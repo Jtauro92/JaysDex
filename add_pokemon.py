@@ -10,6 +10,7 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
         self.number = 0
         self.type1 = ''
         self.type2 = ''
+        self.ability = ''
 
     def set_Type(self, type):
         if type in self.type_list:
@@ -65,10 +66,10 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
 
     def validate_Ability(self, ability):
         if ability in self.ability_list:
-            return ability
+            self.ability = ability
         else:
             print('\nInvalid')
-            return None
+            self.ability = None
 
     def add_Dex_Entry(self):
         with open('dex.csv', 'a',newline='') as pokedex:

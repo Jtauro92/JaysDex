@@ -14,9 +14,8 @@ class Pokemon:
         self.ability_list = []
 
         with open('abilities.csv','r') as abilities:
-            ability_list = csv.DictReader(abilities)
-            for ability in ability_list:
-                self.ability_list.append(ability['ability'])
+            self.ability_list = abilities.read().split(',')
+
 
 
         with open ('dex.csv','r') as dex:
