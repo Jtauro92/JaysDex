@@ -14,11 +14,11 @@ pokedex = num_dex.to_string(index=False)
 
 #print(az_dex.to_string(index=False))
 name = input('Enter Pokemon:\n').capitalize()
-pokemon = df[df['name'] == name]
+pokemon = df2[df['name'] == name]
 
 if pokemon['name'].item() == 'Venusaur':
     print('ok')
-print(pokemon['sp.atk'].item())
+    print(pokemon.to_string(index=False))
 
 class menu:
 
