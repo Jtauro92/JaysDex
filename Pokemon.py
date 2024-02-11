@@ -40,5 +40,5 @@ SP.ATK: {entry['sp.atk']}\n\
 SP.DEF: {entry['sp.def']}\n\
 SPEED: {entry['speed']}")
 
-if '__name__' == '__main'
-print(Pokemon().ability_list)
+if '__name__' == '__main':
+    print(Pokemon().ability_list)
