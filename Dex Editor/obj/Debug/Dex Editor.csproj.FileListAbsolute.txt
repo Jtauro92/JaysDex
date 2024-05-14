@@ -1,0 +1,10 @@
+C:\Users\rushj\OneDrive\Desktop\Pokedex\Dex Editor\bin\Debug\Dex Editor.exe.config
+C:\Users\rushj\OneDrive\Desktop\Pokedex\Dex Editor\bin\Debug\Dex Editor.exe
+C:\Users\rushj\OneDrive\Desktop\Pokedex\Dex Editor\bin\Debug\Dex Editor.pdb
+C:\Users\rushj\OneDrive\Desktop\Pokedex\Dex Editor\obj\Debug\Dex Editor.csproj.AssemblyReference.cache
+C:\Users\rushj\OneDrive\Desktop\Pokedex\Dex Editor\obj\Debug\Dex_Editor.mainForm.resources
+C:\Users\rushj\OneDrive\Desktop\Pokedex\Dex Editor\obj\Debug\Dex_Editor.Properties.Resources.resources
+C:\Users\rushj\OneDrive\Desktop\Pokedex\Dex Editor\obj\Debug\Dex Editor.csproj.GenerateResource.cache
+C:\Users\rushj\OneDrive\Desktop\Pokedex\Dex Editor\obj\Debug\Dex Editor.csproj.CoreCompileInputs.cache
+C:\Users\rushj\OneDrive\Desktop\Pokedex\Dex Editor\obj\Debug\Dex Editor.exe
+C:\Users\rushj\OneDrive\Desktop\Pokedex\Dex Editor\obj\Debug\Dex Editor.pdb
