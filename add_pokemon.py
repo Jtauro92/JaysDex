@@ -1,6 +1,6 @@
-import csv
 from Pokemon import Pokemon as P
 from add_stats import add_stats as AS
+
 
 class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
     
@@ -11,123 +11,105 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
         self.type1 = ''
         self.type2 = ''
         self.ability = ''
+        self.ability2 = ''
+        self.hidden_ability = ''
 
     def set_Type(self, type):
-        if type in self.type_list:
-            self.type1 = type
-        elif type == 'N':
-            print("\nYou chose to quit\n")
-            self.type1 = 'N'
+        if type.isnumeric() == False:
+            type = type.upper()
+            if type in self.type_list:
+                return type
+            else:
+                print('\nThis type doesn\'t exist')
+                return None
         else:
-            print('\nThis type doesn\'t exist\n')
-            self.type1 = 'N'
-
-
-    
-    def set_Type2(self, type):
-        if (type == self.type1) or (type == ''):
-            self.type2 = ''
-        elif (type in self.type_list) and (type != self.type1):
-            self.type2 = type
-        else:
-            print('\nInvalid\n')
-            self.type2 = None
-
+            print('\nInvalid')
+            return None
 
     def validate_Name(self, name):
-        if name in self.name_list:
-            print('\nThis pokemon already exist')
-            self.name = None
-        elif name not in self.name_list:
-            self.name = name
+        if name.isnumeric() == False:
+            name = name.title()
+            if name in self.name_list:
+                print('\nThis pokemon already exist')
+                return None
+            else:
+                return name
         else:
             print('\nInvalid')
-            self.name = None
-
+            return None
 
     def validate_Number(self, number):
-        try:
-            self.number = int(number)
-        except ValueError:
-            self.number = None
-        
- 
-        if self.number in self.num_list:
-            print('\nThis pokemon already exist')
-            self.number = None
-        elif self.number == None:
-            print('Invalid')
-        else: 
-            if 0 < self.number <= 1008:
-                self.number = number
+        if number.isnumeric():
+            number = int(number)
+            if number in self.num_list:
+                print('\nThis pokemon already exist')
+                return None
+            elif 0 < number <= 1008:
+                return number
             else:
                 print('\nNumber can\'t be entered')
-                self.number = None
-
-    def validate_Ability(self, ability):
-        if ability in self.ability_list:
-            self.ability = ability
+                return None
         else:
             print('\nInvalid')
-            self.ability = None
+            return None 
 
-    def add_Dex_Entry(self):
-        with open('dex.csv', 'a',newline='') as pokedex:
-            entry = dict(name = self.name, number = self.number, type1 = self.type1.upper())
-            if self.type2 != None:
-                entry['type2'] = self.type2.upper()
-            writer = csv.DictWriter(pokedex, fieldnames= self.attributes)
-            writer.writerow(entry)
-            print('\nPokemon added to Pokedex!')
+    def validate_Ability(self, ability):
+        if ability.isnumeric() == False:
+            ability = ability.title()
+            if ability in self.ability_list:
+                return ability
+            else:
+                return None
+        else:
+            print('\nInvalid')
+            return None
+
+    def add_Dex_Entry(self,number,name,ability,type1,type2 = None, ability2 = None, hidden_ability = None):
+        self.cursor.execute("INSERT INTO pokemon (Pokemon_Number, P_Name, P_Type1, P_Type2, P_Ability1, P_Ability2, H_Ability) VALUES (%s, %s, %s, %s, %s, %s, %s)", 
+                    (number, name, type1, type2, ability, ability2, hidden_ability))
+        self.mydb.commit()
+        print('\nPokemon added to Pokedex!')
 
     def add_Pokemon(self):
-        checker = ''
-        while checker.upper() != 'N':
-            p = Add_Pokemon()
-            p.set_Type(input('\nEnter Primary type:\n').capitalize())
+        self.name = self.validate_Name(input('Enter Pokemon Name: '))
+        if self.name is None:
+            return
 
-            if p.type1 != 'N':
-                p.set_Type2(input('\nEnter Secondary type:\n').capitalize())
-     
-                if p.type2 != None:
-                    p.validate_Name(input("\nEnter name:\n").capitalize())
+        self.number = self.validate_Number(input('Enter Pokemon Number: '))
+        if self.number is None:
+            return
 
-                    if p.name != None:
-                        try:
-                            p.validate_Number(input("\nEnter number:\n"))
-                        except ValueError:
-                            print('\nInvalid entry\n')
-                            p.number = None
+        self.type1 = self.set_Type(input('Enter Primary Type: '))
+        if self.type1 is None:
+            return
 
-                        if p.number != None:
-                            p.add_Dex_Entry()
-                            checker = input('\nEdit stats? (N to quit)\n')
-                            if checker != 'N':
-                                AS().adjust_stat(p.name)
-                                checker = input('\nAdd another Pokemon? (N to quit)\n')
-                            elif checker == 'N':
-                                checker = input('\nAdd another Pokemon? (N to quit)\n')
-                                
-                        else:
-                            checker = input('\nTry again? (N to quit)\n')
-                    else:
-                        checker = input('\nTry again? (N to quit)\n')
-                else:
-                    checker = input('\nTry again? (N to quit)\n')
-            elif p.type1 == 'N':
-                checker = input('\nTry again? (N to quit)\n')
+        self.type2 = self.set_Type(input('Enter Secondary Type: '))
+        if (self.type2 is None) or (self.type2 == self.type1):
+            self.type2 = None
+
+        self.ability = self.validate_Ability(input('Enter Ability: '))
+        if self.ability is None:
+            return
+
+        self.ability2 = self.validate_Ability(input('Enter Ability #2: '))
+        if self.ability2 == self.ability:
+            self.ability2 = None
+
+        self.hidden_ability = self.validate_Ability(input('Enter Hidden Ability: '))
+        if (self.hidden_ability == (self.ability or self.ability2)):
+            self.hidden_ability = None
+
+        self.add_Dex_Entry(self.number, self.name, self.ability, self.type1, self.type2, self.ability2, self.hidden_ability)
 
 if __name__ == '__main__':
     Add_Pokemon().add_Pokemon()
-    with open ('dex.csv','r',newline='') as dex:
-        pokedex = csv.DictReader(dex)
-        for i, pokemon in enumerate(pokedex):
-            print(f"#{pokemon['number']:>04} {pokemon['name']}")
-            print(f"{pokemon['type1']}",end='')
-            if pokemon['type2'] != '':
-                print(f"/{pokemon['type2']}\n")
-            else:
-                print('\n')
-           
-        print(f"There are {i+1} pokemon in the pokedex\n")
+    for i, pokemon in enumerate(Add_Pokemon().dex):
+        print(f"#{pokemon[0]:>04} {pokemon[1]}")
+        print(f"{pokemon[2]}",end='')
+        if pokemon[3] != None:
+            print(f"/{pokemon[3]}\n")
+        else:
+            print('\n')
+        
+    print(f"There are {i+1} pokemon in the pokedex\n")
         
