@@ -1,6 +1,6 @@
 from Pokemon import Pokemon as P
 from add_stats import add_stats as AS
-
+from prettytable import PrettyTable as PT
 
 class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
     
@@ -13,18 +13,6 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
         self.ability = ''
         self.ability2 = ''
         self.hidden_ability = ''
-
-    def set_Type(self, type):
-        if type.isnumeric() == False:
-            type = type.upper()
-            if type in self.type_list:
-                return type
-            else:
-                print('\nThis type doesn\'t exist')
-                return None
-        else:
-            print('\nInvalid')
-            return None
 
     def validate_Name(self, name):
         if name.isnumeric() == False:
@@ -64,9 +52,9 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
             print('\nInvalid')
             return None
 
-    def add_Dex_Entry(self,number,name,ability,type1,type2 = None, ability2 = None, hidden_ability = None):
-        self.cursor.execute("INSERT INTO pokemon (Pokemon_Number, P_Name, P_Type1, P_Type2, P_Ability1, P_Ability2, H_Ability) VALUES (%s, %s, %s, %s, %s, %s, %s)", 
-                    (number, name, type1, type2, ability, ability2, hidden_ability))
+    def add_Dex_Entry(self,number,name,ability,type1,type2 = None, ability2 = None, hidden_ability = None,stage=1):
+        self.cursor.execute("INSERT INTO pokemon VALUES (%s, %s, %s, %s, %s, %s, %s,%s)", 
+                    (number, name, type1, type2, ability, ability2, hidden_ability,stage))
         self.mydb.commit()
         print('\nPokemon added to Pokedex!')
 
@@ -101,15 +89,21 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
 
         self.add_Dex_Entry(self.number, self.name, self.ability, self.type1, self.type2, self.ability2, self.hidden_ability)
 
+    def show_Pokemon(self):
+        self.cursor.execute("SELECT Pokemon_number, P_Name, P_Type1, p_type2 FROM pokemon order by Pokemon_Number;")
+        result = self.cursor.fetchall()
+        count = self.cursor.rowcount
+        dex = PT()
+        dex.field_names = self.attributes[0:4]
+        dex.add_rows(result)
+        print(f'{dex} \n There are {count} pokemon in the pokedex.')
+
 if __name__ == '__main__':
-    Add_Pokemon().add_Pokemon()
-    for i, pokemon in enumerate(Add_Pokemon().dex):
-        print(f"#{pokemon[0]:>04} {pokemon[1]}")
-        print(f"{pokemon[2]}",end='')
-        if pokemon[3] != None:
-            print(f"/{pokemon[3]}\n")
-        else:
-            print('\n')
+    add = Add_Pokemon()
+    add.add_Pokemon()
+    add.show_Pokemon()
+
+    
         
-    print(f"There are {i+1} pokemon in the pokedex\n")
+    
         
