@@ -55,7 +55,8 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
     def add_Dex_Entry(self,number,name,ability,type1,type2 = None, ability2 = None, hidden_ability = None,stage=1):
         self.cursor.execute("INSERT INTO pokemon VALUES (%s, %s, %s, %s, %s, %s, %s,%s)", 
                     (number, name, type1, type2, ability, ability2, hidden_ability,stage))
-        self.mydb.commit()
+        self.cursor.execute("INSERT INTO stats (pokemon_number,p_name) VALUES (%s,%s)",
+                    (number,name))
         print('\nPokemon added to Pokedex!')
 
     def add_Pokemon(self):
@@ -88,6 +89,8 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
             self.hidden_ability = None
 
         self.add_Dex_Entry(self.number, self.name, self.ability, self.type1, self.type2, self.ability2, self.hidden_ability)
+
+        AS().update_stat(self.name)
 
     def show_Pokemon(self):
         self.cursor.execute("SELECT Pokemon_number, P_Name, P_Type1, p_type2 FROM pokemon order by Pokemon_Number;")

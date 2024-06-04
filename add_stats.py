@@ -4,20 +4,6 @@ class add_stats(P):
     def __init__(self):
         P.__init__(self)
         self.name = ''
-
-    def set_name(self,name):
-        if name.isnumeric() == False:
-            name = name.title()
-            if name in self.name_list:
-                return name
-        else:
-            name = int(name)
-            if name in self.num_list:
-                for pokemon in self.dex:
-                    if name == pokemon[0]:
-                        return pokemon[1]
-            else:
-                print('\nInvalid')
         
     def set_stat(self,stat):
         if not stat.isnumeric():
@@ -32,29 +18,36 @@ class add_stats(P):
         if value.isnumeric():
             return value
         else:
-            print('\nInvalid')
-            return None
+            if value == '':
+                return 0
+            else:
+                print('\nInvalid')
+                return None
     
     def update_stat(self,pokemon):
-        stat = self.set_stat(input('Which stat: '))
-        if stat is None:
-            return
-        else:
+        print(f'''\n{pokemon}'s current stats''')
+        self.view_stats(pokemon)
+        stat = self.set_stat(input('\nWhich stat: '))
+        while stat != None:
             value = self.set_value(input(f'{stat}: '))
-            if value is None:
-                return
+            while value is None:
+                value = self.set_value(input(f'{stat}: '))
             else:
                 self.cursor.execute(f"UPDATE stats SET {stat} = {value} WHERE P_Name = '{pokemon}'")
-                self.mydb.commit()
-                print(f'\n{pokemon}\'s {stat} has been updated to {value}')
+                print(f'\n{pokemon}\'s {stat} has been updated to {value}\n')
+                stat = self.set_stat(input('Which stat: '))
+        else:
+            print(f'''\n{pokemon}'s updated stats''')
+            self.view_stats(pokemon)
+            return
 
     def add_stats(self):
         self.name = self.set_name(input('Enter Pokemon Name: '))
-        if self.name is None:
-            return
-        else:
+        while self.name != None:
             self.update_stat(self.name)
-            
+            self.name = self.set_name(input('\nEnter Pokemon Name: '))
+        else:
+            return
 
 if __name__ == '__main__':
-    print(add_stats().add_stats())
+    add_stats().add_stats()

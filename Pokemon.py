@@ -6,7 +6,7 @@ class Pokemon:
     def __init__(self):
         self.attributes = ['number','name','type1','type2','ability',
                             'ability2','h_ability','stage','hp','atk',
-                            'def','sp.atk','sp.def','speed']
+                            'def','sp_atk','sp_def','speed']
         self.type_list = []
         self.name_list = []
         self.num_list = []
@@ -19,7 +19,8 @@ class Pokemon:
         host="localhost",
         user="root",
         password="devry123",
-        database= database
+        database= database,
+        autocommit=True
         )
         self.cursor = self.mydb.cursor()
 
