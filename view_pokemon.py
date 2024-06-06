@@ -148,6 +148,7 @@ class color:
             ('\033[48;5;0m', 'background_color'),
             ('\033[0m', 'reset'),
             ('\033[38;5;196m', 'error')
+            ('\033[38;5;46m', 'success')
         ]
         self.reset = '\033[0m'
 
