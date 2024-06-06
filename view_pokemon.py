@@ -22,10 +22,12 @@ class View_Pokemon(P):
 
     def view_all_pokemon(self):
         column_names = self.attributes[0:4]
-        table = PrettyTable(column_names)
+        table = PrettyTable(column_names,align='c')
+        print(table.header)
         for pokemon in self.dex:
             table.add_row(pokemon[0:4])
         print(table)
+
 
     def view_one_pokemon(self):
         column_names = self.attributes[0:7]
@@ -36,7 +38,7 @@ class View_Pokemon(P):
                 for pokemon in self.dex:
                     if (self.name == pokemon[1]):
                         table.add_row(pokemon[:7])
-                        print(table)
+                        print(color().color_string(pokemon[2],table))
                         table.clear_rows()
 
     def  view_evolution_line(self,name):
@@ -120,6 +122,42 @@ class View_Pokemon(P):
         else:
             return
 
+
+class color:
+    def __init__(self):
+        self.colors = [
+            ('\033[48;5;1m ', 'fire'),
+            ('\033[48;5;27m ', 'water'),
+            ('\033[48;5;28m \033[38;5;15m', 'grass'),
+            ('\033[48;5;129m ', 'poison'),
+            ('\033[48;5;81m \033[38;5;0m', 'flying'),
+            ('\033[48;5;142m \033[38;5;232m', 'bug'),
+            ('\033[48;5;251m \033[38;5;0m', 'normal'),
+            ('\033[48;5;226m \033[38;5;0m', 'electric'),
+            ('\033[48;5;94m \033[38;5;0m', 'ground'),
+            ('\033[48;5;95m \033[38;5;0m', 'rock'),
+            ('\033[48;5;208m \033[38;5;0m', 'fighting'),
+            ('\033[48;5;163m ', 'psychic'),
+            ('\033[48;5;55m \033[38;5;15m', 'ghost'),
+            ('\033[48;5;45m \033[38;5;0m', 'ice'),
+            ('\033[48;5;52m \033[38;5;15m', 'dragon'),
+            ('\033[48;5;16m \033[38;5;15m', 'dark'),
+            ('\033[48;5;102m \033[38;5;232m', 'steel'),
+            ('\033[48;5;212m \033[38;5;232m', 'fairy'),
+            ('\033[38;5;0m', 'color'),
+            ('\033[48;5;0m', 'background_color'),
+            ('\033[0m', 'reset'),
+            ('\033[38;5;196m', 'error')
+        ]
+        self.reset = '\033[0m'
+
+    def color_string(self,type,string):
+        type = type.lower()
+        for color in self.colors:
+            if type == color[1]:
+                return f'{color[0]}{string}{self.reset}'
+        return string
+
 if __name__ == '__main__':
     VP = View_Pokemon()
-    VP.main()
+    VP.view_one_pokemon()

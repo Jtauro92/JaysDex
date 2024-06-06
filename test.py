@@ -1,18 +1,5 @@
-import mysql.connector
+from tqdm import tqdm
+import time
 
-mydb = mysql.connector.connect(
-  host="localhost",
-  user="root",
-  password="devry123",
-  database="pokedex"
-)
-
-
-cursor = mydb.cursor()
-
-cursor.execute("SELECT P_Name from pokemon where P_Name = 'Charizard'")
-
-name = cursor.fetchone()
-
-for i in name:
-    print(i)
+for i in tqdm(range(100),):
+    time.sleep(0.009)

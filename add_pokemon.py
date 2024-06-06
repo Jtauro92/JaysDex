@@ -1,4 +1,5 @@
 from Pokemon import Pokemon as P
+from view_pokemon import color as C
 from add_stats import add_stats as AS
 from prettytable import PrettyTable as PT
 
@@ -15,31 +16,81 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
         self.hidden_ability = ''
 
     def validate_Name(self, name):
-        if name.isnumeric() == False:
+        while name.isnumeric() == True:
+            print(C().color_string('error','\nNumbers are invalid!\n'))
+            name = input('Enter Pokemon Name: ')
+        else:
             name = name.title()
-            if name in self.name_list:
-                print('\nThis pokemon already exist')
-                return None
+            if name == 'N':
+                print(C().color_string('error','\nYou have chosen to cancel\n'))
+                return 
+            while name in self.name_list:
+                print(C().color_string('error',' \nThis Pokemon already exist!\n'))
+                name = input('Enter Pokemon Name: ').title()
             else:
                 return name
-        else:
-            print('\nInvalid')
-            return None
 
     def validate_Number(self, number):
-        if number.isnumeric():
-            number = int(number)
-            if number in self.num_list:
-                print('\nThis pokemon already exist')
-                return None
-            elif 0 < number <= 1008:
-                return number
+        while number.isnumeric() == False:
+            number = number.upper()
+            if number == 'N':
+                print(C().color_string('error','\nYou have chosen to cancel!\n'))
+                return
             else:
-                print('\nNumber can\'t be entered')
-                return None
+                print(C().color_string('error','\nInvalid! Only numbers are allowed!\n'))
+                number = input('Enter Pokemon Number: ')
+
+        number = int(number)
+        if (number in self.num_list):
+            print(C().color_string('error','\nThis Pokemon already exist!\n'))
+            number = self.validate_Number(input('Enter Pokemon Number: '))
         else:
-            print('\nInvalid')
-            return None 
+            if (number < 1) or (number > 1025):
+                print(C().color_string('error','\nInvalid! Number must be between 1 and 1025!\n'))
+                number = self.validate_Number(input('Enter Pokemon Number: '))
+
+        return number
+    
+    def set_Type(self, type):
+        while type.isnumeric() == True:
+            print(C().color_string('error','\nNumbers are invalid!\n'))
+            type = input('Enter type: ')
+        
+        type = type.upper()
+
+        while type not in self.type_list:
+            type = type.upper()
+            if type == 'N':
+                print(C().color_string('error','\nYou have chosen to cancel\n'))
+                return
+            else:
+                print(C().color_string('error','\nInvalid! This type doesn\'t exist!\n'))
+                self.set_Type(input('Enter Primary type: '))
+        else:
+            return type
+    
+    def set_Type2(self, type1,type2):
+        if type2 is (None):
+            return None
+        else:
+            while type2.isnumeric() == True:
+                print(C().color_string('error','\nNumbers are invalid!\n'))
+                type2 = input('Enter type: ')
+            
+            type2 = type2.upper()
+
+            if type2 not in self.type_list:
+                type2 = type2.upper()
+                if (type2 == 'N') or (type2 == ''):
+                    return type2
+                else:
+                    print(C().color_string('error','\nInvalid! This type doesn\'t exist!\n'))
+                    self.set_Type2(type1,input('Enter type: '))
+            elif type2 == type1:
+                return None
+            else:
+                return type2
+
 
     def validate_Ability(self, ability):
         if ability.isnumeric() == False:
@@ -72,9 +123,13 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
         if self.type1 is None:
             return
 
-        self.type2 = self.set_Type(input('Enter Secondary Type: '))
-        if (self.type2 is None) or (self.type2 == self.type1):
+        self.type2 = self.set_Type2(self.type1,input('Enter Secondary Type: '))
+        if (self.type2 is None) or (self.type2 == 'N'):
+            print(C().color_string('error','\nYou have chosen to cancel\n'))
+            return
+        if self.type2 == '':
             self.type2 = None
+        
 
         self.ability = self.validate_Ability(input('Enter Ability: '))
         if self.ability is None:
@@ -104,7 +159,6 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
 if __name__ == '__main__':
     add = Add_Pokemon()
     add.add_Pokemon()
-    add.show_Pokemon()
 
     
         
