@@ -9,6 +9,9 @@ class View_Pokemon(P):
     def set_name(self,name):
         if name.isnumeric() == False:
             name = name.title()
+            if name == 'N':
+                print(color().color_string('error','\nYou have chosen to quit!\n'))
+                return name
             if name in self.name_list:
                 return name
         else:
@@ -18,28 +21,25 @@ class View_Pokemon(P):
                     if name == pokemon[0]:
                         return pokemon[1]
             else:
-                print('\nInvalid')
+                print(color().color_string('error','\nInvlaid!\
+                                           This Pokemon doesn\'t exist!\n'))
 
     def view_all_pokemon(self):
         column_names = self.attributes[0:4]
         table = PrettyTable(column_names,align='c')
-        print(table.header)
         for pokemon in self.dex:
             table.add_row(pokemon[0:4])
         print(table)
 
 
-    def view_one_pokemon(self):
+    def view_one_pokemon(self, name=None):
         column_names = self.attributes[0:7]
         table = PrettyTable(column_names)
-        while self.name == None:
-            self.name = self.set_name(input("\nWhich Pokemon? (N to quit)\n").capitalize())
-            if self.name != 'N':
-                for pokemon in self.dex:
-                    if (self.name == pokemon[1]):
-                        table.add_row(pokemon[:7])
-                        print(color().color_string(pokemon[2],table))
-                        table.clear_rows()
+        for pokemon in self.dex:
+            if (name == pokemon[1]):
+                table.add_row(pokemon[:7])
+                print(color().color_string(pokemon[2],table))
+                table.clear_rows()
 
     def  view_evolution_line(self,name):
         table2 = PrettyTable()
@@ -50,12 +50,12 @@ class View_Pokemon(P):
             if name == pokemon[1]:
                 if pokemon[7] == 1:
                     try:
-                        pokemon2 = self.dex[pokemon[0]]
+                        pokemon2 = self.dex[(pokemon[0])]
                         if pokemon2[7] == 2:
                             table2.add_row(pokemon2[0:7])
                             print(f'\n{pokemon[1]} evolves into: \n{table2}')
                             table2.clear_rows()
-                            pokemon3 = self.dex[pokemon[0]+1]
+                            pokemon3 = self.dex[(pokemon[0]+1)]
                             if pokemon3[7] == 3:
                                 table3.add_row(pokemon3[0:7])
                                 print(f'\n{pokemon2[1]} evolves into: \n{table3}')
@@ -68,10 +68,10 @@ class View_Pokemon(P):
                         break
                 
                 if pokemon[7] == 2:
-                    pokemon2 = self.dex[pokemon[0]-2]
+                    pokemon2 = self.dex[(pokemon[0]-2)]
                     table2.add_row(pokemon2[0:7])
                     print(f'{pokemon[1]} evolves from: \n{table2}')
-                    pokemon3 = self.dex[pokemon[0]]
+                    pokemon3 = self.dex[(pokemon[0])]
                     if pokemon3[7] == 3:
                         table3.add_row(pokemon3[0:7])
                         print(f'\n{pokemon[1]} evolves into: \n{table3}')
@@ -83,7 +83,7 @@ class View_Pokemon(P):
                     pokemon2 = self.dex[pokemon[0]-2]
                     table2.add_row(pokemon2[0:7])
                     print(f'\n{pokemon[1]} evolves from: \n{table2}')
-                    pokemon3 = self.dex[pokemon[0]-3]
+                    pokemon3 = self.dex[(pokemon[0]-3)]
                     table3.add_row(pokemon3[0:7])
                     print(f'\n{pokemon2[1]} evolves from: \n{table3}')
                     table2.clear_rows()
@@ -110,7 +110,13 @@ class View_Pokemon(P):
 
     def main(self):
         check = ''
-        self.view_one_pokemon()
+        while self.name == None:
+            self.name = self.set_name(input("\nWhich Pokemon? (N to quit)\n").capitalize())
+            if self.name != 'N':
+                self.view_one_pokemon(self.name)
+            else:
+                return
+            
         check = input('\nView Stats? (Y/N) \n').upper()
         if check.isalpha() and check == 'Y':
             self.view_stats(self.name)
@@ -147,7 +153,7 @@ class color:
             ('\033[38;5;0m', 'color'),
             ('\033[48;5;0m', 'background_color'),
             ('\033[0m', 'reset'),
-            ('\033[38;5;196m', 'error')
+            ('\033[38;5;196m', 'error'),
             ('\033[38;5;46m', 'success')
         ]
         self.reset = '\033[0m'
@@ -161,4 +167,4 @@ class color:
 
 if __name__ == '__main__':
     VP = View_Pokemon()
-    VP.view_one_pokemon()
+    VP.main()
