@@ -179,14 +179,11 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
         self.add_Dex_Entry(self.number, self.name, self.ability, self.type1, self.type2, self.ability2, self.hidden_ability)
         VP().view_one_pokemon(self.name)
 
-        check = True
-        check = input(f'\nWould you like to enter {self.name}\'s stat\'s?{C().color_string('error','\n(Press ENTER to continue)')}')
-        if check.isnumeric() == False:
-            if check.upper() == 'N':
-                return
-
+        proceed = input(f'\nWould you like to enter {self.name}\'s stat\'s?{C().color_string('error','\n(Press ENTER to continue)')}')
+        if proceed.upper() == 'N':
+            return
+    
         AS().update_stat(self.name)
-
 
     def show_Pokemon(self):
         self.cursor.execute("SELECT Pokemon_number, P_Name, P_Type1, p_type2 FROM pokemon order by Pokemon_Number;")
@@ -195,7 +192,7 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
         dex = PT()
         dex.field_names = self.attributes[0:4]
         dex.add_rows(result)
-        print(f'{dex} \n {C().color_string('success',f'\nThere are {count} pokemon in the pokedex!\n')}')
+        print(f'{dex} \n {C().color_string('success',f'\nThere are {count} pokemon in the pokedex!\n'):}')
 
 if __name__ == '__main__':
     A = Add_Pokemon()
