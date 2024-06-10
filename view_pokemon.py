@@ -10,7 +10,7 @@ class View_Pokemon(P):
         if name.isnumeric() == False:
             name = name.title()
             if name == 'N':
-                print(color().color_string('error','\nYou have chosen to quit!\n'))
+                print(color().color_string('error','\nYou have chosen to quit!'))
                 return name
             if name in self.name_list:
                 return name
@@ -141,7 +141,7 @@ class View_Pokemon(P):
             print(color().color_string('error','\nYou have chosen to quit!\n'))
             return
         self.view_stats(self.name)
-        
+
         proceed == input(f'\nView Evolution Line?')
         if proceed.upper() == 'N':
             print(color().color_string('error','\nYou have chosen to quit!\n'))

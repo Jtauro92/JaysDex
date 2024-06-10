@@ -194,6 +194,26 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
         dex.add_rows(result)
         print(f'{dex} \n {C().color_string('success',f'\nThere are {count} pokemon in the pokedex!\n'):}')
 
+class Add_MegaEvolution(P):
+    def __init__(self):
+        P.__init__(self)
+        self.name = ''
+        self.number = 0
+        self.type1 = ''
+        self.type2 = ''
+        self.ability = ''
+        self.ability2 = ''
+        self.hidden_ability = ''
+
+    def add_Mega_Evo(self):
+        pass
+    
+    def show_Mega_Evo(self):
+        pass
+
+    def main(self):
+        pass
+
 if __name__ == '__main__':
     A = Add_Pokemon()
     A.add_Pokemon()
