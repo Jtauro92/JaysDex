@@ -147,8 +147,7 @@ class View_Pokemon(P):
             print(color().color_string('error','\nYou have chosen to quit!\n'))
             return
         self.view_evolution_line(self.name)
-
-           
+       
 class color:
     def __init__(self):
         self.colors = [
