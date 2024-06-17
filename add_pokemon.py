@@ -1,5 +1,3 @@
-from audioop import mul
-from numpy import number
 from Pokemon import Pokemon as P
 from view_pokemon import color as C
 from view_pokemon import View_Pokemon as VP
@@ -203,16 +201,16 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
 
 class Add_MegaEvolution(Add_Pokemon):
     def __init__(self):
+        
         Add_Pokemon.__init__(self)
 
     def add_Mega_dex_entry(self, number,name,type1,type2,ability,ability2,hidden_ability):
         self.cursor.execute('''INSERT INTO megas (pokemon_number,p_name,m_type1,m_type2,m_ability1,m_ability2,m_h_ability)
                     VALUES (%s,%s,%s,%s,%s,%s,%s);''',
                     (number,name,type1,type2,ability,ability2,hidden_ability))
-        self.cursor.execute('select m_number from megas where p_name = %s',(name,))
-        result = self.cursor.fetchall()
-        for i in result:
-            meganumber = i[0]
+        self.cursor.execute('select m_number from megas where p_name = %s',(name))
+        result = self.cursor.fetchone()
+        meganumber = result[0]
         self.cursor.execute('INSERT INTO stats (pokemon_number,p_name, m_number) VALUES (%s,%s,%s)',(number,name,meganumber))
         print(C().color_string('success','\nMega Evolution added to Pokedex!\n'))
 
@@ -220,15 +218,59 @@ class Add_MegaEvolution(Add_Pokemon):
         pass
 
     def main(self):
-        self.name = VP().set_name('Enter Pokemon Name: ')
-        if self.name is None:
-            return
+        while True:
+            self.name = VP().set_name(input('Enter Pokemon Name: '))
+            print(self.name)
+            if self.name is None:
+                return
+            self.cursor.execute('SELECT Pokemon_number FROM pokemon WHERE p_name = %s',(self.name))
+            result = self.cursor.fetchone()
+            self.number = result
+            print(self.number)
+
+            self.type1 = self.set_Type(input('Enter Primary Type: '))
+            if self.type1 is None:
+                return
+
+            self.type2 = self.set_Type2(self.type1,input('Enter Secondary Type: '))
+            if (self.type2 is None):
+                return
+            if self.type2 == '':
+                self.type2 = None
+            
+
+            self.ability = self.set_Ability(input('Enter Ability: '))
+            if self.ability is None:
+                return
+
+            self.ability2 = self.set_Abitlity2(self.ability, input('Enter Ability #2: '))
+            if (self.ability2 is None):
+                return
+            if self.ability2 == '':
+                self.ability2 = None
+
+            self.hidden_ability = self.set_Hidden_Ability(self.ability,self.ability2, input('Enter Hidden Ability: '))
+            if (self.hidden_ability is None):
+                return
+            if self.hidden_ability == '':
+                self.hidden_ability= None
+
+            self.add_Mega_dex_entry(self.number, self.name, self.ability, self.type1, self.type2, self.ability2, self.hidden_ability)
+            VP().view_one_pokemon(self.name)
+
+            proceed = input(f'\nWould you like to enter {self.name}\'s stats?{C().color_string('error','\n(Press ENTER to continue)\n')}')
+            if proceed.upper() == 'N':
+                return
         
-        self.number = self.cursor.execute('SELECT Pokemon_number FROM pokemon WHERE P_Name = %s',(self.name,))
+            AS().update_stat(self.name)
+
+            proceed = input(f'\nAdd another Pokémon?{C().color_string('error','\n(Press ENTER to continue)\n')}')
+            if proceed.upper() == 'N':
+                return
 
 if __name__ == '__main__':
    M = Add_MegaEvolution()
-   M.add_Mega_dex_entry(9,'C','Fire','Dragon','Tough Claws',None,'Drought')
+   M.main()
 
     
         
