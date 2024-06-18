@@ -186,4 +186,4 @@ class color:
 
 if __name__ == '__main__':
     VP = View_Pokemon()
-    VP.main()
+    VP.view_all_pokemon()

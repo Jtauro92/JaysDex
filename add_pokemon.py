@@ -134,10 +134,8 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
         return ability3
         
     def add_Dex_Entry(self,number,name,ability,type1,type2 = None, ability2 = None, hidden_ability = None,stage=1):
-        self.cursor.execute("INSERT INTO pokemon VALUES (%s, %s, %s, %s, %s, %s, %s,%s)", 
-                    (number, name, type1, type2, ability, ability2, hidden_ability,stage))
-        self.cursor.execute("INSERT INTO stats (pokemon_number,p_name) VALUES (%s,%s)",
-                    (number,name))
+        self.cursor.execute(f'''call insert_data
+                            ('{number}','{name}','{type1}','{type2}','{ability}','{ability2}','{hidden_ability}','{stage}')''')
         print(C().color_string('success','\nPokemon added to Pokedex!\n'))
 
     def main(self):
@@ -205,13 +203,7 @@ class Add_MegaEvolution(Add_Pokemon):
         Add_Pokemon.__init__(self)
 
     def add_Mega_dex_entry(self, number,name,type1,type2,ability,ability2,hidden_ability):
-        self.cursor.execute('''INSERT INTO megas (pokemon_number,p_name,m_type1,m_type2,m_ability1,m_ability2,m_h_ability)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s);''',
-                    (number,name,type1,type2,ability,ability2,hidden_ability))
-        self.cursor.execute('select m_number from megas where p_name = %s',(name))
-        result = self.cursor.fetchone()
-        meganumber = result[0]
-        self.cursor.execute('INSERT INTO stats (pokemon_number,p_name, m_number) VALUES (%s,%s,%s)',(number,name,meganumber))
+        self.cursor.execute(f'''call insert_data ('{number}','{name}','{type1}','{type2}','{ability}','{ability2}','{hidden_ability}')''')
         print(C().color_string('success','\nMega Evolution added to Pokedex!\n'))
 
     def show_Mega_Evo(self):
@@ -269,7 +261,7 @@ class Add_MegaEvolution(Add_Pokemon):
                 return
 
 if __name__ == '__main__':
-   M = Add_MegaEvolution()
+   M = Add_Pokemon()
    M.main()
 
     
