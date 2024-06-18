@@ -14,8 +14,6 @@ class Pokemon:
         self.ability = ''
         self.ability2 = None
         self.hidden_ability = None
-        self.name_list = []
-        self.num_list = []
         self.dex = []
         self.ability_list = []
         self.load_attributes()
