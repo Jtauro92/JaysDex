@@ -10,10 +10,10 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
         self.name = ''
         self.number = 0
         self.type1 = ''
-        self.type2 = ''
+        self.type2 = None
         self.ability = ''
-        self.ability2 = ''
-        self.hidden_ability = ''
+        self.ability2 = None
+        self.hidden_ability = None
 
     def validate_Name(self,name):
         while name.isnumeric() == True:
@@ -133,7 +133,7 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
 
         return ability3
         
-    def add_Dex_Entry(self,number,name,ability,type1,type2 = None, ability2 = None, hidden_ability = None,stage=1):
+    def add_Dex_Entry(self,number,name,ability,type1,type2, ability2, hidden_ability,stage=1):
         self.cursor.execute(f'''call insert_data
                             ('{number}','{name}','{type1}','{type2}','{ability}','{ability2}','{hidden_ability}','{stage}')''')
         print(C().color_string('success','\nPokemon added to Pokedex!\n'))
