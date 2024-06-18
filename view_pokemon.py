@@ -44,6 +44,8 @@ class View_Pokemon(P):
                 table.clear_rows()
 
     def  view_evolution_line(self,name):
+        self.cursor.execute("select * FROM pokemon")
+        self.dex = self.cursor.fetchall()
         table2 = PrettyTable()
         table2.header = False
         table3 = PrettyTable()
@@ -126,9 +128,10 @@ class View_Pokemon(P):
     def view_stats(self,name):
         column_names = self.attributes[8:]
         table = PrettyTable(column_names)
-        self.cursor.execute(f"SELECT hp,atk,def,sp_atk,sp_def,speed FROM stats WHERE P_Name = '{name}'")
-        pokemon = (self.cursor.fetchall())
-        table.add_rows(pokemon)
+        for pokemon in self.dex:
+            if (name == pokemon[1]):
+                stats = pokemon[4:]
+        table.add_row(stats)
         print('\n', table)
         table.clear_rows()
 

@@ -32,7 +32,7 @@ class Pokemon:
 
     def load_attributes(self):
         self.connect_to_db()
-        self.cursor.execute("select * FROM pokemon")
+        self.cursor.execute("select * FROM national_pokedex")
         self.dex = self.cursor.fetchall()
 
         with open('abilities.csv', 'r') as f:
@@ -41,4 +41,4 @@ class Pokemon:
                     self.ability_list.append(ability.strip())       
 
 if __name__ == '__main__': 
-    print(Pokemon().ability_list)
+    print(Pokemon().dex)
