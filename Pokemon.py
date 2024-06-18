@@ -8,6 +8,13 @@ class Pokemon:
         self.type_list = ['FIRE','WATER','GRASS','ELECTRIC','ICE','FIGHTING',
                           'POISON','GROUND','FLYING','PSYCHIC','BUG','ROCK',
                           'GHOST','DARK','DRAGON','STEEL','FAIRY','NORMAL']
+        self.name = ''
+        self.number = 0
+        self.type1 = ''
+        self.type2 = None
+        self.ability = ''
+        self.ability2 = None
+        self.hidden_ability = None
         self.name_list = []
         self.num_list = []
         self.dex = []
@@ -29,7 +36,6 @@ class Pokemon:
         self.cursor.execute("select * FROM pokemon")
         self.dex = self.cursor.fetchall()
 
-
         self.cursor.execute("select P_Name FROM pokemon")
         for i in self.cursor.fetchall():
             self.name_list.append(i[0])
@@ -43,7 +49,5 @@ class Pokemon:
                 for ability in line.split(','):
                     self.ability_list.append(ability.strip())       
 
-        
-             
 if __name__ == '__main__': 
     print(Pokemon().num_list)

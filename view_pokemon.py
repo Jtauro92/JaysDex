@@ -12,17 +12,21 @@ class View_Pokemon(P):
             if name == 'N':
                 print(color().color_string('error','\nYou have chosen to quit!'))
                 return name
-            if name in self.name_list:
-                return name
+            else:
+                for pokemon in self.dex:
+                    if name == pokemon[1]:
+                        return name
+                else:
+                    print(color().color_string('error','\nThis Pokemon doesn\'t exist!'))
+                    
         else:
             name = int(name)
-            if name in self.num_list:
-                self.cursor.execute(f"SELECT get_name({name})")
-                name = self.cursor.fetchone()[0]
-                return name[0]
+            for pokemon in self.dex:
+                if name == pokemon[0]:
+                    return pokemon[1]
             else:
-                print(color().color_string('error','\nInvlaid! This Pokemon doesn\'t exist!\n'))
-
+                print(color().color_string('error','\nThis Pokemon doesn\'t exist!'))
+        
     def view_all_pokemon(self):
         column_names = self.attributes[0:4]
         table = PrettyTable(column_names,align='c')
