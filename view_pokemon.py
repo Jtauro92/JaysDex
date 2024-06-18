@@ -35,6 +35,8 @@ class View_Pokemon(P):
         print(table)
 
     def view_one_pokemon(self, name=None):
+        self.cursor.execute("select * FROM pokemon")
+        self.dex = self.cursor.fetchall()
         column_names = self.attributes[0:7]
         table = PrettyTable(column_names)
         for pokemon in self.dex:
