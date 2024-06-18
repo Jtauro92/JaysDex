@@ -1,7 +1,4 @@
 import mysql.connector
-import itertools
-import prettytable
-
 class Pokemon:
 
     def __init__(self):
@@ -34,10 +31,12 @@ class Pokemon:
 
 
         self.cursor.execute("select P_Name FROM pokemon")
-        self.name_list = list(set(itertools.chain(*self.cursor.fetchall())))
+        for i in self.cursor.fetchall():
+            self.name_list.append(i[0])
 
         self.cursor.execute("select Pokemon_Number FROM pokemon")
-        self.num_list = list(set(itertools.chain(*self.cursor.fetchall())))
+        for i in self.cursor.fetchall():
+            self.num_list.append(i[0])
 
         with open('abilities.csv', 'r') as f:
             for line in f:
@@ -47,9 +46,4 @@ class Pokemon:
         
              
 if __name__ == '__main__': 
-    column_names = Pokemon().attributes[0:8]
-    table = prettytable.PrettyTable(column_names)
-    for pokemon in Pokemon().dex:
-        table.add_row(pokemon)
-    #print(table)
-    print(Pokemon().set_Type(input('Enter Primary Type: ').upper()))
+    print(Pokemon().num_list)

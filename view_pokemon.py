@@ -18,7 +18,7 @@ class View_Pokemon(P):
             name = int(name)
             if name in self.num_list:
                 self.cursor.execute(f"SELECT get_name({name})")
-                name = self.cursor.fetchone()
+                name = self.cursor.fetchone()[0]
                 return name[0]
             else:
                 print(color().color_string('error','\nInvlaid! This Pokemon doesn\'t exist!\n'))
