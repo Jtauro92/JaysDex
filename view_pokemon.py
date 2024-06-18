@@ -17,9 +17,9 @@ class View_Pokemon(P):
         else:
             name = int(name)
             if name in self.num_list:
-                for pokemon in self.dex:
-                    if name == pokemon[0]:
-                        return pokemon[1]
+                self.cursor.execute(f"SELECT get_name({name})")
+                name = self.cursor.fetchone()
+                return name[0]
             else:
                 print(color().color_string('error','\nInvlaid! This Pokemon doesn\'t exist!\n'))
 
@@ -186,4 +186,4 @@ class color:
 
 if __name__ == '__main__':
     VP = View_Pokemon()
-    VP.view_all_pokemon()
+    VP.main()
