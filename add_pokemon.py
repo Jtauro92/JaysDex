@@ -14,15 +14,17 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
             name = input('Enter Pokemon Name: ')
         else:
             name = name.title()
-            if name == '':
-                print(C().color_string('error','\nName cannot be empty!\n'))
-                name = self.validate_Name(input('Enter Pokemon Name: '))
-            if name == 'N':
-                print(C().color_string('error','\nYou have chosen to cancel!\n'))
-                return 
-            if name in self.name_list:
-                print(C().color_string('error',' \nThis Pokemon already exist!\n'))
-                name = self.validate_Name(input('Enter Pokemon Name: '))
+            for pokemon in self.dex:
+                if name == pokemon[1]:
+                    print(C().color_string('error','\nThis Pokemon already exist!\n'))
+                    name = self.validate_Name(input('Enter Pokemon Name: '))
+            else:
+                if name == '':
+                    print(C().color_string('error','\nName cannot be empty!\n'))
+                    name = self.validate_Name(input('Enter Pokemon Name: '))
+                if name == 'N':
+                    print(C().color_string('error','\nYou have chosen to cancel!\n'))
+                    return
 
         return name
 
@@ -36,13 +38,15 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
                 number = input('Enter Pokedex Number: ')
         else:
             number = int(number)
-            if not (0<number<=1025):
-                print(C().color_string('error','\nInvalid Pokedex Number!\n'))
-                number = self.validate_Number(input('Enter Pokedex Number: '))
-            if number in self.num_list:
-                print(C().color_string('error',' \nThis Pokemon already exist!\n'))
-                number = self.validate_Number(input('Enter Pokedex Number: '))
-            
+            for pokemon in self.dex:
+                if number == pokemon[0]:
+                    print(C().color_string('error','\nThis Pokemon already exist!\n'))
+                    number = self.validate_Number(input('Enter Pokedex Number: '))
+            else:
+                if not (0<number<=1025):
+                    print(C().color_string('error','\nInvalid Pokedex Number!\n'))
+                    number = self.validate_Number(input('Enter Pokedex Number: '))
+
         return number
     
     def set_Type(self,type):
