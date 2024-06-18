@@ -199,66 +199,17 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
 
 class Add_MegaEvolution(Add_Pokemon):
     def __init__(self):
-        
         Add_Pokemon.__init__(self)
 
     def add_Mega_dex_entry(self, number,name,type1,type2,ability,ability2,hidden_ability):
-        self.cursor.execute(f'''call insert_data ('{number}','{name}','{type1}','{type2}','{ability}','{ability2}','{hidden_ability}')''')
+        self.cursor.execute(f'''call insert_mega_data ('{number}','{name}','{type1}','{type2}','{ability}','{ability2}','{hidden_ability}')''')
         print(C().color_string('success','\nMega Evolution added to Pokedex!\n'))
 
     def show_Mega_Evo(self):
         pass
 
     def main(self):
-        while True:
-            self.name = VP().set_name(input('Enter Pokemon Name: '))
-            print(self.name)
-            if self.name is None:
-                return
-            self.cursor.execute('SELECT Pokemon_number FROM pokemon WHERE p_name = %s',(self.name))
-            result = self.cursor.fetchone()
-            self.number = result
-            print(self.number)
-
-            self.type1 = self.set_Type(input('Enter Primary Type: '))
-            if self.type1 is None:
-                return
-
-            self.type2 = self.set_Type2(self.type1,input('Enter Secondary Type: '))
-            if (self.type2 is None):
-                return
-            if self.type2 == '':
-                self.type2 = None
-            
-
-            self.ability = self.set_Ability(input('Enter Ability: '))
-            if self.ability is None:
-                return
-
-            self.ability2 = self.set_Abitlity2(self.ability, input('Enter Ability #2: '))
-            if (self.ability2 is None):
-                return
-            if self.ability2 == '':
-                self.ability2 = None
-
-            self.hidden_ability = self.set_Hidden_Ability(self.ability,self.ability2, input('Enter Hidden Ability: '))
-            if (self.hidden_ability is None):
-                return
-            if self.hidden_ability == '':
-                self.hidden_ability= None
-
-            self.add_Mega_dex_entry(self.number, self.name, self.ability, self.type1, self.type2, self.ability2, self.hidden_ability)
-            VP().view_one_pokemon(self.name)
-
-            proceed = input(f'\nWould you like to enter {self.name}\'s stats?{C().color_string('error','\n(Press ENTER to continue)\n')}')
-            if proceed.upper() == 'N':
-                return
-        
-            AS().update_stat(self.name)
-
-            proceed = input(f'\nAdd another Pokémon?{C().color_string('error','\n(Press ENTER to continue)\n')}')
-            if proceed.upper() == 'N':
-                return
+        pass
 
 if __name__ == '__main__':
    M = Add_Pokemon()
