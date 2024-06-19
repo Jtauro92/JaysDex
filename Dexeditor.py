@@ -36,7 +36,7 @@ class dex_menu:
             self.set_option(input('Enter option: '))
         
             if self.option == 1:
-                AP().add_Pokemon()
+                AP().main()
                 self.option = None
 
             elif self.option == 2:
@@ -44,7 +44,7 @@ class dex_menu:
                 self.option = None
 
             elif self.option == 3:
-                VP().view_pokemon()
+                VP().main()
                 self.option = None
 
             elif self.option == 0:
