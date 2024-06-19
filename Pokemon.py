@@ -12,10 +12,10 @@ class Pokemon:
         self.name = ''
         self.number = 0
         self.type1 = ''
-        self.type2 = None
+        self.type2 = ''
         self.ability = ''
-        self.ability2 = None
-        self.hidden_ability = None
+        self.ability2 = ''
+        self.hidden_ability = ''
         self.dex = []
         self.ability_list = []
         self.load_attributes()

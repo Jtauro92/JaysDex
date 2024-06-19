@@ -2,7 +2,6 @@ from Pokemon import Pokemon as P
 from view_pokemon import color as C
 from view_pokemon import View_Pokemon as VP
 from add_stats import add_stats as AS
-from prettytable import PrettyTable as PT
 
 class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
     def __init__(self):
@@ -22,7 +21,7 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
                         name = self.validate_Name(input('Enter Pokemon Name: '))
                     else:
                         Add_MegaEvolution().main(name=name)
-                        proceed = input(f'\nWould you like to add another Pokemon?{C().color_string('error','\n(Press ENTER to continue)\n')}')
+                        proceed = input(f'\nadd another Pokemon?{C().color_string('error','\n(Press ENTER to continue)\n')}')
                         if proceed.upper() == 'N':
                             return 
                         else:
@@ -50,7 +49,17 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
             for pokemon in self.dex:
                 if number == pokemon[0]:
                     print(C().color_string('error','\nThis Pokemon already exist!\n'))
-                    number = self.validate_Number(input('Enter Pokedex Number: '))
+                    proceed = input(f'\nWould you like to add {pokemon[1]}\'s Mega Evolution?{C().color_string('error','\n(Press ENTER to continue)\n')}')
+                    if proceed.upper() == 'N':
+                        number = self.validate_Number(input('Enter Pokedex Number: '))
+                    else:
+                        Add_MegaEvolution().main(number=number)
+                        proceed = input(f'\nWould you like to add another Pokemon?{C().color_string('error','\n(Press ENTER to continue)\n')}')
+                        if proceed.upper() == 'N':
+                            return 
+                        else:
+                            self.main()
+          
             else:
                 if not (0<number<=1025):
                     print(C().color_string('error','\nInvalid Pokedex Number!\n'))
@@ -145,63 +154,55 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
         print(C().color_string('success','\nPokemon added to Pokedex!\n'))
 
     def main(self):
-        while True:
-            self.name = self.validate_Name(input('Enter Pokemon Name: '))
-            if self.name is None:
-                return
+        self.name = self.validate_Name(input('Enter Pokemon Name: '))
+        if self.name is None:
+            return
 
-            self.number = self.validate_Number(input('Enter Pokemon Number: '))
-            if self.number is None:
-                return
+        self.number = self.validate_Number(input('Enter Pokemon Number: '))
+        if self.number is None:
+            return
 
-            self.type1 = self.set_Type(input('Enter Primary Type: '))
-            if self.type1 is None:
-                return
+        self.type1 = self.set_Type(input('Enter Primary Type: '))
+        if self.type1 is None: 
+            return
 
-            self.type2 = self.set_Type2(self.type1,input('Enter Secondary Type: '))
-            if (self.type2 is None):
-                return
-            if self.type2 == '':
-                self.type2 = None
-            
-
-            self.ability = self.set_Ability(input('Enter Ability: '))
-            if self.ability is None:
-                return
-
-            self.ability2 = self.set_Abitlity2(self.ability, input('Enter Ability #2: '))
-            if (self.ability2 is None):
-                return
-            if self.ability2 == '':
-                self.ability2 = None
-
-            self.hidden_ability = self.set_Hidden_Ability(self.ability,self.ability2, input('Enter Hidden Ability: '))
-            if (self.hidden_ability is None):
-                return
-            if self.hidden_ability == '':
-                self.hidden_ability= None
-
-            self.add_Dex_Entry(self.number, self.name, self.ability, self.type1, self.type2, self.ability2, self.hidden_ability)
-            VP().view_one_pokemon(self.name)
-
-            proceed = input(f'\nWould you like to enter {self.name}\'s stats?{C().color_string('error','\n(Press ENTER to continue)\n')}')
-            if proceed.upper() == 'N':
-                return
+        self.type2 = self.set_Type2(self.type1,input('Enter Secondary Type: '))
+        if (self.type2 is None):
+            return
+        if self.type2 == '':
+            self.type2 = None
         
-            AS().update_stat(self.name)
 
-            proceed = input(f'\nAdd another Pokémon?{C().color_string('error','\n(Press ENTER to continue)\n')}')
-            if proceed.upper() == 'N':
-                return
+        self.ability = self.set_Ability(input('Enter Ability: '))
+        if self.ability is None:
+            return
 
-    def show_Pokemon(self):
-        self.cursor.execute("SELECT Pokemon_number, P_Name, P_Type1, p_type2 FROM pokemon order by Pokemon_Number;")
-        result = self.cursor.fetchall()
-        count = self.cursor.rowcount
-        dex = PT()
-        dex.field_names = self.attributes[0:4]
-        dex.add_rows(result)
-        print(f'{dex} \n {C().color_string('success',f'\nThere are {count} pokemon in the pokedex!\n'):}')
+        self.ability2 = self.set_Abitlity2(self.ability, input('Enter Ability #2: '))
+        if (self.ability2 is None):
+            return
+        if self.ability2 == '':
+            self.ability2 = None
+
+        self.hidden_ability = self.set_Hidden_Ability(self.ability,self.ability2, input('Enter Hidden Ability: '))
+        if (self.hidden_ability is None):
+            return
+        if self.hidden_ability == '':
+            self.hidden_ability= None
+
+        self.add_Dex_Entry(self.number, self.name, self.ability, self.type1, self.type2, self.ability2, self.hidden_ability)
+        VP().view_one_pokemon(self.name)
+
+        proceed = input(f'\nWould you like to enter {self.name}\'s stats?{C().color_string('error','\n(Press ENTER to continue)\n')}')
+        if proceed.upper() == 'N':
+            return
+    
+        AS().update_stat(self.name)
+
+        proceed = input(f'\nAdd another Pokémon?{C().color_string('error','\n(Press ENTER to continue)\n')}')
+        if proceed.upper() == 'N':
+            return
+
+        self.main()
 
 class Add_MegaEvolution(Add_Pokemon):
     def __init__(self):
@@ -261,9 +262,5 @@ class Add_MegaEvolution(Add_Pokemon):
             
 if __name__ == '__main__':
     M = Add_Pokemon()
-    M.main()
 
-        
-        
-    
-        
+    M.main()
