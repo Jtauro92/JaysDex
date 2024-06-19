@@ -1,3 +1,5 @@
+import re
+from unittest import result
 from Pokemon import Pokemon as P
 from prettytable import PrettyTable
 
@@ -36,10 +38,10 @@ class View_Pokemon(P):
 
     def view_one_pokemon(self, name=None):
         self.cursor.execute("select * FROM pokemon")
-        self.dex = self.cursor.fetchall()
+        dex = self.cursor.fetchall()
         column_names = self.attributes[0:7]
         table = PrettyTable(column_names)
-        for pokemon in self.dex:
+        for pokemon in dex:
             if (name == pokemon[1]):
                 table.add_row(pokemon[:7])
                 print(color().color_string(pokemon[2],table))
@@ -56,42 +58,42 @@ class View_Pokemon(P):
         name = f'(mega) {name}' 
         result[1] = name
         table.add_row(result)
-        print(color().color_string(result[2],table))
+        print('\n'+color().color_string(result[2],table))
         table.clear_rows()
 
 
     def  view_evolution_line(self,name):
         self.cursor.execute("select * FROM pokemon")
-        self.dex = self.cursor.fetchall()
+        dex = self.cursor.fetchall()
         table2 = PrettyTable()
         table2.header = False
         table3 = PrettyTable()
         table3.header = False
   
         if name in ['Vaporeon','Jolteon','Flareon','Espeon','Umbreon','Leafeon','Glaceon','Sylveon']:
-            for pokemon in self.dex:
+            for pokemon in dex:
                 if pokemon[1] == "Eevee":
                     table2.add_row(pokemon[0:7])
                     print(f'\n{name} evolves into: \n{color().color_string(pokemon[2],table2)}')
                     table2.clear_rows()
         else:
-            for pokemon in self.dex:
+            for pokemon in dex:
                 if name == pokemon[1]:
                     if pokemon[7] == 1:
                         if name == "Eevee":
-                            for pokemon in self.dex:
+                            for pokemon in dex:
                                 if pokemon[1] in ['Vaporeon','Jolteon','Flareon','Espeon','Umbreon','Leafeon','Glaceon','Sylveon']:
                                     table2.add_row(pokemon[0:7])
                                     print(f'\n{name} evolves from: \n{color().color_string(pokemon[2],table2)}')
                                     table2.clear_rows()
                         else:
                             try:
-                                pokemon2 = self.dex[(pokemon[0])]
+                                pokemon2 = dex[(pokemon[0])]
                                 if pokemon2[7] == 2:
                                     table2.add_row(pokemon2[0:7])
                                     print(f'\n{pokemon[1]} evolves into: \n{color().color_string(pokemon[2],table2)}')
                                     table2.clear_rows()
-                                    pokemon3 = self.dex[(pokemon[0]+1)]
+                                    pokemon3 = dex[(pokemon[0]+1)]
                                     if pokemon3[7] == 3:
                                         table3.add_row(pokemon3[0:7])
                                         print(f'\n{pokemon2[1]} evolves into: \n{color().color_string(pokemon[2],table3)}')
@@ -105,16 +107,16 @@ class View_Pokemon(P):
                     
                     if pokemon[7] == 2:
                         if name in ['Vaporeon','Jolteon','Flareon','Espeon','Umbreon','Leafeon','Glaceon','Sylveon']:
-                            for pokemon in self.dex:
+                            for pokemon in dex:
                                 if pokemon[1] == "Eevee":
                                     table2.add_row(pokemon[0:7])
                                     print(f'\n{name} evolves into: \n{color().color_string(pokemon[2],table2)}')
                                     table2.clear_rows()
                         else:
-                            pokemon2 = self.dex[(pokemon[0]-2)]
+                            pokemon2 = dex[(pokemon[0]-2)]
                             table2.add_row(pokemon2[0:7])
                             print(f'\n{pokemon[1]} evolves from: \n{color().color_string(pokemon[2],table2)}')
-                            pokemon3 = self.dex[(pokemon[0])]
+                            pokemon3 = dex[(pokemon[0])]
                             if pokemon3[7] == 3:
                                 table3.add_row(pokemon3[0:7])
                                 print(f'\n{pokemon[1]} evolves into: \n{color().color_string(pokemon[2],table3)}')
@@ -123,10 +125,10 @@ class View_Pokemon(P):
                                 break
 
                     if pokemon[7] == 3:
-                        pokemon2 = self.dex[pokemon[0]-2]
+                        pokemon2 = dex[pokemon[0]-2]
                         table2.add_row(pokemon2[0:7])
                         print(f'\n{pokemon[1]} evolves from: \n{color().color_string(pokemon[2],table2)}')
-                        pokemon3 = self.dex[(pokemon[0]-3)]
+                        pokemon3 = dex[(pokemon[0]-3)]
                         table3.add_row(pokemon3[0:7])
                         print(f'\n{pokemon2[1]} evolves from: \n{color().color_string(pokemon[2],table3)}')
                         table2.clear_rows()
@@ -143,13 +145,12 @@ class View_Pokemon(P):
         print(table)              
 
     def view_stats(self,name):
-        self.cursor.execute("select * FROM stats")
-        self.dex = self.cursor.fetchall()
+
         column_names = self.attributes[8:]
         table = PrettyTable(column_names)
         for pokemon in self.dex:
-            if (name == pokemon[2]):
-                stats = pokemon[3:9]
+            if (name == pokemon[1]):
+                stats = pokemon[4:]
         table.add_row(stats)
         print('\n', table)
         table.clear_rows()
@@ -173,7 +174,17 @@ class View_Pokemon(P):
             print(color().color_string('error','\nYou have chosen to quit!\n'))
             return
         self.view_evolution_line(self.name)
-       
+        self.cursor.execute(f"select * FROM megas where p_name = '{self.name}';")
+        result = self.cursor.fetchall()
+        if len(result) > 0:
+            proceed = input(f'\nView Mega Pokemon?{color().color_string("error","\n(Press ENTER to continue or N to quit!)")}')
+            if proceed.upper() == 'N':
+                print(color().color_string('error','\nYou have chosen to quit!\n'))
+                return
+            self.view_mega_pokemon(self.name)
+
+
+        
 class color:
     def __init__(self):
         self.colors = [
@@ -212,4 +223,4 @@ class color:
 
 if __name__ == '__main__':
     VP = View_Pokemon()
-    VP.view_stats('Bulbasaur')
+    VP.main()

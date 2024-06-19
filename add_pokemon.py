@@ -16,7 +16,7 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
             for pokemon in self.dex:
                 if name == pokemon[1]:
                     print(C().color_string('error','\nThis Pokemon already exist!\n'))
-                    proceed = input(f'\nWould you like to add {name}\'s Mega Evolution?{C().color_string('error','\n(Press ENTER to continue)\n')}')
+                    proceed = input(f'Would you like to add {name}\'s Mega Evolution?{C().color_string('error','\n(Press ENTER to continue)\n')}')
                     if proceed.upper() == 'N':
                         name = self.validate_Name(input('Enter Pokemon Name: '))
                     else:
