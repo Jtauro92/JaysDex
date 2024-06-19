@@ -11,7 +11,7 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
     def validate_Name(self,name):
         while name.isnumeric() == True:
             print(C().color_string('error','\nNumbers are invalid!\n'))
-            name = input('Enter Pokemon Name: ')
+            name = input('\nEnter Pokemon Name: ')
         else:
             name = name.title()
             for pokemon in self.dex:
@@ -22,7 +22,11 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
                         name = self.validate_Name(input('Enter Pokemon Name: '))
                     else:
                         Add_MegaEvolution().main(name=name)
-                        self.main()
+                        proceed = input(f'\nWould you like to add another Pokemon?{C().color_string('error','\n(Press ENTER to continue)\n')}')
+                        if proceed.upper() == 'N':
+                            return 
+                        else:
+                            self.main()
             else:
                 if name == '':
                     print(C().color_string('error','\nName cannot be empty!\n'))
