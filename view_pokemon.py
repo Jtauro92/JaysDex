@@ -1,4 +1,4 @@
-import re
+
 from unittest import result
 from Pokemon import Pokemon as P
 from prettytable import PrettyTable
