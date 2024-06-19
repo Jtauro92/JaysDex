@@ -17,7 +17,12 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
             for pokemon in self.dex:
                 if name == pokemon[1]:
                     print(C().color_string('error','\nThis Pokemon already exist!\n'))
-                    name = self.validate_Name(input('Enter Pokemon Name: '))
+                    proceed = input(f'\nWould you like to add {name}\'s Mega Evolution?{C().color_string('error','\n(Press ENTER to continue)\n')}')
+                    if proceed.upper() == 'N':
+                        name = self.validate_Name(input('Enter Pokemon Name: '))
+                    else:
+                        Add_MegaEvolution().main(name=name)
+                        self.main()
             else:
                 if name == '':
                     print(C().color_string('error','\nName cannot be empty!\n'))
@@ -198,21 +203,63 @@ class Add_MegaEvolution(Add_Pokemon):
     def __init__(self):
         Add_Pokemon.__init__(self)
 
-    def add_Mega_dex_entry(self, number,name,type1,type2,ability,ability2,hidden_ability):
-        self.cursor.execute(f'''call insert_mega_data ('{number}','{name}','{type1}','{type2}','{ability}','{ability2}','{hidden_ability}')''')
+    def add_Mega_dex_entry(self, number,name,type1,type2,ability):
+        self.cursor.execute(f'''call insert_mega_data ('{number}','{name}','{type1}','{type2}','{ability}')''')
         print(C().color_string('success','\nMega Evolution added to Pokedex!\n'))
 
     def show_Mega_Evo(self):
         pass
 
-    def main(self):
-        pass
+    def main(self,name=None,number=None):
+        while True:
+            if (number is not None) and (name is None):
+                self.number = number
+                for pokemon in self.dex:
+                    if number == int(pokemon[0]):
+                        self.name = pokemon[1]
+            else:         
+                while (name == None) and (number == None):
+                    name = VP().set_name(input('Enter Mega Pokemon Name or Number: '))
+                    if name == 'N':
+                        return
+                    else:
+                        self.name = name
+                        for pokemon in self.dex:
+                            if name == pokemon[1]:
+                                self.number = pokemon[0]
+                else:
+                    self.name = name
+                    for pokemon in self.dex:
+                            if name == pokemon[1]:
+                                self.number = pokemon[0]
 
+            self.type1 = self.set_Type(input('Enter Primary Type: '))
+            if self.type1 is None:
+                return
+
+            self.type2 = self.set_Type2(self.type1,input('Enter Secondary Type: '))
+            if (self.type2 is None):
+                return
+            if self.type2 == '':
+                self.type2 = None
+            
+
+            self.ability = self.set_Ability(input('Enter Ability: '))
+            if self.ability is None:
+                return
+
+            self.add_Mega_dex_entry(self.number, self.name, self.type1, self.type2, self.ability)
+            VP().view_mega_pokemon(self.name)
+
+            proceed = input(f'\nAdd another Mega Pokémon?{C().color_string('error','\n(Press ENTER to continue)\n')}')
+            if proceed.upper() == 'N':
+                return
+            
 if __name__ == '__main__':
-   M = Add_Pokemon()
-   M.main()
+    M = Add_Pokemon()
+    M.main()
 
-    
+        
         
     
         

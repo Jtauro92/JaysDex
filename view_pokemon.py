@@ -44,6 +44,21 @@ class View_Pokemon(P):
                 table.add_row(pokemon[:7])
                 print(color().color_string(pokemon[2],table))
                 table.clear_rows()
+    
+    def view_mega_pokemon(self, name=None):
+        column_names = self.attributes[0:5]
+        table = PrettyTable(column_names)
+        self.cursor.execute(f'''select pokemon_number,p_name, m_type1, m_type2,m_ability1 from megas
+                            where p_name = '{name}';''')
+        result = self.cursor.fetchall()
+        for i in result:
+            result = list(i)
+        name = f'(mega) {name}' 
+        result[1] = name
+        table.add_row(result)
+        print(color().color_string(result[2],table))
+        table.clear_rows()
+
 
     def  view_evolution_line(self,name):
         self.cursor.execute("select * FROM pokemon")
@@ -128,11 +143,13 @@ class View_Pokemon(P):
         print(table)              
 
     def view_stats(self,name):
+        self.cursor.execute("select * FROM stats")
+        self.dex = self.cursor.fetchall()
         column_names = self.attributes[8:]
         table = PrettyTable(column_names)
         for pokemon in self.dex:
-            if (name == pokemon[1]):
-                stats = pokemon[4:]
+            if (name == pokemon[2]):
+                stats = pokemon[3:9]
         table.add_row(stats)
         print('\n', table)
         table.clear_rows()
@@ -195,4 +212,4 @@ class color:
 
 if __name__ == '__main__':
     VP = View_Pokemon()
-    VP.main()
+    VP.view_stats('Bulbasaur')
