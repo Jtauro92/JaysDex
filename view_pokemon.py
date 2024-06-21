@@ -110,12 +110,13 @@ class View_Pokemon(P):
 
                 if pokemon[7] == 3:
                     pokemon2 = dex[pokemon[0]-2]
-                    table2.add_row(pokemon2[0:7])
-                    print(f'\n{pokemon[1]} evolves from: \n{color().color_string(pokemon[2],table2)}')
-                    pokemon3 = dex[(pokemon[0]-3)]
-                    table3.add_row(pokemon3[0:7])
-                    print(f'\n{pokemon2[1]} evolves from: \n{color().color_string(pokemon[2],table3)}')
-                    table2.clear_rows()
+                    if pokemon2 is not None:
+                        table2.add_row(pokemon2[0:7])
+                        print(f'\n{pokemon[1]} evolves from: \n{color().color_string(pokemon[2],table2)}')
+                        pokemon3 = dex[(pokemon[0]-3)]
+                        table3.add_row(pokemon3[0:7])
+                        print(f'\n{pokemon2[1]} evolves from: \n{color().color_string(pokemon[2],table3)}')
+                        table2.clear_rows()
 
     def pokemon_can_evolve(self,name):
         self.cursor.execute("select * FROM pokemon")
@@ -189,8 +190,6 @@ class View_Pokemon(P):
                 return
             self.view_mega_pokemon(self.name)
 
-
-        
 class color:
     def __init__(self):
         self.colors = [

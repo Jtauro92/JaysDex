@@ -41,4 +41,4 @@ class Pokemon:
                     self.ability_list.append(ability.strip())       
 
 if __name__ == '__main__': 
-    print(Pokemon().dex)
+    print(Pokemon().ability_list)
