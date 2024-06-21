@@ -60,79 +60,84 @@ class View_Pokemon(P):
         print('\n'+color().color_string(result[2],table))
         table.clear_rows()
 
-
     def  view_evolution_line(self,name):
         self.cursor.execute("select * FROM pokemon")
         dex = self.cursor.fetchall()
-        table2 = PrettyTable()
-        table2.header = False
-        table3 = PrettyTable()
-        table3.header = False
+        table2 = PrettyTable().header = False
+        table3 = PrettyTable().header = False
   
-        if name in ['Vaporeon','Jolteon','Flareon','Espeon','Umbreon','Leafeon','Glaceon','Sylveon']:
-            for pokemon in dex:
-                if pokemon[1] == "Eevee":
-                    table2.add_row(pokemon[0:7])
-                    print(f'\n{name} evolves into: \n{color().color_string(pokemon[2],table2)}')
-                    table2.clear_rows()
-        else:
-            for pokemon in dex:
-                if name == pokemon[1]:
-                    if pokemon[7] == 1:
-                        if name == "Eevee":
-                            for pokemon in dex:
-                                if pokemon[1] in ['Vaporeon','Jolteon','Flareon','Espeon','Umbreon','Leafeon','Glaceon','Sylveon']:
-                                    table2.add_row(pokemon[0:7])
-                                    print(f'\n{name} evolves from: \n{color().color_string(pokemon[2],table2)}')
-                                    table2.clear_rows()
-                        else:
-                            try:
-                                pokemon2 = dex[(pokemon[0])]
-                                if pokemon2[7] == 2:
-                                    table2.add_row(pokemon2[0:7])
-                                    print(f'\n{pokemon[1]} evolves into: \n{color().color_string(pokemon[2],table2)}')
-                                    table2.clear_rows()
-                                    pokemon3 = dex[(pokemon[0]+1)]
-                                    if pokemon3[7] == 3:
-                                        table3.add_row(pokemon3[0:7])
-                                        print(f'\n{pokemon2[1]} evolves into: \n{color().color_string(pokemon[2],table3)}')
-                                        table3.clear_rows()
-                                        break
-                                else:
-                                    print(f'\n{pokemon[1]} doesn\'t evolve.')   
-                            except IndexError:
-                                print(f'\n{pokemon[1]} doesn\'t evolve.')
-                                break
-                    
-                    if pokemon[7] == 2:
-                        if name in ['Vaporeon','Jolteon','Flareon','Espeon','Umbreon','Leafeon','Glaceon','Sylveon']:
-                            for pokemon in dex:
-                                if pokemon[1] == "Eevee":
-                                    table2.add_row(pokemon[0:7])
-                                    print(f'\n{name} evolves into: \n{color().color_string(pokemon[2],table2)}')
-                                    table2.clear_rows()
-                        else:
-                            pokemon2 = dex[(pokemon[0]-2)]
-                            table2.add_row(pokemon2[0:7])
-                            print(f'\n{pokemon[1]} evolves from: \n{color().color_string(pokemon[2],table2)}')
-                            pokemon3 = dex[(pokemon[0])]
-                            if pokemon3[7] == 3:
-                                table3.add_row(pokemon3[0:7])
-                                print(f'\n{pokemon[1]} evolves into: \n{color().color_string(pokemon[2],table3)}')
+        for pokemon in dex:
+            if name == pokemon[1]:
+                if pokemon[7] == 1:
+                    if name == "Eevee":
+                        for pokemon in dex:
+                            if pokemon[1] in ['Vaporeon','Jolteon','Flareon','Espeon','Umbreon','Leafeon','Glaceon','Sylveon']:
+                                table2.add_row(pokemon[0:7])
+                                print(f'\n{name} evolves from: \n{color().color_string(pokemon[2],table2)}')
                                 table2.clear_rows()
-                                table3.clear_rows()
-                                break
-
-                    if pokemon[7] == 3:
-                        pokemon2 = dex[pokemon[0]-2]
+                    else:
+                        try:
+                            pokemon2 = dex[(pokemon[0])]
+                            if pokemon2[7] == 2:
+                                table2.add_row(pokemon2[0:7])
+                                print(f'\n{pokemon[1]} evolves into: \n{color().color_string(pokemon[2],table2)}')
+                                table2.clear_rows()
+                                pokemon3 = dex[(pokemon[0]+1)]
+                                if pokemon3[7] == 3:
+                                    table3.add_row(pokemon3[0:7])
+                                    print(f'\n{pokemon2[1]} evolves into: \n{color().color_string(pokemon[2],table3)}')
+                                    table3.clear_rows()
+                        except IndexError:                       
+                            pass
+          
+                if pokemon[7] == 2:
+                    if name in ['Vaporeon','Jolteon','Flareon','Espeon','Umbreon','Leafeon','Glaceon','Sylveon']:
+                        for pokemon in dex:
+                            if pokemon[1] == "Eevee":
+                                table2.add_row(pokemon[0:7])
+                                print(f'\n{name} evolves into: \n{color().color_string(pokemon[2],table2)}')
+                                table2.clear_rows()
+                    else:
+                        pokemon2 = dex[(pokemon[0]-2)]
                         table2.add_row(pokemon2[0:7])
                         print(f'\n{pokemon[1]} evolves from: \n{color().color_string(pokemon[2],table2)}')
-                        pokemon3 = dex[(pokemon[0]-3)]
-                        table3.add_row(pokemon3[0:7])
-                        print(f'\n{pokemon2[1]} evolves from: \n{color().color_string(pokemon[2],table3)}')
-                        table2.clear_rows()
-                        table3.clear_rows()
-                        break
+                        pokemon3 = dex[(pokemon[0])]
+                        if pokemon3[7] == 3:
+                            table3.add_row(pokemon3[0:7])
+                            print(f'\n{pokemon[1]} evolves into: \n{color().color_string(pokemon[2],table3)}')
+                            table2.clear_rows()
+                            table3.clear_rows()
+
+                if pokemon[7] == 3:
+                    pokemon2 = dex[pokemon[0]-2]
+                    table2.add_row(pokemon2[0:7])
+                    print(f'\n{pokemon[1]} evolves from: \n{color().color_string(pokemon[2],table2)}')
+                    pokemon3 = dex[(pokemon[0]-3)]
+                    table3.add_row(pokemon3[0:7])
+                    print(f'\n{pokemon2[1]} evolves from: \n{color().color_string(pokemon[2],table3)}')
+                    table2.clear_rows()
+
+    def pokemon_can_evolve(self,name):
+        self.cursor.execute("select * FROM pokemon")
+        dex = self.cursor.fetchall()
+        for pokemon in dex:
+            if name == pokemon[1]:
+                if pokemon[7] == 1:
+                    if name == "Eevee":
+                         return True
+                    else:
+                        try:
+                            pokemon2 = dex[(pokemon[0])]
+                            if pokemon2[7] == 2:
+                                return True
+                        except IndexError:
+                            return False
+                elif pokemon[7] == 2:
+                    return True
+                elif pokemon[7] == 3:
+                    return True
+                else:
+                    return False
             
     def search_by_type(self,type):
         column_names = self.attributes[0:7]
@@ -167,12 +172,14 @@ class View_Pokemon(P):
             print(color().color_string('error','\nYou have chosen to quit!\n'))
             return
         self.view_stats(self.name)
-
-        proceed == input(f'\nView Evolution Line?')
-        if proceed.upper() == 'N':
-            print(color().color_string('error','\nYou have chosen to quit!\n'))
-            return
-        self.view_evolution_line(self.name)
+        if self.pokemon_can_evolve(self.name) == True:
+            proceed == input(f'\nView Evolution Line?')
+            if proceed.upper() == 'N':
+                print(color().color_string('error','\nYou have chosen to quit!\n'))
+                return
+            self.view_evolution_line(self.name)
+        else:
+            pass
         self.cursor.execute(f"select * FROM megas where p_name = '{self.name}';")
         result = self.cursor.fetchall()
         if len(result) > 0:
