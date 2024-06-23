@@ -212,31 +212,47 @@ class Add_MegaEvolution(Add_Pokemon):
         self.cursor.execute(f'''call insert_mega_data ('{number}','{name}','{type1}','{type2}','{ability}')''')
         print(C().color_string('success','\nMega Evolution added to Pokedex!\n'))
 
-    def show_Mega_Evo(self):
-        pass
+    def get_form_name(self,name):
+        print(f'{name} has multiple forms. Please select one of the following:\n')
+        print('1. Mega X\n2. Mega Y\n')
+        form = input('Enter form: ')
+        while form not in ['1','2']:
+            print(C().color_string('error','\nInvalid!\n'))
+            form = input('Enter form: ')
+        if form == '1':
+            return name + ' X'
+        if form == '2':
+            return name + ' Y'
 
     def main(self,name=None,number=None):
         while True:
-            if (number is not None) and (name is None):
-                self.number = number
+            if name in ['Charizard','Mewtwo']:
+                self.name = self.get_form_name(name)
                 for pokemon in self.dex:
-                    if number == int(pokemon[0]):
-                        self.name = pokemon[1]
-            else:         
-                while (name == None) and (number == None):
-                    name = VP().set_name(input('Enter Mega Pokemon Name or Number: '))
-                    if name == 'N':
-                        return
+                    if name == pokemon[1]:
+                        self.number = pokemon[0]
+            else:          
+                if (number is not None) and (name is None):
+                    self.number = number
+                    for pokemon in self.dex:
+                        if number == int(pokemon[0]):
+                            self.name = pokemon[1]
+                else:         
+                    while (name == None) and (number == None):
+                        name = VP().set_name(input('Enter Mega Pokemon Name or Number: '))
+                        if name == 'N':
+                            return
+                        else:
+                            self.name = name
+                            for pokemon in self.dex:
+                                if name == pokemon[1]:
+                                    self.number = pokemon[0]
                     else:
                         self.name = name
                         for pokemon in self.dex:
-                            if name == pokemon[1]:
-                                self.number = pokemon[0]
-                else:
-                    self.name = name
-                    for pokemon in self.dex:
-                            if name == pokemon[1]:
-                                self.number = pokemon[0]
+                                if name == pokemon[1]:
+                                    self.number = pokemon[0]
+                                
 
             self.type1 = self.set_Type(input('Enter Primary Type: '))
             if self.type1 is None:

@@ -1,4 +1,5 @@
 
+from email import header
 from Pokemon import Pokemon as P
 from prettytable import PrettyTable
 
@@ -63,8 +64,8 @@ class View_Pokemon(P):
     def  view_evolution_line(self,name):
         self.cursor.execute("select * FROM pokemon")
         dex = self.cursor.fetchall()
-        table2 = PrettyTable().header = False
-        table3 = PrettyTable().header = False
+        table2 = PrettyTable(header = False)
+        table3 = PrettyTable(header = False)
   
         for pokemon in dex:
             if name == pokemon[1]:
