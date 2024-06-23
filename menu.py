@@ -44,7 +44,6 @@ class Menu:
             height=total_height,
             expand=True,
         )
-        os.system('cls')
         self.console.print(panel)
         
     def main_menu(self):
@@ -75,7 +74,7 @@ class Menu:
                                    'VIEW POKEMON BY REGION'],
                             header='View Pokemon Menu')
         
-    def view_one_pokemon_menu(self,name='Charizard'):
+    def view_one_pokemon_menu(self,name='[blue]Charizard'):
         self.display_menu(options=['VIEW STATS',
                                    'VIEW EVOLUTION LINE',
                                    'VIEW MEGA EVOLUTION',
