@@ -74,6 +74,15 @@ class Menu:
                                    'VIEW POKEMON BY TYPE',
                                    'VIEW POKEMON BY REGION'],
                             header='View Pokemon Menu')
+        
+    def view_one_pokemon_menu(self,name='Charizard'):
+        self.display_menu(options=['VIEW STATS',
+                                   'VIEW EVOLUTION LINE',
+                                   'VIEW MEGA EVOLUTION',
+                                   'VIEW GIGANTAMAX FORM',
+                                   'VIEW REGIONAL VARIANT',
+                                   'VIEW FORM'],
+                            header=name)
 if __name__ == "__main__":
     menu = Menu()
-    menu.view_pokemon_menu()
+    menu.view_one_pokemon_menu()

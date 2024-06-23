@@ -167,12 +167,13 @@ class View_Pokemon(P):
             while self.name == None:
                 self.name = self.set_name(input("\nWhich Pokemon? (N to quit)\n").capitalize())
                 if self.name != 'N':
+                    self.clear()
                     self.view_one_pokemon(self.name)
                 else:
                     self.clear()
                     print(color().color_string('error','\nYou have chosen to quit!\n'))
                     return
-
+            
             proceed = input(f'\nView stats?').upper()
             if proceed.upper() == 'N':
                 print(color().color_string('error','\nYou have chosen to quit!\n'))
