@@ -163,34 +163,45 @@ class View_Pokemon(P):
         table.clear_rows()
 
     def main(self):
-        while self.name == None:
-            self.name = self.set_name(input("\nWhich Pokemon? (N to quit)\n").capitalize())
-            if self.name != 'N':
-                self.view_one_pokemon(self.name)
-            else:
-                return
+        while True:
+            while self.name == None:
+                self.name = self.set_name(input("\nWhich Pokemon? (N to quit)\n").capitalize())
+                if self.name != 'N':
+                    self.view_one_pokemon(self.name)
+                else:
+                    self.clear()
+                    print(color().color_string('error','\nYou have chosen to quit!\n'))
+                    return
 
-        proceed = input(f'\nView stats?').upper()
-        if proceed.upper() == 'N':
-            print(color().color_string('error','\nYou have chosen to quit!\n'))
-            return
-        self.view_stats(self.name)
-        if self.pokemon_can_evolve(self.name) == True:
-            proceed == input(f'\nView Evolution Line?')
+            proceed = input(f'\nView stats?').upper()
             if proceed.upper() == 'N':
                 print(color().color_string('error','\nYou have chosen to quit!\n'))
                 return
-            self.view_evolution_line(self.name)
-        else:
-            pass
-        self.cursor.execute(f"select * FROM megas where p_name like '{self.name}%';")
-        result = self.cursor.fetchall()
-        if len(result) > 0:
-            proceed = input(f'\nView Mega Pokemon?{color().color_string("error","\n(Press ENTER to continue or N to quit!)")}')
+            self.view_stats(self.name)
+            if self.pokemon_can_evolve(self.name) == True:
+                proceed == input(f'\nView Evolution Line?')
+                if proceed.upper() == 'N':
+                    print(color().color_string('error','\nYou have chosen to quit!\n'))
+                    return
+                self.view_evolution_line(self.name)
+            else:
+                pass
+            self.cursor.execute(f"select * FROM megas where p_name like '{self.name}%';")
+            result = self.cursor.fetchall()
+            if len(result) > 0:
+                proceed = input(f'\nView Mega Pokemon?{color().color_string("error","\n(Press ENTER to continue or N to quit!)")}')
+                if proceed.upper() == 'N':
+                    print(color().color_string('error','\nYou have chosen to quit!\n'))
+                    return
+                self.view_mega_pokemon(self.name)
+            proceed = input(f'\nView Another Pokemon?{color().color_string("error","\n(Press ENTER to continue or N to quit!)")}')
             if proceed.upper() == 'N':
                 print(color().color_string('error','\nYou have chosen to quit!\n'))
                 return
-            self.view_mega_pokemon(self.name)
+            else:
+                self.name = None
+                self.clear()
+            
 
 class color:
     def __init__(self):

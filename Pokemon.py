@@ -1,4 +1,5 @@
 import mysql.connector
+import os
 
 
 class Pokemon:
@@ -19,6 +20,7 @@ class Pokemon:
         self.dex = []
         self.ability_list = []
         self.load_attributes()
+        self.clear = lambda: os.system('cls')
 
     def connect_to_db(self,database='pokedex'):
         self.mydb = mysql.connector.connect(
