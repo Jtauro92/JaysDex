@@ -1,5 +1,4 @@
 
-from email import header
 from Pokemon import Pokemon as P
 from prettytable import PrettyTable
 
@@ -155,7 +154,8 @@ class View_Pokemon(P):
 
         column_names = self.attributes[8:]
         table = PrettyTable(column_names)
-        for pokemon in self.dex:
+        self.cursor.execute(f"select * FROM national_pokedex where P_Name = '{name}';")
+        for pokemon in self.cursor.fetchall():
             if (name == pokemon[1]):
                 stats = pokemon[4:]
         table.add_row(stats)
