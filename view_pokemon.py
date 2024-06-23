@@ -188,14 +188,19 @@ class View_Pokemon(P):
                 self.view_evolution_line(self.name)
             else:
                 pass
+            
             self.cursor.execute(f"select * FROM megas where p_name like '{self.name}%';")
             result = self.cursor.fetchall()
             if len(result) > 0:
-                proceed = input(f'\nView Mega Pokemon?{color().color_string("error","\n(Press ENTER to continue or N to quit!)")}')
-                if proceed.upper() == 'N':
+                print(f'\nView Mega Pokemon?{color().color_string("error","\n(Press ENTER to continue or N to quit!)")}')
+                m.kbhit()
+                proceed = m.getch()
+                if proceed.upper() == b'N':
+                    self.clear()
                     print(color().color_string('error','\nYou have chosen to quit!\n'))
                     return
                 self.view_mega_pokemon(self.name)
+                
             print(f'\nView Another Pokemon?{color().color_string("error","\n(Press ENTER to continue or N to quit!)")}')
             m.kbhit()
             proceed = m.getch()
