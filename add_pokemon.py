@@ -275,7 +275,13 @@ class Add_MegaEvolution(Add_Pokemon):
             proceed = input(f'\nAdd another Mega Pokémon?{C().color_string('error','\n(Press ENTER to continue)\n')}')
             if proceed.upper() == 'N':
                 return
-            
+
+class Add_Form(Add_Pokemon):
+    pass
+
+class Add_Gigantamax(Add_Pokemon):
+    pass
+
 if __name__ == '__main__':
     M = Add_Pokemon()
 
