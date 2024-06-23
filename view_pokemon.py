@@ -208,11 +208,10 @@ class View_Pokemon(P):
                 self.clear()
                 print(color().color_string('error','\nYou have chosen to quit!\n'))
                 return
-            else:
-                self.name = None
-                self.clear()
-            
 
+            self.name = None
+            self.clear()
+            
 class color:
     def __init__(self):
         self.colors = [

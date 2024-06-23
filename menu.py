@@ -1,23 +1,28 @@
 
-from cgitb import text
-from numpy import isin
+from numpy import pad
 from rich.console import Console
 from rich.panel import Panel
 from rich.box import DOUBLE, MINIMAL, SQUARE, ASCII, ASCII_DOUBLE_HEAD, DOUBLE,\
     HEAVY, HEAVY_HEAD, ROUNDED, SQUARE,SQUARE_DOUBLE_HEAD
-from rich.text import Text
-import os
 
 class Menu:
     def __init__(self):
         self.console = Console()
         
-    def display_menu(self,color='',header='Main Menu',options=[],
+    def display_menu(self,index=None,color='',header='Main Menu',options=[],
                      footer='[bold red](ENTER an Option)'):
-        option_list = []
-        if isinstance(options, list):
+        def option_generator(options, selected_index):
+            for i, option in enumerate(options, start=1):
+                if i - 1 != selected_index:
+                    yield f"{i}. {option}"
+                    
+        if index is not None:
+            option_list = '\n\n'.join(option_generator(options, index-1)) + '\n\n0. EXIT'
+        else:
             option_list = '\n\n'.join([f"{i}. {option}" for i, option in enumerate(options, start=1)]) + '\n\n0. EXIT'
-            
+                    
+                
+        
         base_height = 5  # Adjust based on your design
         # Dynamic height based on options (2 lines per option in this setup)
         dynamic_height = (len(options)+1) * 2
@@ -30,24 +35,25 @@ class Menu:
         dynamic_width = len(longest_string)
         # Total width
         total_width = base_width + dynamic_width
-        text = Text(option_list, justify='center')
         header =f'[u bold]{header}[/u bold]'
         
         panel = Panel(
-            text,
+            option_list,
             title=header,
             subtitle=footer,
             style=color,
-            padding=(2),
+            padding=(2,2,0,2),
             box=ROUNDED,
             width=total_width,
             height=total_height,
-            expand=True,
+            expand=False,
         )
+        self.console.clear()
         self.console.print(panel)
         
-    def main_menu(self):
-        self.display_menu(options=['ADD POKEMON',
+    def main_menu(self,selection = None):
+        self.display_menu(index= selection,
+                          options=['ADD POKEMON',
                                    'EDIT STATS ',
                                    'VIEW POKEMON'],
                             header='Main Menu')
@@ -74,8 +80,9 @@ class Menu:
                                    'VIEW POKEMON BY REGION'],
                             header='View Pokemon Menu')
         
-    def view_one_pokemon_menu(self,name='[blue]Charizard'):
-        self.display_menu(options=['VIEW STATS',
+    def view_one_pokemon_menu(self,selection = None,name='[blue]Charizard'):
+        self.display_menu(index = selection,
+                            options=['VIEW STATS',
                                    'VIEW EVOLUTION LINE',
                                    'VIEW MEGA EVOLUTION',
                                    'VIEW GIGANTAMAX FORM',
@@ -85,3 +92,7 @@ class Menu:
 if __name__ == "__main__":
     menu = Menu()
     menu.view_one_pokemon_menu()
+    index = int(input('Enter an option: '))
+    while True:
+        menu.view_one_pokemon_menu(selection=index)
+        index = int(input('Enter an option: '))

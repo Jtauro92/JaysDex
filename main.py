@@ -1,55 +1,49 @@
 from add_pokemon import Add_Pokemon as AP
 from add_stats import add_stats as AS
 from view_pokemon import View_Pokemon as VP
+from menu import Menu as M
+import msvcrt as MS
 print("Jason's Dexeditor ")
 
 
 class dex_menu:
     def __init__(self):
-        self.option = None
+        self.option = True
 
     def set_option(self,number= None):
         try:
             if 0 <= int(number) <= 4:
-                self.option = int(number)
+                return int(number)
             else:
                 print("Invalid Entry")
-                self.option = None
+                return  None
         except ValueError:
             print('\nInvalid Entry')
-            self.option = None
+            return None
 
-    def menu_display(self):
-        print('''\b
-            +=================+
-            + 1. Add Pokemon  +
-            + 2. Edit Stats   +
-            + 3. View Pokemon +
-            + 0. EXIT         +
-            +=================+
-            ''')
+    def main(self):
+        proceed = 0
+        while True:
+            M().main_menu(proceed)
+            MS.kbhit()
+            proceed = MS.getch()
         
-    def __main__(self):
-
-        while self.option == None:
-            self.menu_display()
-            self.set_option(input('Enter option: '))
-        
-            if self.option == 1:
+            if proceed == b'1':
                 AP().main()
-                self.option = None
+                proceed = int(proceed)
 
-            elif self.option == 2:
-                AS().add_stat()
-                self.option = None
+            elif proceed == b'2':
+                AS().add_stats()
+                self.option = True
 
-            elif self.option == 3:
+            elif proceed == b'3':
                 VP().main()
-                self.option = None
+                proceed = int(proceed)
 
-            elif self.option == 0:
+            if proceed == b'0':
                 print('\nThank you\n')
+                break
 
 
 if __name__ == '__main__':
-    dex_menu().__main__()
+    dex_menu().main()
