@@ -1,6 +1,5 @@
 from Pokemon import Pokemon as P
-from view_pokemon import color as C
-from view_pokemon import View_Pokemon as VP
+from view_pokemon import color as C, View_Pokemon as VP
 from add_stats import add_stats as AS
 
 class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
