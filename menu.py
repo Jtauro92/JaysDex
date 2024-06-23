@@ -29,10 +29,10 @@ class Menu:
         # Total height
         total_height = base_height + dynamic_height
         
-        base_width = 20  # Adjust based on your design
+        base_width = 40  # Adjust based on your design
         # Dynamic width based on options (2 lines per option in this setup)
         longest_string = max(options)
-        dynamic_width = len(longest_string)
+        dynamic_width = len(longest_string)+ 20
         # Total width
         total_width = base_width + dynamic_width
         header =f'[u bold]{header}[/u bold]'
@@ -42,7 +42,7 @@ class Menu:
             title=header,
             subtitle=footer,
             style=color,
-            padding=(2,2,0,2),
+            padding=(2,2,2,2),
             box=ROUNDED,
             width=total_width,
             height=total_height,
@@ -55,7 +55,7 @@ class Menu:
         self.display_menu(index= selection,
                           options=['ADD POKEMON',
                                    'EDIT STATS ',
-                                   'VIEW POKEMON'],
+                                   'VIEW POKEMON  '],
                             header='Main Menu')
                                     
         
