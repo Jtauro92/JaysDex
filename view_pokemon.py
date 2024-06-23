@@ -48,17 +48,18 @@ class View_Pokemon(P):
                 table.clear_rows()
     
     def view_mega_pokemon(self, name=None):
-        column_names = self.attributes[0:5]
+        column_names = self.attributes[1:5]
         table = PrettyTable(column_names)
-        self.cursor.execute(f'''select pokemon_number,p_name, m_type1, m_type2,m_ability1 from megas
-                            where p_name = '{name}';''')
+        self.cursor.execute(f'''select p_name, m_type1, m_type2,m_ability1 from megas
+                            where p_name like '{name}%';''')
         result = self.cursor.fetchall()
+
         for i in result:
             result = list(i)
-        name = f'(mega) {name}' 
-        result[1] = name
-        table.add_row(result)
-        print('\n'+color().color_string(result[2],table))
+            name = f'(mega) {result[0]}' 
+            result[0] = name
+            table.add_row(result)
+        print(f'\n{color().color_string(result[1],table)}')
         table.clear_rows()
 
     def  view_evolution_line(self,name):
@@ -90,7 +91,7 @@ class View_Pokemon(P):
                                     table3.clear_rows()
                         except IndexError:                       
                             pass
-          
+                        
                 if pokemon[7] == 2:
                     if name in ['Vaporeon','Jolteon','Flareon','Espeon','Umbreon','Leafeon','Glaceon','Sylveon']:
                         for pokemon in dex:
@@ -182,7 +183,7 @@ class View_Pokemon(P):
             self.view_evolution_line(self.name)
         else:
             pass
-        self.cursor.execute(f"select * FROM megas where p_name = '{self.name}';")
+        self.cursor.execute(f"select * FROM megas where p_name like '{self.name}%';")
         result = self.cursor.fetchall()
         if len(result) > 0:
             proceed = input(f'\nView Mega Pokemon?{color().color_string("error","\n(Press ENTER to continue or N to quit!)")}')
