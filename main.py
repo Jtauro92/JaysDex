@@ -8,8 +8,7 @@ print("Jason's Dexeditor ")
 
 class dex_menu:
     def __init__(self):
-        self.option = True
-
+        pass
     def set_option(self,number= None):
         try:
             if 0 <= int(number) <= 4:
