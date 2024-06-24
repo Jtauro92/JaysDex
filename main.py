@@ -21,6 +21,7 @@ class dex_menu:
             return None
     
     def main(self):
+        while True:
             proceed = 0
             M().main_menu()
             MS.kbhit()
