@@ -179,7 +179,8 @@ class View_Pokemon(P):
             if proceed.upper() == 'N':
                 print(color().color_string('error','\nYou have chosen to quit!\n'))
                 return
-            self.view_stats(self.name)
+            else:
+                self.view_stats(self.name)
             if self.pokemon_can_evolve(self.name) == True:
                 proceed == input(f'\nView Evolution Line?')
                 if proceed.upper() == 'N':

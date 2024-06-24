@@ -49,7 +49,7 @@ class add_stats(P):
             print(f'''\n{pokemon}'s updated stats''')
             self.view_stats(pokemon)
 
-    def add_stats(self):
+    def main(self):
         self.name = self.set_name(input('Enter Pokemon Name: '))
         if self.name == 'N':
             return
@@ -58,4 +58,4 @@ class add_stats(P):
 
 
 if __name__ == '__main__':
-    add_stats().update_stat('Mew')
+    add_stats().main()
