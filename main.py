@@ -35,17 +35,14 @@ class dex_menu:
     def main(self):
         M().main_menu()
         MS.kbhit()
-        selection = MS.getch()
-        selection = self.set_option(selection)
+        selection = self.set_option(MS.getch())
         while selection != b'0':
             version = self.processes(selection)
             M().main_menu(int(selection))
             MS.kbhit()
-            selection = MS.getch()
-            selection = self.set_option(selection,version)
-        rprint('[bold green]\nGoodbye![/bold green]')
-
-
+            selection = self.set_option(MS.getch(),version)
+        console.clear()
+        rprint('[bold green]Goodbye![/bold green]')
   
 if __name__ == '__main__':
 
