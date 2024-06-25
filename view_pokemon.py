@@ -1,7 +1,11 @@
 
 from Pokemon import Pokemon as P
 from prettytable import PrettyTable
+from menu import View_Pokemon_Display as VPD, Menu as MM
 import msvcrt as m
+from rich.console import Console as console
+prompt = VPD().prompt
+c = console()
 
 class View_Pokemon(P):
     def __init__(self):
@@ -12,14 +16,14 @@ class View_Pokemon(P):
         if name.isnumeric() == False:
             name = name.title()
             if name == 'N':
-                print(color().color_string('error','\nYou have chosen to quit!'))
                 return name
             else:
                 for pokemon in self.dex:
                     if name == pokemon[1]:
                         return name
                 else:
-                    print(color().color_string('error','\nThis Pokemon doesn\'t exist!'))
+                    prompt(15,text='[bold red]This pokemon doesn\'t exist![/bold red]')
+
                     
         else:
             name = int(name)
@@ -168,12 +172,11 @@ class View_Pokemon(P):
             while self.name == None:
                 self.name = self.set_name(input("\nWhich Pokemon? (N to quit)\n").capitalize())
                 if self.name != 'N':
-                    self.clear()
                     self.view_one_pokemon(self.name)
                 else:
                     self.clear()
                     print(color().color_string('error','\nYou have chosen to quit!\n'))
-                    return
+                    self.name = None
             
             proceed = input(f'\nView stats?').upper()
             if proceed.upper() == 'N':
@@ -185,7 +188,7 @@ class View_Pokemon(P):
                 proceed == input(f'\nView Evolution Line?')
                 if proceed.upper() == 'N':
                     print(color().color_string('error','\nYou have chosen to quit!\n'))
-                    return
+                    self.name = None
                 self.view_evolution_line(self.name)
             else:
                 pass
@@ -212,6 +215,19 @@ class View_Pokemon(P):
 
             self.name = None
             self.clear()
+        
+    def new_main(self):
+        prompt(19,text='[bold green]View Which Pokemon?[/bold green]')
+        self.name = self.set_name(input('\n\t\t\t'))
+        if self.name == 'N':
+            print(color().color_string('error','\nYou have chosen to quit!\n'))
+            return
+        else:
+            for pokemon in self.dex:
+                if self.name == pokemon[1]:
+                    type_color = pokemon[2]
+            VPD().main_frame(MM().view_one_pokemon_menu(color().color_rich(type_color,self.name)))
+
             
 class color:
     def __init__(self):
@@ -242,13 +258,40 @@ class color:
         ]
         self.reset = '\033[0m'
 
+        self.rich_colors = [
+            ('red', 'fire'),
+            ('blue', 'water'),
+            ('green', 'grass'),
+            ('purple', 'poison'),
+            ('yellow', 'flying'),
+            ('brown', 'bug'),
+            ('white', 'normal'),
+            ('yellow', 'electric'),
+            ('brown', 'ground'),
+            ('brown', 'rock'),
+            ('brown', 'fighting'),
+            ('purple', 'psychic'),
+            ('white', 'ghost'),
+            ('blue', 'ice'),
+            ('blue', 'dragon'),
+            ('black', 'dark'),
+            ('grey', 'steel'),
+            ('pink', 'fairy')
+        ]
     def color_string(self,type,string):
         type = type.lower()
         for color in self.colors:
             if type == color[1]:
                 return f'{color[0]}{string}{self.reset}'
         return string
+    
+    def color_rich(self,type,string):
+        type = type.lower()
+        for color in self.rich_colors:
+            if type == color[1]:
+                return f'[bold {color[0]}]{string}'
+        return string
 
 if __name__ == '__main__':
     VP = View_Pokemon()
-    VP.main()
+    VP.new_main()
