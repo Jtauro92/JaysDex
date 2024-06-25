@@ -5,8 +5,8 @@ from menu import Menu as M
 import msvcrt as MS
 from rich.console import Console 
 from rich import print as rprint
-
 clear_console = Console().clear
+
 def minput():
         MS.kbhit()
         return MS.getch()
@@ -19,9 +19,9 @@ class dex_menu:
     
     def set_option(self,number= None,version=None):
         while (number not in [b'0',b'1',b'2',b'3']) or (int(number) == version):
-            rprint('\n[bold red]\nInvalid Entry. Try Again![/bold red]')
+            rprint('\n[bold red]Invalid Entry. Try Again![/bold red]')
             number = minput()
-            print("\033[A\033[2K\033[A", end='')
+            print("\033[A\033[2K\033[A", end='', flush=True)
         return number
         
     def processes(self,hit):
