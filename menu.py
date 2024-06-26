@@ -1,3 +1,5 @@
+from tkinter import FALSE
+import rich
 from rich.console import Console
 from rich.panel import Panel
 from rich.box import DOUBLE, MINIMAL, SQUARE, ASCII, ASCII_DOUBLE_HEAD,\
@@ -44,7 +46,7 @@ class Menu:
             box=ROUNDED,
             width=total_width,
             height=total_height,
-            expand=False,
+            expand=FALSE,
         )
         self.console.clear()
         self.console.print(panel)
@@ -99,7 +101,7 @@ class View_Pokemon_Display:
                    line = HEAVY,
                    panel_color = 'green',
                    height = 25,
-                   padding = (2,2,1,11),
+                   padding = (2,10,1,31),
                    subtitle = '[bold red](N to Quit)[/bold red]'):
         header =f'[u bold white]{title}[/u bold white]'
         
@@ -110,16 +112,21 @@ class View_Pokemon_Display:
             box=line,
             border_style=panel_color,
             padding = padding,
-            width=60,
+            width=100,
             height=height,
             expand=True
         )
         console.clear()
         console.print(panel)
         
-    def prompt(self,padding=23, text=''):
-        self.main_frame(height=5,text=text,padding=(1,2,1,padding),
-                        line = HEAVY_HEAD)
+    def prompt(self, string='',color_name=None):
+        color_map = {'error': 'bold red'}
+        rich_color = color_map.get(color_name, 'white')
+        self.main_frame(height=5,
+                        text=Text(string,
+                                  justify = 'center',
+                                  style = rich_color),
+                        line = HEAVY_HEAD,padding=(1,11))
 if __name__ == "__main__":
-    View_Pokemon_Display().prompt()
+    View_Pokemon_Display().main_frame()
     input('\n\t\t\t')

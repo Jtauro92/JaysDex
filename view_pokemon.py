@@ -22,7 +22,7 @@ class View_Pokemon(P):
                     if name == pokemon[1]:
                         return name
                 else:
-                    prompt(15,text='[bold red]This pokemon doesn\'t exist![/bold red]')
+                    prompt('This pokemon doesn\'t exist! Try again!','error')
 
                     
         else:
@@ -217,7 +217,7 @@ class View_Pokemon(P):
             self.clear()
         
     def new_main(self):
-        prompt(19,text='[bold green]View Which Pokemon?[/bold green]')
+        prompt('Which Pokemon?')
         self.name = self.set_name(input('\n\t\t\t'))
         if self.name == 'N':
             print(color().color_string('error','\nYou have chosen to quit!\n'))
@@ -264,7 +264,7 @@ class color:
             ('green', 'grass'),
             ('purple', 'poison'),
             ('yellow', 'flying'),
-            ('brown', 'bug'),
+            ('dark_olive_green3', 'bug'),
             ('white', 'normal'),
             ('yellow', 'electric'),
             ('brown', 'ground'),
