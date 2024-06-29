@@ -1,4 +1,3 @@
-from re import L
 from rich.console import Console
 from rich.panel import Panel
 from rich.box import DOUBLE, MINIMAL, SQUARE, ASCII, ASCII_DOUBLE_HEAD,\
@@ -15,7 +14,11 @@ class Menu:
     def __init__(self):
         self.console = Console()
         
-    def display_menu(self,index=None,color='',header='Main Menu',options=[],
+    def display_menu(self,index=None,
+                     color='white',
+                     header='Main Menu',
+                     options=[],
+                     exit_statement='0. EXIT',
                      footer='[bold red](ENTER an Option)'):
         def option_generator(options, selected_index):
             for i, option in enumerate(options, start=1):
@@ -25,7 +28,7 @@ class Menu:
         if index is not None:
             option_list = '\n\n'.join(option_generator(options, index-1)) + '\n\n0. EXIT'
         else:
-            option_list = '\n\n'.join([f"{i}. {option}" for i, option in enumerate(options, start=1)]) + '\n\n0. EXIT'
+            option_list = '\n\n'.join([f"{i}. {option}" for i, option in enumerate(options, start=1)]) + f'\n\n{exit_statement}'
                     
         base_height = 5  # Adjust based on your design
         # Dynamic height based on options (2 lines per option in this setup)
@@ -48,7 +51,6 @@ class Menu:
             padding=(2,3,2,3),
             box=ROUNDED,
             width=total_width,
-            height=total_height,
             expand=False
         )
         return panel

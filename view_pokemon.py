@@ -5,10 +5,20 @@ from rich.table import Table
 from rich.text import Text
 from rich.columns import Columns as C
 
+
 class View_Pokemon(Pokemon):
     def __init__(self):
         Pokemon.__init__(self)
         self.name = None
+        self.color = color().color_rich
+        self.color_map = color().color_map
+        self.job_map = {b'1':self.view_stats,
+                        b'2':'',
+                        b'3':'',
+                        b'4':'',
+                        b'5':'',
+                        b'6':'',}
+        self.options = ['VIEW STATS']
         
     def set_name(self,name):
         if name.isnumeric() == False:
@@ -54,11 +64,11 @@ class View_Pokemon(Pokemon):
         for pokemon in dex:
             if (entry == pokemon[1]):
                 name,number = pokemon[1],pokemon[0]
+                rich_color = self.color_map.get(pokemon[2].lower(), 'white')
                 row = [str(attr) for attr in pokemon[2:7]]
             
-        table = Table(title=Text(f'#{number:04} {name}\n',
-                      style='bold red'), 
-                      title_style='bold red',
+        table = Table(title=f'#{number:04} {name}\n',
+                      title_style=rich_color, 
                       padding=(0,1,0,1),
                       collapse_padding=False,
                       expand=True,
@@ -144,8 +154,7 @@ class View_Pokemon(Pokemon):
                         table2.clear_rows()
 
     def pokemon_can_evolve(self,name):
-        self.cursor.execute("select * FROM pokemon")
-        dex = self.cursor.fetchall()
+        dex = self.get_db_data('select * FROM pokemon')
         for pokemon in dex:
             if name == pokemon[1]:
                 if pokemon[7] == 1:
@@ -174,7 +183,7 @@ class View_Pokemon(Pokemon):
                 table.add_row(pokemon[:7])
         print(table)              
 
-    def view_stats(self,name):
+    def stat_table(self,name):
         stats = self.get_db_data(f"select hp,atk,def,sp_atk,sp_def,speed FROM stats where P_Name = '{name}';")
         stats = [str(stat) for stat in stats[0]]
         table = Table()
@@ -182,6 +191,19 @@ class View_Pokemon(Pokemon):
             table.add_column(column_names)
         table.add_row(*stats)
         return table
+
+    def view_stats(self):
+        columns = C([self.stat_table(self.name),
+                     M().view_one_pokemon_menu(self.name,selection=1)],
+                    title='Stats',
+                    expand=True,
+                    align='center',
+                    padding=(2,0))
+        view_stats = (C([self.view_one_pokemon(self.name),columns],
+                        expand=True,
+                        align='center',
+                        padding=(2,0)))
+        cprint(VPD().main_frame(view_stats),justify='center')
 
     def main(self):
         while True:
@@ -233,6 +255,7 @@ class View_Pokemon(Pokemon):
             clear_console
             
     def new_main(self):
+        tick = 1
         clear_console()
         cprint(prompt('Which Pokemon?'),justify='center')
         self.name = self.set_name(input())
@@ -242,31 +265,35 @@ class View_Pokemon(Pokemon):
             return
         else:
             clear_console()
-            view_one_pokemon = (C([self.view_one_pokemon(self.name),M().view_one_pokemon_menu(self.name)],
+            if self.pokemon_can_evolve(self.name) == True:
+                key_to_update = tick+1
+                self.options.append('VIEW EVOLUTION LINE')
+                for key in self.job_map:
+                    if key == b'key_to_update':
+                        self.job_map[key] = self.view_evolution_line
+                    
+            view_one_pokemon = (C([
+                                    self.view_one_pokemon(self.name),
+                                    M().view_one_pokemon_menu(self.name,options=self.options)
+                                   ],
                                   expand=True,
                                   align='center',
-                                padding=(1,0,0,0)))
+                                padding=(1,0)))
             cprint(VPD().main_frame(view_one_pokemon),justify='center')
             selection = minput()
             while True:
-                if selection == b'1':
-                    clear_console()
-                    columns = C([self.view_stats(self.name),
-                                    M().view_one_pokemon_menu(self.name,selection=1)],
-                                title='Stats',
-                            expand=True,
-                            align='center',
-                            padding=(1,0))
-                    view_stats = (C([self.view_one_pokemon(self.name),columns],
-                                    expand=True,
-                                    align='center',
-                                    padding=(2,0)))
-                    cprint(VPD().main_frame(view_stats),justify='center')
-                    minput()
                 if selection == b'0':
-                    clear_console()
-                    cprint(color().color_rich('You have chosen to quit!', 'error'))
-                    return
+                        clear_console()
+                        cprint(color().color_rich('Goodbye!', 'success'))
+                        return
+
+                for key in self.job_map:
+                    if selection == key:
+                        clear_console()
+                        self.job_map[selection]()
+                        selection = minput()
+
+
                     
             
         
@@ -308,19 +335,19 @@ class color:
             'grass': 'green',
             'poison': 'purple',
             'flying': 'yellow',
-            'bug': 'dark_olive_green3',
+            'bug': 'dark_green',
             'normal': 'white',
             'electric': 'yellow',
             'ground': 'brown',
-            'rock': 'brown',
-            'fighting': 'brown',
-            'psychic': 'purple',
-            'ghost': 'white',
-            'ice': 'blue',
-            'dragon': 'blue',
+            'rock': 'gray',
+            'fighting': 'dark_red',
+            'psychic': 'magenta',
+            'ghost': 'light_gray',
+            'ice': 'cyan',
+            'dragon': 'dark_blue',
             'dark': 'black',
-            'steel': 'grey',
-            'fairy': 'pink',
+            'steel': 'light_gray',
+            'fairy': 'light_magenta',
             'error': 'bold red',
             'success': 'bold green',
         }
