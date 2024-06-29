@@ -5,7 +5,11 @@ from menu import Menu as M
 import msvcrt as MS
 from rich.console import Console 
 from rich import print as rprint
+
+
 clear_console = Console().clear
+cprint = Console().print
+
 
 def minput():
         MS.kbhit()
@@ -32,11 +36,14 @@ class dex_menu:
         return int(job[0])
 
     def main(self):
-        M().main_menu()
+        main_menu = M().main_menu
+        clear_console()
+        cprint(main_menu())
         selection = self.set_option(minput())
         while selection != b'0':
             process_num = self.processes(selection)
-            M().main_menu(int(selection))
+            clear_console()
+            cprint(main_menu(int(selection)))
             selection = self.set_option(minput(),process_num)
         clear_console()
         rprint('[bold green]Goodbye![/bold green]')

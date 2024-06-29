@@ -1,17 +1,15 @@
 
-from Pokemon import Pokemon as P
-from prettytable import PrettyTable
-from menu import View_Pokemon_Display as VPD, Menu as MM
-import msvcrt as m
-from rich.console import Console as console
-prompt = VPD().prompt
-c = console()
+from Pokemon import * 
+from menu import View_Pokemon_Display as VPD, Menu as M
+from rich.table import Table
+from rich.text import Text
+from rich.columns import Columns as C
 
-class View_Pokemon(P):
+class View_Pokemon(Pokemon):
     def __init__(self):
-        P.__init__(self)
+        Pokemon.__init__(self)
         self.name = None
-
+        
     def set_name(self,name):
         if name.isnumeric() == False:
             name = name.title()
@@ -40,7 +38,7 @@ class View_Pokemon(P):
             table.add_row(pokemon[0:4])
         print(table)
 
-    def view_one_pokemon(self, name=None):
+   # def view_one_pokemon(self, name=None):
         self.cursor.execute("select * FROM pokemon")
         dex = self.cursor.fetchall()
         column_names = self.attributes[0:7]
@@ -50,7 +48,28 @@ class View_Pokemon(P):
                 table.add_row(pokemon[:7])
                 print(color().color_string(pokemon[2],table))
                 table.clear_rows()
-    
+   
+    def view_one_pokemon(self, entry=None):
+        dex = get_db_data("select * FROM pokemon")
+        for pokemon in dex:
+            if (entry == pokemon[1]):
+                name,number = pokemon[1],pokemon[0]
+                row = [str(attr) for attr in pokemon[2:7]]
+            
+        table = Table(title=Text(f'#{number:04} {name}\n',
+                      style='bold red'), 
+                      title_style='bold red',
+                      padding=(0,1,0,1),
+                      collapse_padding=False,
+                      expand=True,
+                      show_edge=False
+                    )
+        
+        for column_name in self.attributes[2:7]:
+            table.add_column(column_name)
+        table.add_row(*row)
+        return table
+        
     def view_mega_pokemon(self, name=None):
         column_names = self.attributes[1:5]
         table = PrettyTable(column_names)
@@ -156,16 +175,13 @@ class View_Pokemon(P):
         print(table)              
 
     def view_stats(self,name):
-
-        column_names = self.attributes[8:]
-        table = PrettyTable(column_names)
-        self.cursor.execute(f"select * FROM national_pokedex where P_Name = '{name}';")
-        for pokemon in self.cursor.fetchall():
-            if (name == pokemon[1]):
-                stats = pokemon[4:]
-        table.add_row(stats)
-        print('\n', table)
-        table.clear_rows()
+        stats = self.get_db_data(f"select hp,atk,def,sp_atk,sp_def,speed FROM stats where P_Name = '{name}';")
+        stats = [str(stat) for stat in stats[0]]
+        table = Table()
+        for column_names in self.attributes[8:]:
+            table.add_column(column_names)
+        table.add_row(*stats)
+        return table
 
     def main(self):
         while True:
@@ -214,19 +230,47 @@ class View_Pokemon(P):
                 return
 
             self.name = None
-            self.clear()
-        
+            clear_console
+            
     def new_main(self):
-        prompt('Which Pokemon?')
-        self.name = self.set_name(input('\n\t\t\t'))
-        if self.name == 'N':
-            print(color().color_string('error','\nYou have chosen to quit!\n'))
+        clear_console()
+        cprint(prompt('Which Pokemon?'),justify='center')
+        self.name = self.set_name(input())
+        if self.name.upper() == 'N':
+            clear_console()
+            cprint(color().color_rich('You have chosen to quit!', 'error'))
             return
         else:
-            for pokemon in self.dex:
-                if self.name == pokemon[1]:
-                    type_color = pokemon[2]
-            VPD().main_frame(MM().view_one_pokemon_menu(color().color_rich(type_color,self.name)))
+            clear_console()
+            view_one_pokemon = (C([self.view_one_pokemon(self.name),M().view_one_pokemon_menu(self.name)],
+                                  expand=True,
+                                  align='center',
+                                padding=(1,0,0,0)))
+            cprint(VPD().main_frame(view_one_pokemon),justify='center')
+            selection = minput()
+            while True:
+                if selection == b'1':
+                    clear_console()
+                    columns = C([self.view_stats(self.name),
+                                    M().view_one_pokemon_menu(self.name,selection=1)],
+                                title='Stats',
+                            expand=True,
+                            align='center',
+                            padding=(1,0))
+                    view_stats = (C([self.view_one_pokemon(self.name),columns],
+                                    expand=True,
+                                    align='center',
+                                    padding=(2,0)))
+                    cprint(VPD().main_frame(view_stats),justify='center')
+                    minput()
+                if selection == b'0':
+                    clear_console()
+                    cprint(color().color_rich('You have chosen to quit!', 'error'))
+                    return
+                    
+            
+        
+
 
             
 class color:
@@ -258,26 +302,29 @@ class color:
         ]
         self.reset = '\033[0m'
 
-        self.rich_colors = [
-            ('red', 'fire'),
-            ('blue', 'water'),
-            ('green', 'grass'),
-            ('purple', 'poison'),
-            ('yellow', 'flying'),
-            ('dark_olive_green3', 'bug'),
-            ('white', 'normal'),
-            ('yellow', 'electric'),
-            ('brown', 'ground'),
-            ('brown', 'rock'),
-            ('brown', 'fighting'),
-            ('purple', 'psychic'),
-            ('white', 'ghost'),
-            ('blue', 'ice'),
-            ('blue', 'dragon'),
-            ('black', 'dark'),
-            ('grey', 'steel'),
-            ('pink', 'fairy')
-        ]
+        self.color_map = {
+            'fire': 'red',
+            'water': 'blue',
+            'grass': 'green',
+            'poison': 'purple',
+            'flying': 'yellow',
+            'bug': 'dark_olive_green3',
+            'normal': 'white',
+            'electric': 'yellow',
+            'ground': 'brown',
+            'rock': 'brown',
+            'fighting': 'brown',
+            'psychic': 'purple',
+            'ghost': 'white',
+            'ice': 'blue',
+            'dragon': 'blue',
+            'dark': 'black',
+            'steel': 'grey',
+            'fairy': 'pink',
+            'error': 'bold red',
+            'success': 'bold green',
+        }
+        
     def color_string(self,type,string):
         type = type.lower()
         for color in self.colors:
@@ -285,13 +332,10 @@ class color:
                 return f'{color[0]}{string}{self.reset}'
         return string
     
-    def color_rich(self,type,string):
+    def color_rich(self,string,type):
         type = type.lower()
-        for color in self.rich_colors:
-            if type == color[1]:
-                return f'[bold {color[0]}]{string}'
-        return string
+        rich_color = self.color_map.get(type, 'white')
+        return Text(string,style=rich_color)
 
 if __name__ == '__main__':
-    VP = View_Pokemon()
-    VP.new_main()
+    View_Pokemon().new_main()
