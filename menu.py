@@ -20,37 +20,28 @@ class Menu:
                      options=[],
                      exit_statement='0. EXIT',
                      footer='[bold red](ENTER an Option)'):
+        
         def option_generator(options, selected_index):
             for i, option in enumerate(options, start=1):
                 if i - 1 != selected_index:
                     yield f"{i}. {option}"
                     
-        if index is not None:
-            option_list = '\n\n'.join(option_generator(options, index-1)) + '\n\n0. EXIT'
+                    
+        if (len(options) == 1) and (index is not None):
+            option_list = f'{exit_statement} '
+        elif (len(options) > 1) and (index is not None):
+            option_list = '\n\n'.join(option_generator(options, index-1)) + f'\n\n{exit_statement}'
         else:
             option_list = '\n\n'.join([f"{i}. {option}" for i, option in enumerate(options, start=1)]) + f'\n\n{exit_statement}'
-                    
-        base_height = 5  # Adjust based on your design
-        # Dynamic height based on options (2 lines per option in this setup)
-        dynamic_height = (len(options)+1) * 2
-        # Total height
-        total_height = base_height + dynamic_height
-        
-        base_width = 15  # Adjust based on your design
-        # Dynamic width based on options (2 lines per option in this setup)
-        longest_string = max(options)
-        dynamic_width = len(longest_string)+ 20
-        # Total width
-        total_width = base_width + dynamic_width
+
         
         panel = Panel(
             option_list,
             title=header,
             subtitle=footer,
             style=color,
-            padding=(2,3,2,3),
+            padding=(2,4,2,4),
             box=ROUNDED,
-            width=total_width,
             expand=False
         )
         return panel
@@ -100,7 +91,8 @@ class Menu:
         return self.display_menu(index = selection,
                                  options = options,
                                  header = name,
-                                 footer = footer)
+                                 footer = footer,
+                                 exit_statement='9. SWITCH POKEMON\n\n0. EXIT',)
 
     
 

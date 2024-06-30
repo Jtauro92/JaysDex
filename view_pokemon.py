@@ -4,20 +4,21 @@ from menu import View_Pokemon_Display as VPD, Menu as M
 from rich.table import Table
 from rich.text import Text
 from rich.columns import Columns as C
+from rich.prompt import Prompt
+cinput = console().input
+ask = Prompt.ask
 
 
 class View_Pokemon(Pokemon):
     def __init__(self):
         Pokemon.__init__(self)
+        self.main_frame = VPD().main_frame
         self.name = None
         self.color = color().color_rich
         self.color_map = color().color_map
-        self.job_map = {b'1':self.view_stats,
-                        b'2':'',
-                        b'3':'',
-                        b'4':'',
-                        b'5':'',
-                        b'6':'',}
+        self.job_map = {
+                        b'1':self.view_stats,
+                        }
         self.options = ['VIEW STATS']
         
     def set_name(self,name):
@@ -41,6 +42,13 @@ class View_Pokemon(Pokemon):
             else:
                 print(color().color_string('error','\nThis Pokemon doesn\'t exist!'))
         
+    def set_option(self,number= None,version=None):
+            while (number not in self.job_map) and (number not in [b'9',b'0']) or(int(number) == version) :
+                cprint('\n[bold red]Invalid Entry. Try Again![/bold red]')
+                number = minput()
+                print("\033[A\033[2K\033[A", end='', flush=True)
+            return number    
+        
     def view_all_pokemon(self):
         column_names = self.attributes[0:4]
         table = PrettyTable(column_names,align='c')
@@ -59,7 +67,7 @@ class View_Pokemon(Pokemon):
                 print(color().color_string(pokemon[2],table))
                 table.clear_rows()
    
-    def view_one_pokemon(self, entry=None):
+    def pokemon_data(self, entry=None):
         dex = get_db_data("select * FROM pokemon")
         for pokemon in dex:
             if (entry == pokemon[1]):
@@ -82,10 +90,9 @@ class View_Pokemon(Pokemon):
         
     def view_mega_pokemon(self, name=None):
         column_names = self.attributes[1:5]
-        table = PrettyTable(column_names)
-        self.cursor.execute(f'''select p_name, m_type1, m_type2,m_ability1 from megas
+        table = Table(headers=column_names)
+        result  = self.get_db_data(f'''select p_name, m_type1, m_type2,m_ability1 from megas
                             where p_name like '{name}%';''')
-        result = self.cursor.fetchall()
 
         for i in result:
             result = list(i)
@@ -98,8 +105,8 @@ class View_Pokemon(Pokemon):
     def  view_evolution_line(self,name):
         self.cursor.execute("select * FROM pokemon")
         dex = self.cursor.fetchall()
-        table2 = PrettyTable(header = False)
-        table3 = PrettyTable(header = False)
+        table2 = Table(header = False)
+        table3 = Table(header = False)
   
         for pokemon in dex:
             if name == pokemon[1]:
@@ -192,18 +199,18 @@ class View_Pokemon(Pokemon):
         table.add_row(*stats)
         return table
 
-    def view_stats(self):
+    def view_stats(self,selection,options):
         columns = C([self.stat_table(self.name),
-                     M().view_one_pokemon_menu(self.name,selection=1)],
+                     M().view_one_pokemon_menu(self.name,selection=selection,options=options)],
                     title='Stats',
                     expand=True,
                     align='center',
                     padding=(2,0))
-        view_stats = (C([self.view_one_pokemon(self.name),columns],
+        finished_columns = (C([self.pokemon_data(self.name),columns],
                         expand=True,
                         align='center',
                         padding=(2,0)))
-        cprint(VPD().main_frame(view_stats),justify='center')
+        cprint(self.main_frame(finished_columns),justify='center')
 
     def main(self):
         while True:
@@ -255,43 +262,52 @@ class View_Pokemon(Pokemon):
             clear_console
             
     def new_main(self):
-        tick = 1
-        clear_console()
-        cprint(prompt('Which Pokemon?'),justify='center')
-        self.name = self.set_name(input())
-        if self.name.upper() == 'N':
+        while True:
+            options = ['VIEW STATS']
+            key = ''
+            tick = 1
             clear_console()
-            cprint(color().color_rich('You have chosen to quit!', 'error'))
-            return
-        else:
-            clear_console()
-            if self.pokemon_can_evolve(self.name) == True:
-                key_to_update = tick+1
-                self.options.append('VIEW EVOLUTION LINE')
-                for key in self.job_map:
-                    if key == b'key_to_update':
-                        self.job_map[key] = self.view_evolution_line
-                    
-            view_one_pokemon = (C([
-                                    self.view_one_pokemon(self.name),
-                                    M().view_one_pokemon_menu(self.name,options=self.options)
-                                   ],
-                                  expand=True,
-                                  align='center',
-                                padding=(1,0)))
-            cprint(VPD().main_frame(view_one_pokemon),justify='center')
-            selection = minput()
-            while True:
-                if selection == b'0':
-                        clear_console()
-                        cprint(color().color_rich('Goodbye!', 'success'))
-                        return
+            cprint(prompt('Which Pokemon?'),justify='center')
+            self.name = self.set_name(cinput())
+            if self.name.upper() == 'N':
+                clear_console()
+                cprint(color().color_rich('You have chosen to quit!', 'error'))
+                self.name = None
+                return
+            else:
+                clear_console()
+                if self.pokemon_can_evolve(self.name) == True:
+                    key_to_update = tick+1
+                    options.append('VIEW EVOLUTION LINE')
+                    key = str(key_to_update).encode()
+                    self.job_map[key] = self.new_main
+                        
+                view_pokemon_layout = (C([
+                                        self.pokemon_data(self.name),
+                                        M().view_one_pokemon_menu(self.name,options=options)
+                                    ],
+                                    expand=True,
+                                    align='center',
+                                    padding=(2,0)))
+                cprint(VPD().main_frame(view_pokemon_layout),justify='center')
+                selection = self.set_option(minput())
+                while True:
+                    if selection == b'9':
+                            print('This is a test')
+                            self.new_main()
+                    if selection == b'0':
+                            clear_console()
+                            cprint(color().color_rich('Goodbye!', 'success'))
+                            self.name = None
+                            return
+                    else:
+                        for key in self.job_map:
+                            if selection == key:
+                                clear_console()
+                                self.job_map[selection](int(selection),options)
+                                break
+                    selection = self.set_option(minput(),int(selection))
 
-                for key in self.job_map:
-                    if selection == key:
-                        clear_console()
-                        self.job_map[selection]()
-                        selection = minput()
 
 
                     

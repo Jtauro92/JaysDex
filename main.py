@@ -12,17 +12,21 @@ cprint = Console().print
 
 
 def minput():
-        MS.kbhit()
-        return MS.getch()
+    MS.kbhit()
+    return MS.getch()
 
 class dex_menu:
     def __init__(self):
-        self.joblist = [(b'1',AP().main),
-                        (b'2',AS().main),
-                        (b'3',VP().main)]  
+
+        self.joblist = {
+                        b'1': AP().main,
+                        b'2': AS().main,
+                        b'3': VP().main,
+                        b'0': 'exit'
+                        }
     
     def set_option(self,number= None,version=None):
-        while (number not in [b'0',b'1',b'2',b'3']) or (int(number) == version):
+        while (number not in self.joblist) or (int(number) == version):
             rprint('\n[bold red]Invalid Entry. Try Again![/bold red]')
             number = minput()
             print("\033[A\033[2K\033[A", end='', flush=True)
@@ -30,10 +34,10 @@ class dex_menu:
         
     def processes(self,hit):
         for job in self.joblist:
-            if (hit == job[0]):
-                job[1]()
-                break
-        return int(job[0])
+            if hit == job:
+                self.joblist[hit]()
+                return int(hit)
+
 
     def main(self):
         main_menu = M().main_menu
