@@ -19,28 +19,30 @@ class View_Pokemon(Pokemon):
         self.job_map = {
                         b'1':self.view_stats,
                         }
-        self.options = ['VIEW STATS']
         
     def set_name(self,name):
-        if name.isnumeric() == False:
-            name = name.title()
-            if name == 'N':
-                return name
-            else:
-                for pokemon in self.dex:
-                    if name == pokemon[1]:
-                        return name
+        while True:
+            if name.isnumeric() == False:
+                name = name.title()
+                if name == 'N':
+                    return name
                 else:
-                    prompt('This pokemon doesn\'t exist! Try again!','error')
-
-                    
-        else:
-            name = int(name)
-            for pokemon in self.dex:
-                if name == pokemon[0]:
-                    return pokemon[1]
+                    for pokemon in self.dex:
+                        if name == pokemon[1]:
+                            return name
+                    else:
+                        clear_console()
+                        cprint(prompt('This pokemon doesn\'t exist! Try again!','error'),justify='center')
+                        name = input()
             else:
-                print(color().color_string('error','\nThis Pokemon doesn\'t exist!'))
+                name = int(name)
+                for pokemon in self.dex:
+                    if name == pokemon[0]:
+                        return pokemon[1]
+                else:
+                    clear_console()
+                    cprint(prompt('This pokemon doesn\'t exist! Try again!','error'),justify='center')
+                    name = input()
         
     def set_option(self,number= None,version=None):
             while (number not in self.job_map) and (number not in [b'9',b'0']) or(int(number) == version) :
@@ -293,8 +295,7 @@ class View_Pokemon(Pokemon):
                 selection = self.set_option(minput())
                 while True:
                     if selection == b'9':
-                            print('This is a test')
-                            self.new_main()
+                            break
                     if selection == b'0':
                             clear_console()
                             cprint(color().color_rich('Goodbye!', 'success'))
