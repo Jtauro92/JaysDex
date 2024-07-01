@@ -86,12 +86,11 @@ class Menu:
                                    'VIEW MEGA EVOLUTION',
                                    'VIEW GIGANTAMAX FORM',
                                    'VIEW REGIONAL VARIANT',
-                                   'VIEW FORM'],
-                              footer = '(N to Quit)'):
+                                   'VIEW FORM']):
         return self.display_menu(index = selection,
                                  options = options,
                                  header = name,
-                                 footer = footer,
+
                                  exit_statement='9. SWITCH POKEMON\n\n0. EXIT',)
 
     
@@ -105,15 +104,13 @@ class View_Pokemon_Display:
                    title='View Pokemon',
                    line = HEAVY,
                    panel_color = 'green',
-                   padding = (2,5,1,5),
-                   subtitle = '[bold red](N to Quit)[/bold red]'):
+                   padding = (2,5,1,5)):
         
         header =f'[u bold white]{title}[/u bold white]'
         
         return Panel(
             render,
             title=header,
-            subtitle=subtitle,
             box=line,
             border_style=panel_color,
             padding = padding,

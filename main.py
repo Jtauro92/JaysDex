@@ -42,12 +42,12 @@ class dex_menu:
     def main(self):
         main_menu = M().main_menu
         clear_console()
-        cprint(main_menu())
+        cprint(main_menu(),justify='center')
         selection = self.set_option(minput())
         while selection != b'0':
             process_num = self.processes(selection)
             clear_console()
-            cprint(main_menu(int(selection)))
+            cprint(main_menu(int(selection)),justify='center')
             selection = self.set_option(minput(),process_num)
         clear_console()
         rprint('[bold green]Goodbye![/bold green]')
