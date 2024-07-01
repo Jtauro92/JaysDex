@@ -93,43 +93,45 @@ class View_Pokemon(Pokemon):
         return table
         
     def view_mega_pokemon(self, selection=None,option=None):
-        clear_console()
-        cprint('Not implemented yet!') 
-        cprint(self.main_menu(self.name,selection,option))
-        return
         result  = self.get_db_data(f'''select pokemon_number, p_name, m_type1, m_type2,m_ability1 from megas
                             where p_name like '{self.name}%';''')
-        column_names = self.attributes[2:5]
         dex =[]
+        column_names = ['Number','Name','Type1','Type2','Ability']
         for i in result:
-            row_dict = dict(zip(column_names,i[2:5]))
+            row_dict = dict(zip(column_names,i))
             dex.append(row_dict)
             
-        for pokemon in dex:
-            result = list(pokemon.values())
-            name = f'(mega) {result[0]}'
-            result[0] = name
-            row = [str(attr) for attr in result]
+        tables = []
             
-        table = Table(
-                        title=f'{name}\n',
+        for pokemon in dex:
+            table = Table(
+                        title=f'(mega) {pokemon['Name']}\n',
                         padding=(0,1),
                         collapse_padding=True,
                         expand=True,
                         show_edge=False,
                         )
-        table.add_column(column_names,justify='center')
-        table.add_row(*row)
-        
-        cprint(table)
 
-        for i in result:
-            result = list(i)
-            name = f'(mega) {result[0]}' 
-            result[0] = name
-            table.add_row(result)
-        print(f'\n{color().color_string(result[1],table)}')
-        table.clear_rows()
+            for i in column_names[2:]:
+                table.add_column(i,justify='center')
+            
+            row = ([str(attr) for attr in list(pokemon.values())[2:]])
+            table.add_row(*row)
+            tables.append(table)
+
+        grid = C(tables,align='center',padding=(2,4))
+        columns = C([grid,M().view_one_pokemon_menu(self.name,
+                                                      selection=selection,
+                                                      options=option)],
+                    title='[u]Mega Evolution\n',
+                    expand=True,
+                    align='center',
+                    padding=(4,0))
+        finished_columns = C([self.pokemon_data(self.name),columns],
+                             expand=True,
+                             align='center',
+                             padding=(4,0))
+        cprint(self.main_frame(finished_columns),justify='center')
 
     def  view_evolution_line(self,selection=None,options=None):
         result = self.get_db_data("select * FROM pokemon")
