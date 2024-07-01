@@ -1,14 +1,9 @@
 
-from turtle import clear
 from Pokemon import * 
 from menu import View_Pokemon_Display as VPD, Menu as M
 from rich.table import Table
 from rich.text import Text
 from rich.columns import Columns as C
-from rich.prompt import Prompt
-cinput = console().input
-ask = Prompt.ask
-
 
 class View_Pokemon(Pokemon):
     def __init__(self):
@@ -318,7 +313,7 @@ class View_Pokemon(Pokemon):
             key_to_update = 1
             clear_console()
             cprint(prompt('Which Pokemon?'),justify='center')
-            self.name = self.set_name(cinput())
+            self.name = self.set_name(input())
             if self.name.upper() == 'N':
                 clear_console()
                 cprint(color().color_rich('You have chosen to quit!', 'error'))
