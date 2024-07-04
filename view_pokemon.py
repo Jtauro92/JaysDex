@@ -1,6 +1,5 @@
-
 from Pokemon import * 
-from menu import View_Pokemon_Display as VPD, Menu as M
+from menu import Menu as M
 from rich.table import Table
 from rich.text import Text
 from rich.columns import Columns as C
@@ -28,7 +27,7 @@ class View_Pokemon(Pokemon):
                     return name
                 else:
                     for pokemon in self.dex:
-                        if name == pokemon[1]:
+                        if name == pokemon['Name']:
                             return name
                     else:
                         clear_console()
@@ -37,8 +36,8 @@ class View_Pokemon(Pokemon):
             else:
                 name = int(name)
                 for pokemon in self.dex:
-                    if name == pokemon[0]:
-                        return pokemon[1]
+                    if name == pokemon['Number']:
+                        return pokemon['Name']
                 else:
                     clear_console()
                     cprint(prompt('This pokemon doesn\'t exist! Try again!','error'),justify='center')
@@ -74,22 +73,23 @@ class View_Pokemon(Pokemon):
         for pokemon in dex:
             if (entry == pokemon[1]):
                 name,number = pokemon[1],pokemon[0]
-                rich_color = self.color_map.get(pokemon[2].lower(), 'white')
+                title_color = self.color_map.get(pokemon[2].lower(), 'white')
                 table_color = self.table_color.get(pokemon[2].lower(), 'white')
                 row = [str(attr) for attr in pokemon[2:7]]
             
         table = Table(
-                      title=f'#{number:04} {name}\n',
-                      title_style=rich_color, 
+                      title=f'#{number:04} {name}',
+                      title_style=title_color, 
                       padding=(0,1),
-                      collapse_padding=True,
                       expand=True,
-                      show_edge=False,
+                      show_edge=True,
+                      border_style=table_color,
+                      header_style=table_color
                       )
         
         for column_name in self.attributes[2:7]:
-            table.add_column(column_name,justify='center')
-        table.add_row(*row,style=table_color)
+            table.add_column(column_name,justify='center',style=table_color)
+        table.add_row(*row)
         return table
         
     def view_mega_pokemon(self, selection=None,option=None):
@@ -107,7 +107,6 @@ class View_Pokemon(Pokemon):
             table = Table(
                         title=f'(mega) {pokemon['Name']}\n',
                         padding=(0,1),
-                        collapse_padding=True,
                         expand=True,
                         show_edge=False,
                         )
@@ -131,39 +130,30 @@ class View_Pokemon(Pokemon):
                              expand=True,
                              align='center',
                              padding=(4,0))
-        cprint(self.main_frame(finished_columns),justify='center')
+        cprint(self.main_frame(finished_columns),justify='center',style= 'red')
 
     def  view_evolution_line(self,selection=None,options=None):
-        result = self.get_db_data("select * FROM pokemon")
-        columns = ['Number','Name','Type1','Type2','Ability','Ability2','Hidden_Ability','Stage']
-        dex = []
-        for row in result:
-            row_dict = dict(zip(columns,row))
-            dex.append(row_dict)
-
-        for pokemon in dex:
+        for pokemon in self.dex:
             if self.name == pokemon['Name']:
-                
                 if pokemon['Stage'] == 1:
                     if self.name == "Eevee":
                         column = [f'{pokemon["Name"]} evolves into:']
-                        for pokemon in dex:
-                            if pokemon['Name'] in ['Vaporeon','Jolteon','Flareon','Espeon','Umbreon','Leafeon','Glaceon','Sylveon']:
-                                column.append(self.pokemon_data(pokemon['Name']))
+                        for pokemon2 in self.dex:
+                            if pokemon2['Name'] in ['Vaporeon','Jolteon','Flareon','Espeon','Umbreon','Leafeon','Glaceon','Sylveon']:
+                                column.append(self.pokemon_data(pokemon2['Name']))
                         tables = C(column,expand=True,align='center',padding=(1,0,3,0))
                     else:
-                        try:
-                            pokemon2 = dex[(pokemon['Number'])]
-                            if pokemon2['Stage'] == 2:
-                                column = [f'{pokemon["Name"]} evolves into:']
-                                column.append(self.pokemon_data(pokemon2['Name']))
-                                pokemon3 = dex[(pokemon['Number']+1)]
-                                if pokemon3['Stage'] == 3:
-                                    column.append(f'{pokemon2["Name"]} evolves into:')
-                                    column.append(self.pokemon_data(pokemon3['Name']))
-                            tables = C(column,expand=True,align='center',padding=(1,0))      
-                        except IndexError:                       
-                            pass
+                        for pokemon2 in self.dex:
+                            if pokemon2['Number'] == (pokemon['Number']+1):
+                                if pokemon2['Stage'] == 2:
+                                    column = [f'{pokemon["Name"]} evolves into:']
+                                    column.append(self.pokemon_data(pokemon2['Name']))
+                                    for pokemon3 in self.dex:
+                                        if pokemon3['Number'] == (pokemon2['Number']+1):
+                                            if pokemon3['Stage'] == 3:
+                                                column.append(f'{pokemon2["Name"]} evolves into:')
+                                                column.append(self.pokemon_data(pokemon3['Name']))
+                    tables = C(column,expand=True,align='center',padding=(1,0))      
                         
                 if pokemon['Stage'] == 2:
                     if self.name in ['Vaporeon','Jolteon','Flareon','Espeon','Umbreon','Leafeon','Glaceon','Sylveon']:
@@ -171,23 +161,26 @@ class View_Pokemon(Pokemon):
                         column.append(self.pokemon_data('Eevee'))
                         tables = C(column,expand=True,align='center',padding=(1,0))
                     else:
-                        pokemon2 = dex[(pokemon['Number']-2)]
-                        column = [f'{pokemon["Name"]} evolves from:']
-                        column.append(self.pokemon_data(pokemon2['Name']))
-                        pokemon3 = dex[(pokemon['Number']-1)]
-                        if pokemon3['Stage'] == 3:
-                            column.append(f'{pokemon["Name"]} evolves into:')
-                            column.append(self.pokemon_data(pokemon3['Name']))
+                        for pokemon2 in self.dex:
+                            if pokemon2['Number'] == (pokemon['Number']-1):
+                                column = [f'{pokemon["Name"]} evolves from:']
+                                column.append(self.pokemon_data(pokemon2['Name']))
+                                for pokemon3 in self.dex:
+                                    if pokemon3['Number'] == (pokemon['Number']+1):
+                                        if pokemon3['Stage'] == 3:
+                                            column.append(f'{pokemon["Name"]} evolves into:')
+                                            column.append(self.pokemon_data(pokemon3['Name']))
                     tables = C(column,expand=True,align='center',padding=(1,0))
 
                 if pokemon['Stage'] == 3:
-                    pokemon2 = dex[pokemon['Number']-2]
-                    if pokemon2 is not None:
-                        column = [f'{pokemon["Name"]} evolves from:']
-                        column.append(self.pokemon_data(pokemon2['Name']))
-                        pokemon3 = dex[(pokemon['Number']-3)]
-                        column.append(f'{pokemon2["Name"]} evolves from:')
-                        column.append(self.pokemon_data(pokemon3['Name']))
+                    for pokemon2 in self.dex:
+                        if pokemon2['Number'] == pokemon['Number']-1:
+                            column = [f'{pokemon["Name"]} evolves from:']
+                            column.append(self.pokemon_data(pokemon2['Name']))
+                            for pokemon3 in self.dex:
+                                if pokemon3['Number'] == pokemon2['Number']-1:
+                                    column.append(f'{pokemon2["Name"]} evolves from:')
+                                    column.append(self.pokemon_data(pokemon3['Name']))
                     tables = C(column,expand=True,align='center',padding=(1,0))
         columns = C([tables,M().view_one_pokemon_menu(self.name,
                                                       selection=selection,
@@ -210,26 +203,25 @@ class View_Pokemon(Pokemon):
             return False
         
     def pokemon_can_evolve(self,name):
-        dex = self.get_db_data('select * FROM pokemon')
-        for pokemon in dex:
-            if name == pokemon[1]:
-                if pokemon[7] == 1:
-                    if name == "Eevee":
-                         return True
+        for pokemon in self.dex:
+            for pokemon2 in self.dex:
+                if name == pokemon['Name']:
+                    if pokemon['Stage'] == 1:
+                        if name == "Eevee":
+                            return True
+                        else:
+                            if pokemon2['Number'] == pokemon['Number']+1:
+                                if pokemon2['Stage'] == 2:
+                                    return True
+                                else:
+                                    return False
+                    elif pokemon['Stage'] == 2:
+                        return True
+                    elif pokemon['Stage'] == 3:
+                        return True
                     else:
-                        try:
-                            pokemon2 = dex[(pokemon[0])]
-                            if pokemon2[7] == 2:
-                                return True
-                        except IndexError:
-                            return False
-                elif pokemon[7] == 2:
-                    return True
-                elif pokemon[7] == 3:
-                    return True
-                else:
-                    return False
-            
+                        return False
+                
     def search_by_type(self,type):
         column_names = self.attributes[0:7]
         table = PrettyTable(column_names)
@@ -392,48 +384,48 @@ class color:
         self.reset = '\033[0m'
         
         self.table_color = {
-                            'fire': 'red',
+                            'fire': 'white on red',
                             'water': 'white on blue',
-                            'grass': 'green',
+                            'grass': 'bold black on green',
                             'poison': 'white on purple',
-                            'flying': 'yellow',
-                            'bug': 'dark_green',
+                            'flying': 'white on sky_blue1',
+                            'bug': 'bold black on chartreuse4',
                             'normal': 'bold black on white',
-                            'electric': 'yellow',
-                            'ground': 'brown',
-                            'rock': 'gray',
-                            'fighting': 'dark_red',
-                            'psychic': 'magenta',
-                            'ghost': 'light_gray',
-                            'ice': 'cyan',
-                            'dragon': 'dark_blue',
-                            'dark': 'black',
-                            'steel': 'light_gray',
-                            'fairy': 'white on magenta',
+                            'electric': 'black on yellow',
+                            'ground': 'white on brown',
+                            'rock': 'black on tan',
+                            'fighting': 'white on orange_red1',
+                            'psychic': 'white on magenta',
+                            'ghost': 'white on navy_blue',
+                            'ice': 'bold black on cyan',
+                            'dragon': 'white on deep_pink4',
+                            'dark': 'bold white on grey30',
+                            'steel': 'bold black on light_gray',
+                            'fairy': 'bold black on plum1',
                             }
 
         self.color_map = {
-            'fire': 'red',
-            'water': 'blue',
-            'grass': 'green',
-            'poison': 'purple',
-            'flying': 'yellow',
-            'bug': 'dark_green',
-            'normal': 'white',
-            'electric': 'yellow',
-            'ground': 'brown',
-            'rock': 'gray',
-            'fighting': 'dark_red',
-            'psychic': 'magenta',
-            'ghost': 'light_gray',
-            'ice': 'cyan',
-            'dragon': 'dark_blue',
-            'dark': 'black',
-            'steel': 'light_gray',
-            'fairy': 'light_magenta',
-            'error': 'bold red',
-            'success': 'bold green',
-        }
+                            'fire': 'bold red',
+                            'water': 'bold blue',
+                            'grass': 'bold green',
+                            'poison': 'bold purple',
+                            'flying': 'bold sky_blue1',
+                            'bug': 'bold chartreuse4',
+                            'normal': 'white',
+                            'electric': 'yellow',
+                            'ground': 'bold brown',
+                            'rock': 'bold tan',
+                            'fighting': 'bold orange_red1',
+                            'psychic': 'bold magenta',
+                            'ghost': 'bold navy_blue',
+                            'ice': 'bold cyan',
+                            'dragon': 'bold deep_pink4',
+                            'dark': 'bold grey30',
+                            'steel': 'bold light_gray',
+                            'fairy': 'bold plum1',
+                            'error': 'bold red',
+                            'success': 'bold green',
+                        }
         
     def color_string(self,type,string):
         type = type.lower()

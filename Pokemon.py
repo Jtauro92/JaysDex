@@ -60,8 +60,11 @@ class Pokemon:
 
     def load_attributes(self):
         self.connect_to_db()
-        self.cursor.execute("select * FROM national_pokedex")
-        self.dex = self.cursor.fetchall()
+        result = self.get_db_data("select * FROM Pokemon")
+        columns = ['Number','Name','Type1','Type2','Ability','Ability2','Hidden_Ability','Stage']
+        for row in result:
+            row_dict = dict(zip(columns,row))
+            self.dex.append(row_dict)
 
         with open('abilities.csv', 'r') as f:
             for line in f:
@@ -74,4 +77,4 @@ class Pokemon:
              
 
 if __name__ == '__main__': 
-    print(Pokemon().ability_list)
+    print(Pokemon().dex)
