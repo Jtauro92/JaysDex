@@ -1,6 +1,9 @@
 from Pokemon import Pokemon as P
 from view_pokemon import color as C, View_Pokemon as VP
 from add_stats import add_stats as AS
+from menu import Add_Pokemon_Display as APD
+
+prompt = APD().prompt
 
 class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
     def __init__(self):
@@ -8,7 +11,7 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
 
     def validate_Name(self,name):
         while name.isnumeric() == True:
-            print(C().color_string('error','\nNumbers are invalid!\n'))
+            prompt('[bold red]Numbers are invalid!')
             name = input('\nEnter Pokemon Name: ')
         else:
             name = name.title()

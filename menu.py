@@ -136,7 +136,8 @@ class Add_Pokemon_Display:
                    title='Add Pokemon',
                    line = HEAVY,
                    panel_color = 'blue',
-                   padding = (2,5,1,5)):
+                   padding = (2,5,1,5),
+                   footer = '[bold red](ENTER an Option)'):
         
         header =f'[u bold white]{title}[/u bold white]'
         
@@ -148,7 +149,7 @@ class Add_Pokemon_Display:
             padding = padding,
             expand=False,
             width=console.width,
-            # Add this line to set the width to the terminal width
+            subtitle=footer# Add this line to set the width to the terminal width
         )
 
     def prompt(self, string='',color_name=None):
@@ -158,7 +159,8 @@ class Add_Pokemon_Display:
                         render=Text(string,
                                   justify = 'center',
                                   style = rich_color),
-                        line = HEAVY_HEAD,padding=(1,11))
+                        line = HEAVY_HEAD,padding=(1,11),
+                        footer = '[bold red](ENTER N to Quit)')
         
 if __name__ == "__main__":
     View_Pokemon_Display().prompt('Invalid Entry. Try Again!','error')
