@@ -1,10 +1,8 @@
 import mysql.connector
 import msvcrt as m
 from rich.console import Console as console
-from menu import View_Pokemon_Display as VPD
 import os
 
-prompt = VPD().prompt
 cprint = console().print
 clear_console = console().clear
 

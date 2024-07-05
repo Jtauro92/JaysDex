@@ -2,8 +2,10 @@ from Pokemon import *
 from menu import Menu as M
 from rich.table import Table
 from rich.text import Text
+from menu import View_Pokemon_Display as VPD
 from rich.columns import Columns as C
 
+prompt = VPD().prompt
 #View_Pokemon class inherits from Pokemon class
 #View_Pokemon class is responsible for displaying the pokemon data
 class View_Pokemon(Pokemon):

@@ -127,5 +127,38 @@ class View_Pokemon_Display:
                                   style = rich_color),
                         line = HEAVY_HEAD,padding=(1,11))
         
+class Add_Pokemon_Display:
+    def __init__(self):
+        pass
+
+    def main_frame(self,
+                   render= Menu().add_pokemon_menu(),
+                   title='Add Pokemon',
+                   line = HEAVY,
+                   panel_color = 'blue',
+                   padding = (2,5,1,5)):
+        
+        header =f'[u bold white]{title}[/u bold white]'
+        
+        return Panel(
+            render,
+            title=header,
+            box=line,
+            border_style=panel_color,
+            padding = padding,
+            expand=False,
+            width=console.width,
+            # Add this line to set the width to the terminal width
+        )
+
+    def prompt(self, string='',color_name=None):
+        color_map = {'error': 'bold red'}
+        rich_color = color_map.get(color_name, 'white')
+        return self.main_frame(
+                        render=Text(string,
+                                  justify = 'center',
+                                  style = rich_color),
+                        line = HEAVY_HEAD,padding=(1,11))
+        
 if __name__ == "__main__":
     View_Pokemon_Display().prompt('Invalid Entry. Try Again!','error')
