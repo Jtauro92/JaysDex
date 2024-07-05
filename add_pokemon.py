@@ -1,22 +1,23 @@
-from Pokemon import Pokemon as P
+from Pokemon import *
 from view_pokemon import color as C, View_Pokemon as VP
 from add_stats import add_stats as AS
 from menu import Add_Pokemon_Display as APD
 
 prompt = APD().prompt
 
-class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
+class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
     def __init__(self):
-        P.__init__(self)
+        super().__init__()
 
     def validate_Name(self,name):
         while name.isnumeric() == True:
-            prompt('[bold red]Numbers are invalid!')
+            clear_console()
+            cprint(prompt('Numbers are invalid!','error'),justify='center')
             name = input('\nEnter Pokemon Name: ')
         else:
             name = name.title()
             for pokemon in self.dex:
-                if name == pokemon[1]:
+                if name == pokemon['Name']:
                     print(C().color_string('error','\nThis Pokemon already exist!\n'))
                     proceed = input(f'Would you like to add {name}\'s Mega Evolution?{C().color_string('error','\n(Press ENTER to continue)\n')}')
                     if proceed.upper() == 'N':
@@ -156,7 +157,9 @@ class Add_Pokemon(P): #Eventual menu option to add Pokemon to Pokedex
         print(C().color_string('success','\nPokemon added to Pokedex!\n'))
 
     def main(self):
-        self.name = self.validate_Name(input('Enter Pokemon Name: '))
+        clear_console()
+        cprint(prompt('Enter Pokemon Name:'),justify='center')
+        self.name = self.validate_Name(input())
         if self.name is None:
             return
 
