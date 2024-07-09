@@ -1,3 +1,4 @@
+from turtle import clear
 from Pokemon import *
 from view_pokemon import color as C, View_Pokemon as VP
 from add_stats import add_stats as AS
@@ -28,6 +29,7 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
                         b'7':self.set_Hidden_Ability,
                         b'8':self.clear_data,
                         b'9':self.add_Dex_Entry}
+        self.data_table = VP().pokemon_data
 
     def validate_Name(self):
         name = input('\nEnter Pokemon Name: ')
@@ -139,7 +141,7 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
             if (ability not in self.ability_list):
                 clear_line()
                 cprint(color('This ability doesn\'t exist!','error'))
-                ability = self.set_Ability(input('Enter Ability: '))
+                self.set_Ability()
 
         self.options[4] = f'Ability:            {ability}'
         self.ability = ability
@@ -207,9 +209,12 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
                                 '{self.ability}',
                                 '{self.ability2}',
                                 '{self.hidden_ability}')''')
-            cprint(color('Pokemon added to Pokedex!','success'))
+            clear_console()
+            cprint(color('Pokemon added to Pokedex!\n','success'),justify='center')
+            cprint(self.data_table(self.name),justify='center')
             minput()
             self.clear_data()
+            
     def clear_data(self):
         self.name,self.number,self.type1,self.type2 = None,None,None,None
         self.type1 = None

@@ -79,20 +79,20 @@ class View_Pokemon(Pokemon):
                 table_color = self.table_color.get(pokemon[2].lower(), 'white')
                 row = [str(attr) for attr in pokemon[2:7]]
             
-        table = Table(
-                      title=f'#{number:04} {name}',
-                      title_style=title_color, 
-                      padding=(0,1),
-                      expand=True,
-                      show_edge=True,
-                      border_style=table_color,
-                      header_style=table_color
-                      )
-        
-        for column_name in self.attributes[2:7]:
-            table.add_column(column_name,justify='center',style=table_color)
-        table.add_row(*row)
-        return table
+                table = Table(
+                            title=f'#{pokemon[0]:04} {pokemon[1]}',
+                            title_style=title_color, 
+                            padding=(0,1),
+                            expand=True,
+                            show_edge=True,
+                            border_style=table_color,
+                            header_style=table_color
+                            )
+                
+                for column_name in self.attributes[2:7]:
+                    table.add_column(column_name,justify='center',style=table_color)
+                table.add_row(*row)
+                return table
         
     def view_mega_pokemon(self, selection=None,option=None):
         result  = self.get_db_data(f'''select pokemon_number, p_name, m_type1, m_type2,m_ability1 from megas
@@ -402,7 +402,7 @@ class color:
                             'ice': 'bold black on cyan',
                             'dragon': 'white on deep_pink4',
                             'dark': 'bold white on grey30',
-                            'steel': 'bold black on light_gray',
+                            'steel': 'bold black on grey82',
                             'fairy': 'bold black on plum1',
                             }
 
@@ -423,7 +423,7 @@ class color:
                             'ice': 'bold cyan',
                             'dragon': 'bold deep_pink4',
                             'dark': 'bold grey30',
-                            'steel': 'bold light_gray',
+                            'steel': 'bold grey82',
                             'fairy': 'bold plum1',
                             'error': 'bold red',
                             'success': 'bold green',
