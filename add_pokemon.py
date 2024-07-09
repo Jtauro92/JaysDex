@@ -1,9 +1,8 @@
-from turtle import clear
 from Pokemon import *
 from view_pokemon import color as C, View_Pokemon as VP
 from add_stats import add_stats as AS
 from menu import Add_Pokemon_Display as APD
-import time
+
 
 color = C().color_rich
 def clear_line():
@@ -212,7 +211,17 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
             clear_console()
             cprint(color('Pokemon added to Pokedex!\n','success'),justify='center')
             cprint(self.data_table(self.name),justify='center')
-            minput()
+            cprint(color('\nWould you like to enter stats for this Pokemon?'))
+            selection = minput()
+            if selection == b'0':
+                return
+            else:
+                AS().update_stat(self.name)
+                cprint(color('\nWould you like to add another Pokemon?'))
+                selection = minput()
+                if selection == b'0':
+                    return
+
             self.clear_data()
             
     def clear_data(self):
@@ -230,7 +239,7 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
                         'Ability #2:', 
                         'Hidden Ability:']
 
-    def main(self):
+    def old_main(self):
         clear_console()
         cprint(prompt('Enter Pokemon Name:'),justify='center')
         self.name = self.validate_Name(input())
@@ -282,6 +291,7 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
             return
 
         self.main()
+    
     def set_option(self,number= None,version=None):
             while (number not in self.job_map) and (number not in [b'8',b'0']) or(int(number) == version) :
                 cprint('\n[bold red]Invalid Entry. Try Again![/bold red]')
@@ -289,12 +299,13 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
                 print("\033[A\033[2K\033[A", end='', flush=True)
             return number
         
-    def new_main(self):
+    def main(self):
         main_frame = APD().main_frame
         cprint(main_frame(options=self.options),justify='center')
         selection = self.set_option(minput())
         while True:
             if selection == b'0':
+                self.clear_data()
                 clear_console()
                 return
             else:
@@ -307,7 +318,6 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
                         clear_console()
                         cprint(main_frame(options=self.options),justify='center')
                         selection = self.set_option(minput())
-                        break
 
 class Add_MegaEvolution(Add_Pokemon):
     def __init__(self):
@@ -389,4 +399,4 @@ class Add_Gigantamax(Add_Pokemon):
 
 if __name__ == '__main__':
     M = Add_Pokemon()
-    M.new_main()
+    M.main()
