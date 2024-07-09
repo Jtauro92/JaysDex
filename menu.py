@@ -1,3 +1,4 @@
+from ast import Add
 from rich.console import Console
 from rich.panel import Panel
 from rich.box import DOUBLE, MINIMAL, SQUARE, ASCII, ASCII_DOUBLE_HEAD,\
@@ -15,8 +16,8 @@ class Menu:
         self.console = Console()
         
     def display_menu(self,index=None,
-                     color='white',
-                     header='Main Menu',
+                     color: str ='white',
+                     header: str ='Main Menu',
                      options=[],
                      exit_statement='0. EXIT',
                      footer='[bold red](ENTER an Option)'):
@@ -118,7 +119,7 @@ class View_Pokemon_Display:
             width=console.width  # Add this line to set the width to the terminal width
         )
 
-    def prompt(self, string='',color_name=None):
+    def prompt(self, string='',color_name='white'):
         color_map = {'error': 'bold red'}
         rich_color = color_map.get(color_name, 'white')
         return self.main_frame(
@@ -132,7 +133,7 @@ class Add_Pokemon_Display:
         pass
 
     def main_frame(self,
-                   render= Menu().add_pokemon_menu(),
+                   render = Menu().add_pokemon_menu(),
                    title='Add Pokemon',
                    line = HEAVY,
                    panel_color = 'blue',
@@ -152,15 +153,14 @@ class Add_Pokemon_Display:
             subtitle=footer# Add this line to set the width to the terminal width
         )
 
-    def prompt(self, string='',color_name=None):
+    def prompt(self, string='',color_name='white'):
         color_map = {'error': 'bold red'}
         rich_color = color_map.get(color_name, 'white')
+        string = Text(string,justify = 'center',style = rich_color)
         return self.main_frame(
-                        render=Text(string,
-                                  justify = 'center',
-                                  style = rich_color),
+                        render=string,
                         line = HEAVY_HEAD,padding=(1,11),
                         footer = '[bold red](ENTER N to Quit)')
         
 if __name__ == "__main__":
-    View_Pokemon_Display().prompt('Invalid Entry. Try Again!','error')
+    console.print(Add_Pokemon_Display().prompt('Invalid Entry. Try Again!','error'))
