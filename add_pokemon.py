@@ -1,8 +1,9 @@
-from turtle import clear
 from Pokemon import *
 from view_pokemon import color as C, View_Pokemon as VP
 from add_stats import add_stats as AS
 from menu import Add_Pokemon_Display as APD
+import time
+
 color = C().color_rich
 def clear_line():
     print("\033[A\033[2K\033[A\033[2K", end='', flush=True)
@@ -10,15 +11,14 @@ def clear_line():
 class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
     def __init__(self):
         super().__init__()
-        self.options = ['Name:', 
-                        'Pokedex Number:', 
-                        'Primary Type:', 
+        self.options = ['Name*:', 
+                        'Pokedex Number*:', 
+                        'Primary Type*:', 
                         'Secondary Type:', 
-                        'Ability:', 
+                        'Ability*:', 
                         'Ability #2:', 
                         'Hidden Ability:']
         self.index = None
-        self.main_frame = APD().main_frame()
         self.job_map ={b'1':self.validate_Name,
                         b'2':self.validate_Number,
                         b'3':self.set_Type,
@@ -26,6 +26,7 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
                         b'5':self.set_Ability,
                         b'6':self.set_Abitlity2,
                         b'7':self.set_Hidden_Ability,
+                        b'8':self.clear_data,
                         b'9':self.add_Dex_Entry}
 
     def validate_Name(self):
@@ -51,11 +52,11 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
                     cprint(color('This Pokemon already exist!','error'))
                     name = self.validate_Name()
                     
-        self.options[0] = f'Name: {name}'
+        self.options[0] = f'Name:               {name}'
         self.name = name
 
     def validate_Number(self):
-        number = input('Enter Pokedex Number: ')
+        number = input('\nEnter Pokedex Number: ')
         while number.isnumeric() == False:
             clear_line()
             cprint(color('Only numbers are valid!','error'))
@@ -75,11 +76,11 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
                         cprint(color('This Pokemon already exist!','error'))
                         number = self.validate_Number()
                         
-        self.options[1] = f'Pokedex Number: {number}'
+        self.options[1] = f'Pokedex Number:     {number}'
         self.number = number
     
     def set_Type(self):
-        type = input('Enter Primary Type: ')
+        type = input('\nEnter Primary Type: ')
         while type.isnumeric() == True:
             if type == '0':
                 return
@@ -94,17 +95,17 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
                 cprint(color('This type doesn\'t exist!','error'))
                 type = self.set_Type()
         
-        self.options[2] = f'Primary Type: {type}'       
+        self.options[2] = f'Primary Type:       {type}'       
         self.type1 = type
 
     def set_Type2(self):
         if self.type1 == None:
             clear_line()
-            cprint(color('Primary Type must be set first!','error'))
+            cprint(color('\nPrimary Type must be set first!','error'))
             return
             
         else:
-            type2 = input('Enter Secondary Type: ')
+            type2 = input('\nEnter Secondary Type: ')
             while type2.isnumeric() == True:
                 if type2 == '0':
                     return
@@ -121,11 +122,11 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
                     cprint(color('This type doesn\'t exist!','error'))
                     self.set_Type2()
 
-        self.options[3] = f'Secondary Type: {type2}'
+        self.options[3] = f'Secondary Type:     {type2}'
         self.type2 = type2
 
     def set_Ability(self):
-        ability = input('Enter Ability: ')
+        ability = input('\nEnter Ability: ')
         while ability.isnumeric() == True:
             if ability == '0':
                 return
@@ -140,7 +141,7 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
                 cprint(color('This ability doesn\'t exist!','error'))
                 ability = self.set_Ability(input('Enter Ability: '))
 
-        self.options[4] = f'Ability: {ability}'
+        self.options[4] = f'Ability:            {ability}'
         self.ability = ability
 
     def set_Abitlity2(self):
@@ -148,7 +149,7 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
             clear_line()
             cprint(color('Primary Ability must be set first!','error'))
             return
-        ability2 = input('Enter Ability #2: ')
+        ability2 = input('\nEnter Ability #2: ')
         while ability2.isnumeric() == True:
             if ability2 == '0':
                 return
@@ -165,7 +166,7 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
                 cprint(color('This ability doesn\'t exist!','error'))
                 self.set_Abitlity2()
 
-        self.options[5] = f'Ability #2: {ability2}'
+        self.options[5] = f'Ability #2:         {ability2}'
         self.ability2 = ability2
 
     def set_Hidden_Ability(self):
@@ -173,7 +174,7 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
             clear_line()
             cprint(color('Primary Ability must be set first!','error'))
             return
-        ability3 = input('Enter Hidden Ability: ')
+        ability3 = input('\nEnter Hidden Ability: ')
         while ability3.isnumeric() == True:
             if ability3 == '0':
                 return
@@ -190,13 +191,39 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
                 cprint(color('This ability doesn\'t exist!','error'))
                 self.set_Hidden_Ability()
 
-        self.options[6] = f'Hidden Ability: {ability3}'
+        self.options[6] = f'Hidden Ability:     {ability3}'
         self.hidden_ability = ability3
         
-    def add_Dex_Entry(self,number,name,ability,type1,type2, ability2, hidden_ability):
-        self.cursor.execute(f'''call insert_data
-                            ('{number}','{name}','{type1}','{type2}','{ability}','{ability2}','{hidden_ability}')''')
-        print(C().color_string('success','\nPokemon added to Pokedex!\n'))
+    def add_Dex_Entry(self):
+        if any(attribute is None for attribute in [self.number,self.name,self.type1,self.ability]):
+            cprint(color('All fields must be filled!','error'))
+            return
+        else:
+            self.cursor.execute(f'''call insert_data
+                                ('{self.number}',
+                                '{self.name}',
+                                '{self.type1}',
+                                '{self.type2}',
+                                '{self.ability}',
+                                '{self.ability2}',
+                                '{self.hidden_ability}')''')
+            cprint(color('Pokemon added to Pokedex!','success'))
+            minput()
+            self.clear_data()
+    def clear_data(self):
+        self.name,self.number,self.type1,self.type2 = None,None,None,None
+        self.type1 = None
+        self.type2 = None
+        self.ability = None
+        self.ability2 = None
+        self.hidden_ability = None
+        self.options = ['Name:', 
+                        'Pokedex Number:', 
+                        'Primary Type:', 
+                        'Secondary Type:', 
+                        'Ability:', 
+                        'Ability #2:', 
+                        'Hidden Ability:']
 
     def main(self):
         clear_console()

@@ -32,13 +32,13 @@ class Pokemon:
         self.type_list = ['FIRE','WATER','GRASS','ELECTRIC','ICE','FIGHTING',
                           'POISON','GROUND','FLYING','PSYCHIC','BUG','ROCK',
                           'GHOST','DARK','DRAGON','STEEL','FAIRY','NORMAL']
-        self.name = ''
-        self.number = 0
+        self.name = None
+        self.number = None
         self.type1 = None
-        self.type2 = ''
+        self.type2 = None
         self.ability = None
-        self.ability2 = ''
-        self.hidden_ability = ''
+        self.ability2 = None
+        self.hidden_ability = None
         self.dex = []
         self.ability_list = []
         self.load_attributes()
