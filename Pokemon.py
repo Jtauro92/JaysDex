@@ -36,7 +36,7 @@ class Pokemon:
         self.number = 0
         self.type1 = None
         self.type2 = ''
-        self.ability = ''
+        self.ability = None
         self.ability2 = ''
         self.hidden_ability = ''
         self.dex = []

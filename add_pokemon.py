@@ -98,27 +98,34 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
         self.type1 = type
 
     def set_Type2(self):
-        type2 = input('Enter Secondary Type: ')
-        while type2.isnumeric() == True:
-            if type2 == '0':
-                return
-            else:
-                clear_line()
-                cprint(color('Numbers are invalid!','error'))
-                type2 = input('Enter Secondary Type: ')
+        if self.type1 == None:
+            clear_line()
+            cprint(color('Primary Type must be set first!','error'))
+            return
+            
         else:
-            type2 = type2.upper()
-            if (type2 == self.type1) or (type2 == ''):
-                type2 = ''
-            elif (type2 not in self.type_list):
-                clear_line()
-                cprint(color('This type doesn\'t exist!','error'))
-                self.set_Type2()
+            type2 = input('Enter Secondary Type: ')
+            while type2.isnumeric() == True:
+                if type2 == '0':
+                    return
+                else:
+                    clear_line()
+                    cprint(color('Numbers are invalid!','error'))
+                    type2 = input('Enter Secondary Type: ')
+            else:
+                type2 = type2.upper()
+                if (type2 == self.type1) or (type2 == ''):
+                    type2 = ''
+                elif (type2 not in self.type_list):
+                    clear_line()
+                    cprint(color('This type doesn\'t exist!','error'))
+                    self.set_Type2()
 
         self.options[3] = f'Secondary Type: {type2}'
         self.type2 = type2
 
-    def set_Ability(self,ability):
+    def set_Ability(self):
+        ability = input('Enter Ability: ')
         while ability.isnumeric() == True:
             if ability == '0':
                 return
@@ -134,9 +141,14 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
                 ability = self.set_Ability(input('Enter Ability: '))
 
         self.options[4] = f'Ability: {ability}'
-        return ability
+        self.ability = ability
 
-    def set_Abitlity2(self,ability1,ability2):
+    def set_Abitlity2(self):
+        if self.ability == None:
+            clear_line()
+            cprint(color('Primary Ability must be set first!','error'))
+            return
+        ability2 = input('Enter Ability #2: ')
         while ability2.isnumeric() == True:
             if ability2 == '0':
                 return
@@ -146,17 +158,22 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
                 ability2 = input('Enter Ability #2: ')
         else:
             ability2 = ability2.title()
-            if (ability2 == ability1) or (ability2 == ''):
-                type2 = ''
+            if (ability2 == self.ability) or (ability2 == ''):
+                ability2 = ''
             elif (ability2 not in self.ability_list):
                 clear_line()
                 cprint(color('This ability doesn\'t exist!','error'))
-                self.set_Abitlity2(ability1,input('Enter Ability #2: '))
+                self.set_Abitlity2()
 
         self.options[5] = f'Ability #2: {ability2}'
-        return ability2
+        self.ability2 = ability2
 
-    def set_Hidden_Ability(self,ability1,ability2,ability3):
+    def set_Hidden_Ability(self):
+        if self.ability == None:
+            clear_line()
+            cprint(color('Primary Ability must be set first!','error'))
+            return
+        ability3 = input('Enter Hidden Ability: ')
         while ability3.isnumeric() == True:
             if ability3 == '0':
                 return
@@ -166,15 +183,15 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
                 ability3 = input('Enter Hidden Ability: ')
         else:
             ability3 = ability3.title()
-            if (ability3 == ability1) or (ability3 == ability2) or (ability3 == ''):
+            if (ability3 == self.ability) or (ability3 == self.ability2) or (ability3 == ''):
                 ability3 = ''
             elif (ability3 not in self.ability_list):
                 clear_line()
                 cprint(color('This ability doesn\'t exist!','error'))
-                self.set_Hidden_Ability(ability1,ability2,input('Enter Hidden Ability: '))
+                self.set_Hidden_Ability()
 
         self.options[6] = f'Hidden Ability: {ability3}'
-        return ability3
+        self.hidden_ability = ability3
         
     def add_Dex_Entry(self,number,name,ability,type1,type2, ability2, hidden_ability):
         self.cursor.execute(f'''call insert_data
@@ -257,7 +274,7 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
                         self.job_map[selection]()
                         clear_console()
                         cprint(main_frame(options=self.options),justify='center')
-                        selection = self.set_option(minput(),int(key))
+                        selection = self.set_option(minput())
                         break
 
 class Add_MegaEvolution(Add_Pokemon):
