@@ -34,7 +34,7 @@ class Pokemon:
                           'GHOST','DARK','DRAGON','STEEL','FAIRY','NORMAL']
         self.name = ''
         self.number = 0
-        self.type1 = ''
+        self.type1 = None
         self.type2 = ''
         self.ability = ''
         self.ability2 = ''

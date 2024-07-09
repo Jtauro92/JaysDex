@@ -1,168 +1,179 @@
+from turtle import clear
 from Pokemon import *
 from view_pokemon import color as C, View_Pokemon as VP
 from add_stats import add_stats as AS
 from menu import Add_Pokemon_Display as APD
-
-prompt = APD().prompt
+color = C().color_rich
+def clear_line():
+    print("\033[A\033[2K\033[A\033[2K", end='', flush=True)
 
 class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
     def __init__(self):
         super().__init__()
+        self.options = ['Name:', 
+                        'Pokedex Number:', 
+                        'Primary Type:', 
+                        'Secondary Type:', 
+                        'Ability:', 
+                        'Ability #2:', 
+                        'Hidden Ability:']
+        self.index = None
+        self.main_frame = APD().main_frame()
+        self.job_map ={b'1':self.validate_Name,
+                        b'2':self.validate_Number,
+                        b'3':self.set_Type,
+                        b'4':self.set_Type2,
+                        b'5':self.set_Ability,
+                        b'6':self.set_Abitlity2,
+                        b'7':self.set_Hidden_Ability,
+                        b'9':self.add_Dex_Entry}
 
-    def validate_Name(self,name):
+    def validate_Name(self):
+        name = input('\nEnter Pokemon Name: ')
         while name.isnumeric() == True:
             name = int(name)
-            for pokemon in self.dex:
-                if name == pokemon['Number']:
-                    print(C().color_string('error','\nThis Pokemon already exist!\n'))
-                    proceed = input(f'Would you like to add {pokemon['Name']}\'s Mega Evolution?{C().color_string('error','\n(Press ENTER to continue)\n')}')
-                    if proceed.upper() == 'N':
-                        name = self.validate_Name(input('Enter Pokemon Name: '))
-                    else:
-                        Add_MegaEvolution().main(name=name)
-                        proceed = input(f'\nadd another Pokemon?{C().color_string('error','\n(Press ENTER to continue)\n')}')
-                        if proceed.upper() == 'N':
-                            return 
-                        else:
-                            self.main()
-            clear_console()
-            cprint(prompt('Numbers are invalid!','error'),justify='center')
-            name = input('\nEnter Pokemon Name: ')
+            if name == 0:
+                return
+            else:
+                clear_line()
+                cprint(color('Numbers are invalid!','error'))
+            name = input('Enter Pokemon Name: ')
+
         else:
             name = name.title()
+            if name == '':
+                    clear_line()
+                    cprint(color('Name cannot be empty!','error'))
+                    name = self.validate_Name()
             for pokemon in self.dex:
                 if name == pokemon['Name']:
-                    print(C().color_string('error','\nThis Pokemon already exist!\n'))
-                    proceed = input(f'Would you like to add {name}\'s Mega Evolution?{C().color_string('error','\n(Press ENTER to continue)\n')}')
-                    if proceed.upper() == 'N':
-                        name = self.validate_Name(input('Enter Pokemon Name: '))
-                    else:
-                        Add_MegaEvolution().main(name=name)
-                        proceed = input(f'\nadd another Pokemon?{C().color_string('error','\n(Press ENTER to continue)\n')}')
-                        if proceed.upper() == 'N':
-                            return 
-                        else:
-                            self.main()
-            else:
-                if name == '':
-                    print(C().color_string('error','\nName cannot be empty!\n'))
-                    name = self.validate_Name(input('Enter Pokemon Name: '))
-                if name == 'N':
-                    print(C().color_string('error','\nYou have chosen to cancel!\n'))
-                    return
+                    clear_line()
+                    cprint(color('This Pokemon already exist!','error'))
+                    name = self.validate_Name()
+                    
+        self.options[0] = f'Name: {name}'
+        self.name = name
 
-        return name
-
-    def validate_Number(self,number):
+    def validate_Number(self):
+        number = input('Enter Pokedex Number: ')
         while number.isnumeric() == False:
-            if number.upper() == 'N':
-                print(C().color_string('error','\nYou have chosen to cancel!\n'))
-                return
-            else: 
-                print(C().color_string('error','\nOnly numbers are valid!\n'))
-                number = input('Enter Pokedex Number: ')
+            clear_line()
+            cprint(color('Only numbers are valid!','error'))
+            number = input('Enter Pokedex Number: ')
         else:
             number = int(number)
-            for pokemon in self.dex:
-                if number == pokemon[0]:
-                    print(C().color_string('error','\nThis Pokemon already exist!\n'))
-                    proceed = input(f'\nWould you like to add {pokemon[1]}\'s Mega Evolution?{C().color_string('error','\n(Press ENTER to continue)\n')}')
-                    if proceed.upper() == 'N':
-                        number = self.validate_Number(input('Enter Pokedex Number: '))
-                    else:
-                        Add_MegaEvolution().main(number=number)
-                        proceed = input(f'\nWould you like to add another Pokemon?{C().color_string('error','\n(Press ENTER to continue)\n')}')
-                        if proceed.upper() == 'N':
-                            return 
-                        else:
-                            self.main()
-          
+            if number == 0:
+                        return
+            if not (0<number<=1025):
+                        clear_line()
+                        cprint(color('Invalid Pokedex Number!','error'))
+                        number = self.validate_Number()
             else:
-                if not (0<number<=1025):
-                    print(C().color_string('error','\nInvalid Pokedex Number!\n'))
-                    number = self.validate_Number(input('Enter Pokedex Number: '))
-
-        return number
+                for pokemon in self.dex:
+                    if number == pokemon['Number']:
+                        clear_line()
+                        cprint(color('This Pokemon already exist!','error'))
+                        number = self.validate_Number()
+                        
+        self.options[1] = f'Pokedex Number: {number}'
+        self.number = number
     
-    def set_Type(self,type):
+    def set_Type(self):
+        type = input('Enter Primary Type: ')
         while type.isnumeric() == True:
-            print(C().color_string('error','\nNumbers are invalid!\n'))
-            type = input('Enter Primary Type: ')
+            if type == '0':
+                return
+            else:
+                clear_line()
+                cprint(color('Numbers are invalid!', 'error'))
+                type = input('Enter Primary Type: ')
         else:
             type = type.upper()
-            if type == 'N':
-                print(C().color_string('error','\nYou chose to quit!\n'))
-                return
             if (type not in self.type_list):
-                print(C().color_string('error','\nThis type doesn\'t exist!\n'))
-                type = self.set_Type(input('Enter Primary Type: '))
+                clear_line()
+                cprint(color('This type doesn\'t exist!','error'))
+                type = self.set_Type()
+        
+        self.options[2] = f'Primary Type: {type}'       
+        self.type1 = type
 
-        return type
-
-    def set_Type2(self,type1,type2):
+    def set_Type2(self):
+        type2 = input('Enter Secondary Type: ')
         while type2.isnumeric() == True:
-            print(C().color_string('error','\nNumbers are invalid!\n'))
-            type2 = input('Enter Secondary Type: ')
+            if type2 == '0':
+                return
+            else:
+                clear_line()
+                cprint(color('Numbers are invalid!','error'))
+                type2 = input('Enter Secondary Type: ')
         else:
             type2 = type2.upper()
-            if type2 == 'N':
-                print(C().color_string('error','\nYou chose to quit!\n'))
-                return None
-            elif (type2 == type1) or (type2 == ''):
+            if (type2 == self.type1) or (type2 == ''):
                 type2 = ''
             elif (type2 not in self.type_list):
-                print(C().color_string('error','\nThis type doesn\'t exist!\n'))
-                self.set_Type2(type1,input('Enter Secondary Type: '))
+                clear_line()
+                cprint(color('This type doesn\'t exist!','error'))
+                self.set_Type2()
 
-        return type2
+        self.options[3] = f'Secondary Type: {type2}'
+        self.type2 = type2
 
     def set_Ability(self,ability):
         while ability.isnumeric() == True:
-            print(C().color_string('error','\nNumbers are invalid!\n'))
-            ability = input('Enter Ability: ')
+            if ability == '0':
+                return
+            else:
+                clear_line()
+                cprint(color('Numbers are invalid!', 'error'))
+                ability = input('Enter Ability: ')
         else:
             ability = ability.title()
-            if ability == 'N':
-                print(C().color_string('error','\nYou chose to quit!\n'))
-                return
             if (ability not in self.ability_list):
-                print(C().color_string('error','\nThis ability doesn\'t exist!\n'))
+                clear_line()
+                cprint(color('This ability doesn\'t exist!','error'))
                 ability = self.set_Ability(input('Enter Ability: '))
 
+        self.options[4] = f'Ability: {ability}'
         return ability
 
     def set_Abitlity2(self,ability1,ability2):
         while ability2.isnumeric() == True:
-            print(C().color_string('error','\nNumbers are invalid!\n'))
-            ability2 = input('Enter Ability #2: ')
+            if ability2 == '0':
+                return
+            else:
+                clear_line()
+                cprint(color('Numbers are invalid!', 'error'))
+                ability2 = input('Enter Ability #2: ')
         else:
             ability2 = ability2.title()
-            if ability2 == 'N':
-                print(C().color_string('error','\nYou chose to quit!\n'))
-                return None
-            elif (ability2 == ability1) or (ability2 == ''):
+            if (ability2 == ability1) or (ability2 == ''):
                 type2 = ''
             elif (ability2 not in self.ability_list):
-                print(C().color_string('error','\nThis ability doesn\'t exist!\n'))
+                clear_line()
+                cprint(color('This ability doesn\'t exist!','error'))
                 self.set_Abitlity2(ability1,input('Enter Ability #2: '))
 
+        self.options[5] = f'Ability #2: {ability2}'
         return ability2
 
     def set_Hidden_Ability(self,ability1,ability2,ability3):
         while ability3.isnumeric() == True:
-            print(C().color_string('error','\nNumbers are invalid!\n'))
-            ability3 = input('Enter Hidden Ability: ')
+            if ability3 == '0':
+                return
+            else:
+                clear_line()
+                cprint(color('Numbers are invalid!', 'error'))
+                ability3 = input('Enter Hidden Ability: ')
         else:
             ability3 = ability3.title()
-            if ability3 == 'N':
-                print(C().color_string('error','\nYou chose to quit!\n'))
-                return None
-            elif (ability3 == ability1) or (ability3 == ability2) or (ability3 == ''):
+            if (ability3 == ability1) or (ability3 == ability2) or (ability3 == ''):
                 ability3 = ''
             elif (ability3 not in self.ability_list):
-                print(C().color_string('error','\nThis ability doesn\'t exist!\n'))
+                clear_line()
+                cprint(color('This ability doesn\'t exist!','error'))
                 self.set_Hidden_Ability(ability1,ability2,input('Enter Hidden Ability: '))
 
+        self.options[6] = f'Hidden Ability: {ability3}'
         return ability3
         
     def add_Dex_Entry(self,number,name,ability,type1,type2, ability2, hidden_ability):
@@ -222,6 +233,32 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
             return
 
         self.main()
+    def set_option(self,number= None,version=None):
+            while (number not in self.job_map) and (number not in [b'8',b'0']) or(int(number) == version) :
+                cprint('\n[bold red]Invalid Entry. Try Again![/bold red]')
+                number = minput()
+                print("\033[A\033[2K\033[A", end='', flush=True)
+            return number
+        
+    def new_main(self):
+        main_frame = APD().main_frame
+        cprint(main_frame(options=self.options),justify='center')
+        selection = self.set_option(minput())
+        while True:
+            if selection == b'0':
+                clear_console()
+                return
+            else:
+                for key in self.job_map:
+                    if selection == key:
+                        self.index = int(selection)
+                        clear_console()
+                        cprint(main_frame(options=self.options,index=self.index),justify='center')
+                        self.job_map[selection]()
+                        clear_console()
+                        cprint(main_frame(options=self.options),justify='center')
+                        selection = self.set_option(minput(),int(key))
+                        break
 
 class Add_MegaEvolution(Add_Pokemon):
     def __init__(self):
@@ -303,5 +340,4 @@ class Add_Gigantamax(Add_Pokemon):
 
 if __name__ == '__main__':
     M = Add_Pokemon()
-
-    M.main()
+    M.new_main()

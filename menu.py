@@ -1,4 +1,5 @@
 from ast import Add
+from re import A
 from rich.console import Console
 from rich.panel import Panel
 from rich.box import DOUBLE, MINIMAL, SQUARE, ASCII, ASCII_DOUBLE_HEAD,\
@@ -20,7 +21,8 @@ class Menu:
                      header: str ='Main Menu',
                      options=[],
                      exit_statement='0. EXIT',
-                     footer='[bold red](ENTER an Option)'):
+                     footer='[bold red](ENTER an Option)',
+                     padding=(2,4,2,4)):
         
         def option_generator(options, selected_index):
             for i, option in enumerate(options, start=1):
@@ -37,11 +39,11 @@ class Menu:
 
         
         panel = Panel(
-            option_list,
+            Text(option_list, justify='left'),
             title=header,
             subtitle=footer,
-            style=color,
-            padding=(2,4,2,4),
+            border_style=color,
+            padding=padding,
             box=ROUNDED,
             expand=False
         )
@@ -133,34 +135,31 @@ class Add_Pokemon_Display:
         pass
 
     def main_frame(self,
-                   render = Menu().add_pokemon_menu(),
+                   options = ['Name:',
+                            'Number:',
+                            'Type:',
+                            'Type 2:',
+                            'Ability:',
+                            'Ability 2:',
+                            'Hidden Ability:'],
+                    exit_statement = '8. CLEAR\n\n9. SUBMIT\n\n0. EXIT',
+                    index = None,
                    title='Add Pokemon',
                    line = HEAVY,
                    panel_color = 'blue',
-                   padding = (2,5,1,5),
+                   padding = (2,30,1,5),
                    footer = '[bold red](ENTER an Option)'):
         
         header =f'[u bold white]{title}[/u bold white]'
+        console.clear()
         
-        return Panel(
-            render,
-            title=header,
-            box=line,
-            border_style=panel_color,
-            padding = padding,
-            expand=False,
-            width=console.width,
-            subtitle=footer# Add this line to set the width to the terminal width
-        )
-
-    def prompt(self, string='',color_name='white'):
-        color_map = {'error': 'bold red'}
-        rich_color = color_map.get(color_name, 'white')
-        string = Text(string,justify = 'center',style = rich_color)
-        return self.main_frame(
-                        render=string,
-                        line = HEAVY_HEAD,padding=(1,11),
-                        footer = '[bold red](ENTER N to Quit)')
+        return Menu().display_menu(color= panel_color,
+                                   options=options,
+                                   exit_statement=exit_statement,
+                                   footer=footer,
+                                   index=index,
+                                   header=header,
+                                   padding=padding)
         
 if __name__ == "__main__":
-    console.print(Add_Pokemon_Display().prompt('Invalid Entry. Try Again!','error'))
+    console.print(Add_Pokemon_Display().main_frame(index=7),justify='center')
