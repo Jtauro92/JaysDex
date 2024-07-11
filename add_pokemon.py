@@ -338,6 +338,8 @@ class Add_MegaEvolution(Add_Pokemon):
             return name + ' X'
         if form == '2':
             return name + ' Y'
+        
+    
 
     def main(self,name=None,number=None):
         while True:

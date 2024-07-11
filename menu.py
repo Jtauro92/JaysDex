@@ -29,7 +29,7 @@ class Menu:
                 if i - 1 != selected_index:
                     yield f"{i}. {option}"
                     
-                    
+    
         if (len(options) == 1) and (index is not None):
             option_list = f'{exit_statement} '
         elif (len(options) > 1) and (index is not None):
@@ -161,5 +161,18 @@ class Add_Pokemon_Display:
                                    header=header,
                                    padding=padding)
         
+    def prompt(self, string='',color_name='white'):
+        color_map = {'error': 'bold red'}
+        rich_color = color_map.get(color_name, 'white')
+        return Panel(
+            Text(string,
+                 justify = 'center',
+                 style = rich_color),
+            title='[u bold white]Add MegaEvolution',  # Add this line to set the title to 'Add Pokemon
+            box=HEAVY_HEAD,
+            border_style='orange_red1',
+            padding=(1,11),
+            expand=False)        
+    
 if __name__ == "__main__":
-    console.print(Add_Pokemon_Display().main_frame(index=7),justify='center')
+    console.print(Add_Pokemon_Display().prompt('This is a test','error',),justify='center')
