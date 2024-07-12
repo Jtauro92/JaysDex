@@ -5,7 +5,9 @@ import os
 
 cprint = console().print
 clear_console = console().clear
-
+def clear_line():
+    print("\033[A\033[2K", end='', flush=True)
+    
 def minput():
         m.kbhit()
         return m.getch()

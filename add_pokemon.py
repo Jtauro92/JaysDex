@@ -1,12 +1,14 @@
+from turtle import clear
 from Pokemon import *
 from view_pokemon import color as C, View_Pokemon as VP
 from add_stats import add_stats as AS
 from menu import Add_Pokemon_Display as APD
 
-
 color = C().color_rich
-def clear_line():
-    print("\033[A\033[2K\033[A\033[2K", end='', flush=True)
+
+def clear_two_lines():
+    clear_line()
+    clear_line()
 
 class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
     def __init__(self):
@@ -31,169 +33,162 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
         self.data_table = VP().pokemon_data
 
     def validate_Name(self):
-        name = input('\nEnter Pokemon Name: ')
-        while name.isnumeric() == True:
-            name = int(name)
-            if name == 0:
+        name = input('Enter Pokemon Name: ')
+        clear_line()
+        while True:
+            if name == '0':
                 return
-            else:
-                clear_line()
+            if name.isnumeric():
                 cprint(color('Numbers are invalid!','error'))
-            name = input('Enter Pokemon Name: ')
-
-        else:
-            name = name.title()
-            if name == '':
-                    clear_line()
-                    cprint(color('Name cannot be empty!','error'))
-                    name = self.validate_Name()
-            for pokemon in self.dex:
-                if name == pokemon['Name']:
-                    clear_line()
-                    cprint(color('This Pokemon already exist!','error'))
-                    name = self.validate_Name()
-                    
-        self.options[0] = f'Name:               {name}'
-        self.name = name
-
-    def validate_Number(self):
-        number = input('\nEnter Pokedex Number: ')
-        while number.isnumeric() == False:
-            clear_line()
-            cprint(color('Only numbers are valid!','error'))
-            number = input('Enter Pokedex Number: ')
-        else:
-            number = int(number)
-            if number == 0:
-                        return
-            if not (0<number<=1025):
-                        clear_line()
-                        cprint(color('Invalid Pokedex Number!','error'))
-                        number = self.validate_Number()
+                
+            elif name == '':
+                cprint(color('Name cannot be empty!','error'))
             else:
-                for pokemon in self.dex:
-                    if number == pokemon['Number']:
-                        clear_line()
+                name = name.title()
+                if any(name == pokemon['Name'] for pokemon in self.dex):
+                    cprint(color('This Pokemon already exist!','error'))
+                else:
+                    self.name = name
+                    self.options[0] = f'Name:               {self.name}'
+                    return
+            name = input('Enter Pokemon Name: ')
+            clear_line()
+            clear_line()
+                
+    def validate_Number(self):
+        number = input('Enter Pokedex Number: ')
+        clear_line()
+        while True:
+            if number == '0':
+                return
+            if (number.isnumeric() == False):
+                cprint(color('Only numbers are valid!','error'))
+            else:
+                number = int(number)
+                if not (0<number<=1025):
+                    cprint(color('Invalid Pokedex Number!','error'))
+                else:
+                    if any(number == pokemon['Number'] for pokemon in self.dex):
                         cprint(color('This Pokemon already exist!','error'))
-                        number = self.validate_Number()
-                        
-        self.options[1] = f'Pokedex Number:     {number}'
-        self.number = number
+                    else:
+                        self.options[1] = f'Pokedex Number:     {number}'
+                        self.number = number
+                        return
+            number = input('Enter Pokedex Number: ')
+            clear_two_lines()
     
     def set_Type(self):
-        type = input('\nEnter Primary Type: ')
-        while type.isnumeric() == True:
+        type = input('Enter Primary Type: ')
+        clear_line()
+        while True:
             if type == '0':
                 return
+            if type.isnumeric():
+                cprint(color('Numbers are invalid!','error'))
             else:
-                clear_line()
-                cprint(color('Numbers are invalid!', 'error'))
-                type = input('Enter Primary Type: ')
-        else:
-            type = type.upper()
-            if (type not in self.type_list):
-                clear_line()
-                cprint(color('This type doesn\'t exist!','error'))
-                type = self.set_Type()
-        
-        self.options[2] = f'Primary Type:       {type}'       
-        self.type1 = type
+                type = type.upper()
+                if (type not in self.type_list):
+                    cprint(color('This type doesn\'t exist!','error'))
+                else:
+                    self.options[2] = f'Primary Type:       {type}'
+                    self.type1 = type
+                    return
+            type = input('Enter Primary Type: ')
+            clear_two_lines()
 
     def set_Type2(self):
         if self.type1 == None:
-            clear_line()
-            cprint(color('\nPrimary Type must be set first!','error'))
-            return
-            
+            return 
         else:
-            type2 = input('\nEnter Secondary Type: ')
-            while type2.isnumeric() == True:
+            type2 = input('Enter Secondary Type: ')
+            clear_line()
+            while True:
                 if type2 == '0':
                     return
-                else:
-                    clear_line()
+                if type2.isnumeric():
                     cprint(color('Numbers are invalid!','error'))
-                    type2 = input('Enter Secondary Type: ')
-            else:
-                type2 = type2.upper()
-                if (type2 == self.type1) or (type2 == ''):
-                    type2 = ''
-                elif (type2 not in self.type_list):
-                    clear_line()
-                    cprint(color('This type doesn\'t exist!','error'))
-                    self.set_Type2()
-
-        self.options[3] = f'Secondary Type:     {type2}'
-        self.type2 = type2
+                else:
+                    type2 = type2.upper()
+                    if (type2 not in self.type_list):
+                        cprint(color('This type doesn\'t exist!','error'))
+                    else:
+                        if type2 == self.type1:
+                            cprint(color('Cannot be the same as Primary type!','error'))
+                        else:
+                            self.options[3] = f'Secondary Type:     {type2}'
+                            self.type2 = type2
+                            return
+                type2 = input('Enter Secondary Type: ')
+                clear_two_lines()
 
     def set_Ability(self):
-        ability = input('\nEnter Ability: ')
-        while ability.isnumeric() == True:
+        ability = input('Enter Ability: ')
+        clear_line()
+        while True:
             if ability == '0':
                 return
+            if ability.isnumeric():
+                cprint(color('Numbers are invalid!','error'))
             else:
-                clear_line()
-                cprint(color('Numbers are invalid!', 'error'))
-                ability = input('Enter Ability: ')
-        else:
-            ability = ability.title()
-            if (ability not in self.ability_list):
-                clear_line()
-                cprint(color('This ability doesn\'t exist!','error'))
-                self.set_Ability()
-
-        self.options[4] = f'Ability:            {ability}'
-        self.ability = ability
+                ability = ability.title()
+                if (ability not in self.ability_list):
+                    cprint(color('This ability doesn\'t exist!','error'))
+                else:
+                    self.options[4] = f'Ability:            {ability}'
+                    self.ability = ability
+                    return
+            ability = input('Enter Ability: ')
+            clear_two_lines()
 
     def set_Abitlity2(self):
         if self.ability == None:
-            clear_line()
-            cprint(color('Primary Ability must be set first!','error'))
-            return
-        ability2 = input('\nEnter Ability #2: ')
-        while ability2.isnumeric() == True:
-            if ability2 == '0':
-                return
-            else:
-                clear_line()
-                cprint(color('Numbers are invalid!', 'error'))
-                ability2 = input('Enter Ability #2: ')
+            return 
         else:
-            ability2 = ability2.title()
-            if (ability2 == self.ability) or (ability2 == ''):
-                ability2 = ''
-            elif (ability2 not in self.ability_list):
-                clear_line()
-                cprint(color('This ability doesn\'t exist!','error'))
-                self.set_Abitlity2()
-
-        self.options[5] = f'Ability #2:         {ability2}'
-        self.ability2 = ability2
+            ability2 = input('Enter Ability #2: ')
+            clear_line()
+            while True:
+                if ability2 == '0':
+                    return
+                if ability2.isnumeric():
+                    cprint(color('Numbers are invalid!','error'))
+                else:
+                    ability2 = ability2.title()
+                    if (ability2 not in self.ability_list):
+                        cprint(color('This ability doesn\'t exist!','error'))
+                    else:
+                        if ability2 in [self.ability,self.hidden_ability]:
+                            cprint(color('This ability has been entered!','error'))
+                        else:
+                            self.options[5] = f'Ability #2:         {ability2}'
+                            self.ability2 = ability2
+                            return
+                ability2 = input('Enter Ability #2: ')
+                clear_two_lines()
 
     def set_Hidden_Ability(self):
         if self.ability == None:
-            clear_line()
-            cprint(color('Primary Ability must be set first!','error'))
-            return
-        ability3 = input('\nEnter Hidden Ability: ')
-        while ability3.isnumeric() == True:
-            if ability3 == '0':
-                return
-            else:
-                clear_line()
-                cprint(color('Numbers are invalid!', 'error'))
-                ability3 = input('Enter Hidden Ability: ')
+            return 
         else:
-            ability3 = ability3.title()
-            if (ability3 == self.ability) or (ability3 == self.ability2) or (ability3 == ''):
-                ability3 = ''
-            elif (ability3 not in self.ability_list):
-                clear_line()
-                cprint(color('This ability doesn\'t exist!','error'))
-                self.set_Hidden_Ability()
-
-        self.options[6] = f'Hidden Ability:     {ability3}'
-        self.hidden_ability = ability3
+            ability3 = input('Enter Hidden Ability: ')
+            clear_line()
+            while True:
+                if ability3 == '0':
+                    return
+                if ability3.isnumeric():
+                    cprint(color('Numbers are invalid!','error'))
+                else:
+                    ability3 = ability3.title()
+                    if (ability3 not in self.ability_list):
+                        cprint(color('This ability doesn\'t exist!','error'))
+                    else:
+                        if ability3 in [self.ability,self.ability2]:
+                            cprint(color('This ability has been entered!','error'))
+                        else:
+                            self.options[6] = f'Hidden Ability:     {ability3}'
+                            self.hidden_ability = ability3
+                            return
+                ability3 = input('Enter Hidden Ability: ')
+                clear_two_lines()
         
     def add_Dex_Entry(self):
         if any(attribute is None for attribute in [self.number,self.name,self.type1,self.ability]):
@@ -211,17 +206,18 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
             clear_console()
             cprint(color('Pokemon added to Pokedex!\n','success'),justify='center')
             cprint(self.data_table(self.name),justify='center')
-            cprint(color('\nWould you like to enter stats for this Pokemon?'))
+            cprint('\nWould you like to enter stats for this Pokemon?')
             selection = minput()
             if selection == b'0':
+                self.clear_data()
                 return
             else:
                 AS().update_stat(self.name)
                 cprint(color('\nWould you like to add another Pokemon?'))
                 selection = minput()
                 if selection == b'0':
+                    self.clear_data()
                     return
-
             self.clear_data()
             
     def clear_data(self):
@@ -293,10 +289,10 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
         self.main()
     
     def set_option(self,number= None,version=None):
-            while (number not in self.job_map) and (number not in [b'8',b'0']) or(int(number) == version) :
-                cprint('\n[bold red]Invalid Entry. Try Again![/bold red]')
+            while (number not in self.job_map) and (number != b'0') or (int(number) == version) :
+                cprint(color('Invalid Entry. Try Again!','error'))
                 number = minput()
-                print("\033[A\033[2K\033[A", end='', flush=True)
+                clear_line()
             return number
         
     def main(self):
@@ -313,7 +309,7 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
                     if selection == key:
                         self.index = int(selection)
                         clear_console()
-                        cprint(main_frame(options=self.options,index=self.index),justify='center')
+                        cprint('\n',main_frame(options=self.options,index=self.index),justify='center')
                         self.job_map[selection]()
                         clear_console()
                         cprint(main_frame(options=self.options),justify='center')

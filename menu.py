@@ -1,5 +1,6 @@
 from ast import Add
 from re import A
+from turtle import width
 from rich.console import Console
 from rich.panel import Panel
 from rich.box import DOUBLE, MINIMAL, SQUARE, ASCII, ASCII_DOUBLE_HEAD,\
@@ -22,7 +23,9 @@ class Menu:
                      options=[],
                      exit_statement='0. EXIT',
                      footer='[bold red](ENTER an Option)',
-                     padding=(2,4,2,4)):
+                     padding=(2,4,2,4),
+                    width=None,
+                    line_style = HEAVY):
         
         def option_generator(options, selected_index):
             for i, option in enumerate(options, start=1):
@@ -44,8 +47,9 @@ class Menu:
             subtitle=footer,
             border_style=color,
             padding=padding,
-            box=ROUNDED,
-            expand=False
+            box=line_style,
+            expand=False,
+            width=width
         )
         return panel
 
@@ -147,7 +151,7 @@ class Add_Pokemon_Display:
                    title='Add Pokemon',
                    line = HEAVY,
                    panel_color = 'blue',
-                   padding = (2,30,1,5),
+                   padding = (2,5,1,5),
                    footer = '[bold red](ENTER an Option)'):
         
         header =f'[u bold white]{title}[/u bold white]'
@@ -159,7 +163,9 @@ class Add_Pokemon_Display:
                                    footer=footer,
                                    index=index,
                                    header=header,
-                                   padding=padding)
+                                   padding=padding,
+                                   width=None,
+                                   line_style=line) # Add this line to set the width to the terminal width)
         
     def prompt(self, string='',color_name='white'):
         color_map = {'error': 'bold red'}
