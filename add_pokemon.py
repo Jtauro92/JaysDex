@@ -221,19 +221,9 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
             self.clear_data()
             
     def clear_data(self):
-        self.name,self.number,self.type1,self.type2 = None,None,None,None
-        self.type1 = None
-        self.type2 = None
-        self.ability = None
-        self.ability2 = None
-        self.hidden_ability = None
-        self.options = ['Name:', 
-                        'Pokedex Number:', 
-                        'Primary Type:', 
-                        'Secondary Type:', 
-                        'Ability:', 
-                        'Ability #2:', 
-                        'Hidden Ability:']
+        self.name = self.number = self.type1 = self.type2 = self.ability = self.ability2 = self.hidden_ability = None
+        self.options = ['Name:','Pokedex Number:', 'Primary Type:', 'Secondary Type:',
+                        'Ability:', 'Ability #2:', 'Hidden Ability:']
 
     def old_main(self):
         clear_console()

@@ -165,7 +165,7 @@ class Add_Pokemon_Display:
                                    header=header,
                                    padding=padding,
                                    width=None,
-                                   line_style=line) # Add this line to set the width to the terminal width)
+                                   line_style=line) # Add this line to set the width to the terminal width
         
     def prompt(self, string='',color_name='white'):
         color_map = {'error': 'bold red'}
