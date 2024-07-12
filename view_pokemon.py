@@ -1,8 +1,7 @@
 from Pokemon import * 
-from menu import Menu as M
+from menu import Menu as M , View_Pokemon_Display as VPD
 from rich.table import Table
 from rich.text import Text
-from menu import View_Pokemon_Display as VPD
 from rich.columns import Columns as C
 
 prompt = VPD().prompt
@@ -10,10 +9,9 @@ prompt = VPD().prompt
 #View_Pokemon class is responsible for displaying the pokemon data
 class View_Pokemon(Pokemon):
     def __init__(self):
-        Pokemon.__init__(self)
+        super().__init__()
         self.main_frame = VPD().main_frame
         self.main_menu = M().view_one_pokemon_menu
-        self.name = None
         self.color = color().color_rich
         self.color_map = color().color_map
         self.table_color = color().table_color
@@ -23,33 +21,30 @@ class View_Pokemon(Pokemon):
 
     def set_name(self,name):
         while True:
+            if name == '0':
+                return name
             if name.isnumeric() == False:
                 name = name.title()
-                if name == 'N':
+                if any(name == pokemon['Name'] for pokemon in self.dex):
                     return name
                 else:
-                    for pokemon in self.dex:
-                        if name == pokemon['Name']:
-                            return name
-                    else:
-                        clear_console()
-                        cprint(prompt('This pokemon doesn\'t exist! Try again!','error'),justify='center')
-                        name = input()
+                    clear_console()
+                    cprint(prompt('This pokemon doesn\'t exist! Try again!','error'),justify='center')
             else:
                 name = int(name)
                 for pokemon in self.dex:
                     if name == pokemon['Number']:
                         return pokemon['Name']
-                else:
-                    clear_console()
-                    cprint(prompt('This pokemon doesn\'t exist! Try again!','error'),justify='center')
-                    name = input()
+                    else:
+                        clear_console()
+                        cprint(prompt('This pokemon doesn\'t exist! Try again!','error'),justify='center')
+            name = input()
         
     def set_option(self,number= None,version=None):
             while (number not in self.job_map) and (number not in [b'9',b'0']) or(int(number) == version) :
-                cprint('\n[bold red]Invalid Entry. Try Again![/bold red]')
+                cprint(self.color('Invalid Entry. Try Again!','error'))
                 number = minput()
-                print("\033[A\033[2K\033[A", end='', flush=True)
+                clear_line()
             return number    
         
     def view_all_pokemon(self):
@@ -72,15 +67,14 @@ class View_Pokemon(Pokemon):
    
     def pokemon_data(self, entry=None):
         dex = get_db_data("select * FROM pokemon")
-        for pokemon in dex:
-            if (entry == pokemon[1]):
-                name,number = pokemon[1],pokemon[0]
-                title_color = self.color_map.get(pokemon[2].lower(), 'white')
-                table_color = self.table_color.get(pokemon[2].lower(), 'white')
-                row = [str(attr) for attr in pokemon[2:7]]
+        for pokemon in self.dex:
+            if (entry == pokemon['Name']):
+                title_color = self.color_map.get(pokemon['Type1'].lower(), 'white')
+                table_color = self.table_color.get(pokemon['Type1'].lower(), 'white')
+                row = [str(pokemon[key]) for key in ['Type1', 'Type2', 'Ability', 'Ability2','Hidden_Ability']]
             
                 table = Table(
-                            title=f'#{pokemon[0]:04} {pokemon[1]}',
+                            title=f'#{pokemon['Number']:04} {pokemon['Name']}',
                             title_style=title_color, 
                             padding=(0,1),
                             expand=True,
@@ -312,9 +306,9 @@ class View_Pokemon(Pokemon):
             clear_console()
             cprint(prompt('Which Pokemon?'),justify='center')
             self.name = self.set_name(input())
-            if self.name.upper() == 'N':
+            if self.name == '0':
                 clear_console()
-                cprint(color().color_rich('You have chosen to quit!', 'error'))
+                cprint(self.color('You have chosen to quit!', 'error'))
                 self.name = None
                 return
             else:

@@ -1,4 +1,3 @@
-from turtle import clear
 from Pokemon import *
 from view_pokemon import color as C, View_Pokemon as VP
 from add_stats import add_stats as AS
@@ -208,16 +207,11 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
             cprint(self.data_table(self.name),justify='center')
             cprint('\nWould you like to enter stats for this Pokemon?')
             selection = minput()
+            clear_two_lines()
             if selection == b'0':
                 self.clear_data()
-                return
             else:
                 AS().update_stat(self.name)
-                cprint(color('\nWould you like to add another Pokemon?'))
-                selection = minput()
-                if selection == b'0':
-                    self.clear_data()
-                    return
             self.clear_data()
             
     def clear_data(self):

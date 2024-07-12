@@ -1,6 +1,3 @@
-from ast import Add
-from re import A
-from turtle import width
 from rich.console import Console
 from rich.panel import Panel
 from rich.box import DOUBLE, MINIMAL, SQUARE, ASCII, ASCII_DOUBLE_HEAD,\

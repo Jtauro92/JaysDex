@@ -34,7 +34,8 @@ class Pokemon:
         self.type_list = ['FIRE','WATER','GRASS','ELECTRIC','ICE','FIGHTING',
                           'POISON','GROUND','FLYING','PSYCHIC','BUG','ROCK',
                           'GHOST','DARK','DRAGON','STEEL','FAIRY','NORMAL']
-        self.name = self.number= self.type1= self.type2=self.ability=self.ability2=self.hidden_ability=None
+        self.name = self.number = self.type1 = self.ability = None 
+        self.type2 = self.ability2 = self.hidden_ability = None
         self.dex, self.ability_list = [],[]
         self.load_attributes()
         self.clear = lambda: os.system('cls')
