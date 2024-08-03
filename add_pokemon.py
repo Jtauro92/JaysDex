@@ -322,6 +322,8 @@ class Add_MegaEvolution(Add_Pokemon):
     
 
     def main(self,name=None,number=None):
+        if name is None:
+            name = VP().set_name(input('Enter Pokemon Name or Number: '))
         while True:
             if name in ['Charizard','Mewtwo']:
                 self.name = self.get_form_name(name)
@@ -380,5 +382,5 @@ class Add_Gigantamax(Add_Pokemon):
     pass
 
 if __name__ == '__main__':
-    M = Add_Pokemon()
+    M = Add_MegaEvolution()
     M.main()
