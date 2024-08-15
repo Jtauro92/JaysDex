@@ -5,9 +5,7 @@ from menu import Add_Pokemon_Display as APD
 
 color = C().color_rich
 
-def clear_two_lines():
-    clear_line()
-    clear_line()
+clear_two_lines = lambda: (clear_line(), clear_line())
 
 class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
     def __init__(self):
@@ -383,4 +381,5 @@ class Add_Gigantamax(Add_Pokemon):
 
 if __name__ == '__main__':
     M = Add_MegaEvolution()
-    M.main()
+    A = Add_Pokemon()
+    A.main()
