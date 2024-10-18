@@ -217,7 +217,7 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
         self.options = ['Name:','Pokedex Number:', 'Primary Type:', 'Secondary Type:',
                         'Ability:', 'Ability #2:', 'Hidden Ability:']
 
-    def old_main(self):
+    #def old_main(self):
         clear_console()
         cprint(prompt('Enter Pokemon Name:'),justify='center')
         self.name = self.validate_Name(input())
