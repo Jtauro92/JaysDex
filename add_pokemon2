@@ -1,0 +1,34 @@
+from hmac import new
+from os import name
+from database import dex,ability_list,type_list,attributes,Pokedex as P
+from Pokemon import Pokemon
+
+new_pokemon = Pokemon()
+
+class Add_Pokemon():
+
+
+    def set_Name(self):
+        name = input('Enter Pokemon Name: ')
+        while True:
+            if name == '0':
+                return
+            else:
+                new_pokemon = Pokemon(name)
+                if new_pokemon.name_in_pokedex():
+                    print('This Pokemon already exist!')
+                elif new_pokemon.name == '':
+                    print('Cannot be empty!')
+                elif new_pokemon.name == None:
+                    print('Invalid Pokemon Name!')
+                else:
+                    print(new_pokemon.name)
+                    return
+            name = input('Enter Pokemon Name: ')
+
+
+        
+
+if __name__ == "__main__":
+    Add_Pokemon().set_Name()
+    print('done')
