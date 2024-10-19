@@ -9,15 +9,16 @@ class Add_Pokemon():
 
 
     def set_Name(self):
+        global new_pokemon
         name = input('Enter Pokemon Name: ')
         while True:
             if name == '0':
                 return
             else:
-                new_pokemon = Pokemon(name)
+                new_pokemon.name = name
                 if new_pokemon.name_in_pokedex():
                     print('This Pokemon already exist!')
-                elif new_pokemon.name == '':
+                elif not new_pokemon.name:
                     print('Cannot be empty!')
                 elif new_pokemon.name == None:
                     print('Invalid Pokemon Name!')
