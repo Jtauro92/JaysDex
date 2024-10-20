@@ -8,16 +8,28 @@ class Add_Pokemon(Pokemon):
 
     def set_Name(self):
         while True:
-            pokemon = Pokemon(input('Enter Pokemon Name: '))
-            if pokemon.name == '0':
+            np = Pokemon(input('Enter Pokemon Name: '))
+            if np.name == '0':
                 return
-            if pokemon.name == None:
-                print('Invalid Pokemon Name!')
-            elif pokemon.in_pokedex():
+            if np.name == None:
+                print('Invalid!')
+            elif np.in_pokedex():
                 print('Pokemon already exists!')
             else:
-                return pokemon.name
+                return np.name
+            
+    def get_Number(self):
+        while True:
+            np = Pokemon(number= input('Enter Pokemon Number: '))
+            if np.number == 0:
+                return
+            if np.number == None:
+                print('Invalid!')
+            elif np.in_pokedex():
+                print('Pokemon already exists!')
+            else:
+                return np.number
 
 
 if __name__ == "__main__":
-    print(Add_Pokemon().set_Name())
+    print(Add_Pokemon().get_Number())

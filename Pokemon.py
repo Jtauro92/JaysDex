@@ -17,7 +17,7 @@ class Pokemon:
 
         self.name = name.capitalize() if name.strip() and (name == '0' or not name.isnumeric()) else None
         try:
-            self.number = int(number) if 0 <int(number)<= 1025 else None
+            self.number = int(number) if 0 <= int(number)<= 1025 else None
         except ValueError:
             self.number = None
             
@@ -36,10 +36,10 @@ class Pokemon:
         self.speed = speed
 
     def in_pokedex(self):
-        return any(pokemon['Name'] == self.name for pokemon in dex)
-    
-    def number_in_pokedex(self):
-        return any(pokemon['Number'] == self.number for pokemon in dex)   
+        if isinstance(self.name,str):
+            return any(pokemon['Name'] == self.name for pokemon in dex)
+        elif isinstance(self.number,int):
+            return any(pokemon['Number'] == self.number for pokemon in dex)
         
     def type2_equals_type1(self):
         return self.type1 == self.type2
