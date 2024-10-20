@@ -13,9 +13,9 @@ def minput():
 
 class Pokemon:
     def __init__(self,name='',number=0,type1='',type2='',ability='',ability2='',h_ability='',
-                 stage=1,hp=None,atk=None,defn=None,sp_atk=None,sp_def=None,speed=None):
+                 stage=1,hp=0,atk=0,defn=0,sp_atk=0,sp_def=0,speed=0):
 
-        self.name = name.capitalize() if not name.isnumeric() else None
+        self.name = name.capitalize() if name.strip() and (name == '0' or not name.isnumeric()) else None
         try:
             self.number = int(number) if 0 <int(number)<= 1025 else None
         except ValueError:
@@ -35,7 +35,7 @@ class Pokemon:
         self.sp_def = sp_def
         self.speed = speed
 
-    def name_in_pokedex(self):
+    def in_pokedex(self):
         return any(pokemon['Name'] == self.name for pokemon in dex)
     
     def number_in_pokedex(self):
@@ -56,11 +56,11 @@ class Pokemon:
         return f"{self.name} is a {self.type1} type Pokemon with {self.hp} HP"             
 
 if __name__ == '__main__':
-    Testmon = Pokemon('charmander',
+    Testmon = Pokemon(' ',
                       number=9, 
                       type1="Fire",
                       type2="Flying",
                       ability="blaze",
                       ability2="solar flare",
                       h_ability="Drought",)
-    print (Testmon.name_in_pokedex())
+    print (Testmon)
