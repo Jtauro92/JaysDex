@@ -1,17 +1,25 @@
+from hmac import new
+from operator import ne
 from database import dex,ability_list,type_list,attributes
 from Pokemon import Pokemon
+import msvcrt as m
+
+
+def minput():
+        m.kbhit()
+        return m.getch()
+new_pokemon = Pokemon()
 
 class Add_Pokemon(Pokemon):
     def __init__(self):
         super().__init__()
-        self.new_pokemon = Pokemon()
 
     def set_Name(self):
         while True:
             np = Pokemon(input('Enter Pokemon Name: '))
             if np.name == '0':
                 return
-            if np.name == None:
+            elif np.name == None:
                 print('Invalid!')
             elif np.in_pokedex():
                 print('Pokemon already exists!')
@@ -23,13 +31,75 @@ class Add_Pokemon(Pokemon):
             np = Pokemon(number= input('Enter Pokemon Number: '))
             if np.number == 0:
                 return
-            if np.number == None:
+            elif np.number == None:
                 print('Invalid!')
             elif np.in_pokedex():
                 print('Pokemon already exists!')
             else:
                 return np.number
 
+    def get_Type(self):
+        np = Pokemon(type= input('Enter Pokemon Type: '))
+        if np.type1 == '0':
+            return
+        elif np.type1 == None:
+            print('Type not found!')
+        else:
+            return np.type1
+
+    def get_ability(self):
+        np = Pokemon()
+        np.ability = input('Enter Pokemon Ability: ')
+        if np.ability == '0':
+            return
+        elif np.ability == None:
+            print('Ability not found!')
+        else:
+            return np.ability
+        
+        
+    def main(self):
+        global new_pokemon
+        while True:
+            print ('Enter 0 to exit')
+            new_pokemon.name = self.set_Name()
+            if new_pokemon.name == None:
+                return
+                
+            new_pokemon.number = self.get_Number()
+            if new_pokemon.number == None:
+                    return
+                
+            new_pokemon.type1 = self.get_Type()
+            if new_pokemon.type1 == None:
+                return
+                
+            new_pokemon.type2 = self.get_Type()
+            if new_pokemon.type2_equals_type1():
+                new_pokemon.type2 = None
+
+             
+            new_pokemon.ability = self.get_ability()
+            if new_pokemon.ability == None:
+                return
+
+            new_pokemon.ability2 = self.get_ability()
+            if new_pokemon.has_same_ability():
+                new_pokemon.ability2 = None
+            
+
+            new_pokemon.h_ability = self.get_ability()
+            if new_pokemon.has_same_ability():
+                new_pokemon.h_ability = None
+                
+            break
+            
+    def __str__(self):
+        return new_pokemon.__str__()
+            
+        
 
 if __name__ == "__main__":
-    print(Add_Pokemon().get_Number())
+    AD = Add_Pokemon()
+    AD.main()
+    print(AD)

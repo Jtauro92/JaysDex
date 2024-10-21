@@ -12,7 +12,7 @@ def minput():
         return m.getch()
 
 class Pokemon:
-    def __init__(self,name='',number=0,type1='',type2='',ability='',ability2='',h_ability='',
+    def __init__(self,name='',number=0,type='',ability='',
                  stage=1,hp=0,atk=0,defn=0,sp_atk=0,sp_def=0,speed=0):
 
         self.name = name.capitalize() if name.strip() and (name == '0' or not name.isnumeric()) else None
@@ -21,11 +21,11 @@ class Pokemon:
         except ValueError:
             self.number = None
             
-        self.type1 = type1.upper() if type1.upper() in type_list else None
-        self.type2 = type2.upper() if type2.upper() in type_list else None
+        self.type1 = type.upper() if type.upper() in type_list or type != ''.strip() else None
+        self.type2 = None
         self.ability = ability.title() if ability.title() in ability_list else None
-        self.ability2 = ability2.title() if ability2.title() in ability_list else None
-        self.h_ability = h_ability.title() if h_ability.title() in ability_list else None
+        self.ability2 = None
+        self.h_ability =  None
         self.stage = stage if 0 < stage < 4 else 1
         
         self.hp = hp
