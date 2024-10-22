@@ -1,8 +1,8 @@
 from hmac import new
-from operator import ne
-from database import dex,ability_list,type_list,attributes
+from database import dex,type_list,attributes
 from Pokemon import Pokemon
 import msvcrt as m
+
 
 
 def minput():
@@ -46,16 +46,37 @@ class Add_Pokemon(Pokemon):
             print('Type not found!')
         else:
             return np.type1
+        
+    def prompt_generator(self):
+        string = 'Enter Pokemon Ability: '
+        prompt_list = [string, string.replace('Ability', 'Second Ability'), string.replace('Ability', 'Hidden Ability')]
+        for i in prompt_list:
+            yield i
 
     def get_ability(self):
-        np = Pokemon()
-        np.ability = input('Enter Pokemon Ability: ')
-        if np.ability == '0':
-            return
-        elif np.ability == None:
-            print('Ability not found!')
-        else:
-            return np.ability
+        ability_list = []
+        prompt = self.prompt_generator()
+
+        for i in range(3):
+            if i == 1:
+                while True:
+                    pokemon = Pokemon(ability=input(next(prompt)))
+                    if pokemon.ability == '0':
+                        print('Exiting...')
+                                        
+                    if pokemon.ability == None:
+                        print('Ability not found!')
+                
+                    else:
+                        ability_list.append(pokemon.ability)
+                    
+                
+        for a in ability_list:
+            yield a
+                        
+
+
+
         
         
     def main(self):
@@ -77,29 +98,20 @@ class Add_Pokemon(Pokemon):
             new_pokemon.type2 = self.get_Type()
             if new_pokemon.type2_equals_type1():
                 new_pokemon.type2 = None
-
-             
-            new_pokemon.ability = self.get_ability()
-            if new_pokemon.ability == None:
-                return
-
-            new_pokemon.ability2 = self.get_ability()
-            if new_pokemon.has_same_ability():
-                new_pokemon.ability2 = None
-            
-
-            new_pokemon.h_ability = self.get_ability()
-            if new_pokemon.has_same_ability():
-                new_pokemon.h_ability = None
                 
-            break
-            
-    def __str__(self):
-        return new_pokemon.__str__()
+    def test_ability(self):
+        global new_pokemon
+        try:
+            self.ability = next(self.get_ability())
+        except StopIteration:
+            return
+
+ 
+                
             
         
 
 if __name__ == "__main__":
     AD = Add_Pokemon()
-    AD.main()
-    print(AD)
+    AD.test_ability()
+    print(AD.ability)
