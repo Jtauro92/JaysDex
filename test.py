@@ -1,5 +1,4 @@
-from tqdm import tqdm
-import time
+from Pokemon import Pokemon as P
 
-for i in tqdm(range(100),):
-    time.sleep(0.009)
+new_pokemon = P()
+new_pokemon

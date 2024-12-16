@@ -1,6 +1,6 @@
 from hmac import new
 from database import dex,type_list,attributes
-from Pokemon import Pokemon
+from Pokemon import Pokemon as P
 import msvcrt as m
 
 
@@ -8,38 +8,43 @@ import msvcrt as m
 def minput():
         m.kbhit()
         return m.getch()
-new_pokemon = Pokemon()
 
-class Add_Pokemon(Pokemon):
-    def __init__(self):
-        super().__init__()
+class Add_Pokemon(P):
+    def __init__(self,name=None,number=0,type='',type2=None,ability=None,ability2=None,h_ability=None):
+        super().__init__(name, number, type, type2, ability, ability2, h_ability)
+        self.ability_list = []
 
     def set_Name(self):
         while True:
-            np = Pokemon(input('Enter Pokemon Name: '))
-            if np.name == '0':
-                return
-            elif np.name == None:
-                print('Invalid!')
-            elif np.in_pokedex():
-                print('Pokemon already exists!')
-            else:
-                return np.name
+            if P.set_name(input('Enter Pokemon Name: ')):
             
+            if name == '0':
+                print('Exiting...')
+                return
+            if name == 'Default':
+                continue
+            if self.in_pokedex(name):
+                print('Pokemon already exists!')
+            if name is None:
+                continue
+            else:
+                return name
+        
     def get_Number(self):
         while True:
-            np = Pokemon(number= input('Enter Pokemon Number: '))
-            if np.number == 0:
+            number = P(number= input('Enter Pokemon Number: ')).number
+            if number == 0:
+                print('Exiting...')
                 return
-            elif np.number == None:
-                print('Invalid!')
-            elif np.in_pokedex():
-                print('Pokemon already exists!')
+            if number is False:
+                continue
+            if number is None:
+                continue
             else:
-                return np.number
+                return number
 
     def get_Type(self):
-        np = Pokemon(type= input('Enter Pokemon Type: '))
+        np = P(type= input('Enter Pokemon Type: '))
         if np.type1 == '0':
             return
         elif np.type1 == None:
@@ -54,25 +59,63 @@ class Add_Pokemon(Pokemon):
             yield i
 
     def get_ability(self):
-        ability_list = []
         prompt = self.prompt_generator()
 
         for i in range(3):
-            if i == 1:
+            try:
                 while True:
-                    pokemon = Pokemon(ability=input(next(prompt)))
-                    if pokemon.ability == '0':
-                        print('Exiting...')
-                                        
-                    if pokemon.ability == None:
-                        print('Ability not found!')
-                
-                    else:
-                        ability_list.append(pokemon.ability)
-                    
-                
-        for a in ability_list:
-            yield a
+                    ability = (input(next(prompt)))
+                    if ability == '0':
+                            print('Exiting...')
+                            prompt = self.prompt_generator()
+                            return
+                    if ability == False:
+                            print('Ability not found!')
+                            prompt = self.prompt_generator()
+                    if i == 0:
+                       pass 
+                    elif i == 1:
+                        if ability == None:
+                            while True:
+                                print('Ability not found!')
+                                prompt = self.prompt_generator()
+                            if pokemon.has_same_ability():
+                                print('Ability already exists!')
+                                prompt = self.prompt_generator()
+
+                    elif i == 2:
+                        pokemon = Pokemon(ability=input(next(prompt)))
+                        if pokemon.ability == '0':
+                            print('Exiting...')
+                            prompt = self.prompt_generator()
+                            return
+                        elif pokemon.ability == None:
+                            print('Ability not found!')
+                            prompt = next(self.prompt_generator())
+                        
+                    yield ability
+            except (TypeError,StopIteration):
+                self.ability_list = []
+                prompt = self.prompt_generator()
+                break
+              
+    def get_new_pokemon(self):
+        try:
+            new_pokemon = Pokemon(nam=self.set_Name())
+            if new_pokemon.name == None:
+                pass
+
+                         
+        except AttributeError:
+            return
+                              
+        return new_pokemon
+            
+            
+  
+
+
+
                         
 
 
@@ -101,17 +144,18 @@ class Add_Pokemon(Pokemon):
                 
     def test_ability(self):
         global new_pokemon
+        ability = AD.get_ability()
         try:
-            self.ability = next(self.get_ability())
+            self.ability = next(ability)
+            self.ability2 = next(ability)
+            self.h_ability = next(ability)
         except StopIteration:
             return
+    
 
- 
-                
-            
-        
 
 if __name__ == "__main__":
     AD = Add_Pokemon()
-    AD.test_ability()
-    print(AD.ability)
+
+    name = AD.set_Name()
+    print(name)
