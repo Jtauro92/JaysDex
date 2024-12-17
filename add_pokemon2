@@ -1,4 +1,5 @@
 from hmac import new
+from turtle import title
 from database import dex,type_list,attributes
 from Pokemon import Pokemon as P
 import msvcrt as m
@@ -9,26 +10,26 @@ def minput():
         m.kbhit()
         return m.getch()
 
-class Add_Pokemon(P):
-    def __init__(self,name=None,number=0,type='',type2=None,ability=None,ability2=None,h_ability=None):
-        super().__init__(name, number, type, type2, ability, ability2, h_ability)
+class Add_Pokemon():
+    def __init__(self):
         self.ability_list = []
+        self.new_pokemon = P()
 
     def set_Name(self):
         while True:
-            if P.set_name(input('Enter Pokemon Name: ')):
-            
+            name = input('Enter Pokemon Name: ').title()
             if name == '0':
                 print('Exiting...')
                 return
-            if name == 'Default':
+            if name.isnumeric():
+                print('Invalid Name!')
                 continue
-            if self.in_pokedex(name):
-                print('Pokemon already exists!')
-            if name is None:
-                continue
-            else:
-                return name
+            if self.new_pokemon.validate_pokemon(name) is False:
+                self.new_pokemon.name = name
+                break
+            
+    def get_name(self):
+        return self.new_pokemon.name
         
     def get_Number(self):
         while True:
@@ -157,5 +158,5 @@ class Add_Pokemon(P):
 if __name__ == "__main__":
     AD = Add_Pokemon()
 
-    name = AD.set_Name()
-    print(name)
+    AD.set_Name()
+    print(AD.get_name())
