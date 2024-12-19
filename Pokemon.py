@@ -14,7 +14,7 @@ def minput():
         return m.getch()
 
 class Pokemon:
-    def __init__(self,name='',number=None,type='',type2='',ability='',ability2=None,h_ability=None,
+    def __init__(self,name='',number=0,type='',type2='',ability='',ability2=None,h_ability=None,
                  stage=1,hp=0,atk=0,defn=0,sp_atk=0,sp_def=0,speed=0):
         
         self.name = name.title() if self.validate_pokemon(name) else None
@@ -22,8 +22,8 @@ class Pokemon:
         self.type1 = type.upper() if self.validate_pokemon(type=type) else None
         self.type2 = type2.upper() if self.validate_pokemon(type2=type2) else None
         self.ability = ability.title() if self.validate_pokemon(ability=ability) else None
-        self.ability2 = ability2.titlte() if self.validate_pokemon(ability2=ability2) else None
-        self.h_ability =  h_ability.title() if self.validate_pokemon(h_ability=h_ability) else None
+        self.ability2 = ability2.title() if ability2 and self.validate_pokemon(ability2=ability2) else None
+        self.h_ability =  h_ability.title() if h_ability and self.validate_pokemon(h_ability=h_ability) else None
         self.stage = int(stage) if 0 < int(stage) < 4 else 1
         
         self.hp = hp
@@ -32,7 +32,7 @@ class Pokemon:
         self.sp_atk = sp_atk
         self.sp_def = sp_def
         self.speed = speed
-        self.in_pokedex = False
+
         
     def validate_pokemon(self, name=None, number=None, type=None, type2=None, ability=None,
                          ability2=None, h_ability=None):

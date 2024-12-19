@@ -26,6 +26,6 @@
     "python.testing.pytestArgs": [
         "Pokedex"
     ],
-    "python.analysis.typeCheckingMode": "off",
+    "python.analysis.typeCheckingMode": "standard",
     "python.analysis.autoImportCompletions": true
 }
