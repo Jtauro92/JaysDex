@@ -24,7 +24,7 @@ class Pokemon:
         self.ability = ability.title() if self.validate_pokemon(ability=ability) else None
         self.ability2 = ability2.titlte() if self.validate_pokemon(ability2=ability2) else None
         self.h_ability =  h_ability.title() if self.validate_pokemon(h_ability=h_ability) else None
-        self.stage = stage if 0 < stage < 4 else 1
+        self.stage = int(stage) if 0 < int(stage) < 4 else 1
         
         self.hp = hp
         self.atk = atk

@@ -1,5 +1,3 @@
-from hmac import new
-from turtle import title
 from database import dex,type_list,attributes
 from Pokemon import Pokemon as P
 import msvcrt as m
@@ -29,7 +27,7 @@ class Add_Pokemon():
                 break
             
     def get_name(self):
-        return self.new_pokemon.name
+        return self.new_pokemon
         
     def get_Number(self):
         while True:
