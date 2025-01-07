@@ -93,7 +93,7 @@ def clear_console():
 def clear_line():
     print("\033[A\033[2K", end='', flush=True)
     
-clear_two_lines = lambda: (clear_line(), clear_line())
+clear_two_lines = lambda : (clear_line(), clear_line())
     
 def cprint(*args, **kwargs):
     console().print(*args, **kwargs)
