@@ -1,10 +1,9 @@
 from Pokemon import * 
-from menu import Menu as M , View_Pokemon_Display as VPD
+#from menu import Menu as M , View_Pokemon_Display as VPD
 from rich.table import Table
-from rich.text import Text
 from rich.columns import Columns as C
 
-prompt = VPD().prompt
+#prompt = VPD().prompt
 #View_Pokemon class inherits from Pokemon class
 #View_Pokemon class is responsible for displaying the pokemon data
 class View_Pokemon(Pokemon):
@@ -352,33 +351,6 @@ class View_Pokemon(Pokemon):
     
 class color:
     def __init__(self):
-        self.colors = [
-                        ('\033[48;5;1m ', 'fire'),
-                        ('\033[48;5;27m ', 'water'),
-                        ('\033[48;5;28m \033[38;5;15m', 'grass'),
-                        ('\033[48;5;129m ', 'poison'),
-                        ('\033[48;5;81m \033[38;5;0m', 'flying'),
-                        ('\033[48;5;142m \033[38;5;232m', 'bug'),
-                        ('\033[48;5;251m \033[38;5;0m', 'normal'),
-                        ('\033[48;5;226m \033[38;5;0m', 'electric'),
-                        ('\033[48;5;94m \033[38;5;0m', 'ground'),
-                        ('\033[48;5;95m \033[38;5;0m', 'rock'),
-                        ('\033[48;5;208m \033[38;5;0m', 'fighting'),
-                        ('\033[48;5;163m ', 'psychic'),
-                        ('\033[48;5;55m \033[38;5;15m', 'ghost'),
-                        ('\033[48;5;45m \033[38;5;0m', 'ice'),
-                        ('\033[48;5;52m \033[38;5;15m', 'dragon'),
-                        ('\033[48;5;16m \033[38;5;15m', 'dark'),
-                        ('\033[48;5;102m \033[38;5;232m', 'steel'),
-                        ('\033[48;5;212m \033[38;5;232m', 'fairy'),
-                        ('\033[38;5;0m', 'color'),
-                        ('\033[48;5;0m', 'background_color'),
-                        ('\033[0m', 'reset'),
-                        ('\033[38;5;196m', 'error'),
-                        ('\033[38;5;46m', 'success')
-                        ]
-        self.reset = '\033[0m'
-        
         self.table_color = {
                             'fire': 'white on red',
                             'water': 'white on blue',
@@ -400,40 +372,10 @@ class color:
                             'fairy': 'bold black on plum1',
                             }
 
-        self.color_map = {
-                            'fire': 'bold red',
-                            'water': 'bold blue',
-                            'grass': 'bold green',
-                            'poison': 'bold purple',
-                            'flying': 'bold sky_blue1',
-                            'bug': 'bold chartreuse4',
-                            'normal': 'white',
-                            'electric': 'yellow',
-                            'ground': 'bold orange4',
-                            'rock': 'bold tan',
-                            'fighting': 'bold orange_red1',
-                            'psychic': 'bold magenta',
-                            'ghost': 'bold navy_blue',
-                            'ice': 'bold cyan',
-                            'dragon': 'bold deep_pink4',
-                            'dark': 'bold grey30',
-                            'steel': 'bold grey82',
-                            'fairy': 'bold plum1',
-                            'error': 'bold red',
-                            'success': 'bold green',
-                        }
         
-    def color_string(self,type,string):
-        type = type.lower()
-        for color in self.colors:
-            if type == color[1]:
-                return f'{color[0]}{string}{self.reset}'
-        return string
-    
-    def color_rich(self,string,type):
-        type = type.lower()
-        rich_color = self.color_map.get(type, 'white')
-        return Text(string,style=rich_color)
+
 
 if __name__ == '__main__':
-    View_Pokemon().main()
+    view = View_Pokemon()
+    
+    
