@@ -78,7 +78,7 @@ def color_str(string:str, color:str, type = None):
     def ascii(string:str = string, type:str = color) -> str:
         type = type.lower()
         color = ascii_color_map.get(type, 'white')
-        return f"{color}{string} {ascii_color_map['reset']}"
+        return f"{color}{string}{ascii_color_map['reset']}"
         
     if type and type == 'r':
         new_str = rich()

@@ -34,10 +34,21 @@ class Menu():
         clear()
         cprint(self.menu_panel())
         
-    def add_option(self, option: str) -> None:
-        self.options.append(option)
+    def add_option(self, option: dict) -> None:
+        self.options.update(option)
     
     def run(self) -> None:
+        def select_option() -> str:
+            selected_option: str = ''
+            key = minput()
+            if key == 'UP' and self.current_row > 0:
+                self.current_row -= 1
+            elif key == 'DOWN' and self.current_row < len(self.options) - 1:
+                self.current_row += 1
+            elif key == 'ENTER':
+                selected_option = list(self.options.keys())[self.current_row]
+            return selected_option
+        
         def process(selected_option):
             try:
                 if any(selected_option == option for option in self.options):
@@ -45,26 +56,16 @@ class Menu():
             except TypeError:
                 cprint(f"You selected '{selected_option}'")
                 time.sleep(1)
-                clear()
-                
+   
         while True:
             self.display_menu()
-            process(self.select_option())
+            process(select_option())
             
-    def select_option(self) -> str:
-        selected_option: str = ''
-        key = minput()
-        if key == 'UP' and self.current_row > 0:
-            self.current_row -= 1
-        elif key == 'DOWN' and self.current_row < len(self.options) - 1:
-            self.current_row += 1
-        elif key == 'ENTER':
-            selected_option = list(self.options.keys())[self.current_row]
-        return selected_option
+    
 
 if __name__ == '__main__':
     menu = Menu("Main Menu", 
-                "Select an Option", 
+                c("Select an Option", 'error','r'), 
                 {'Option 1':'',
                  'Option 2':'',
                  'Option 3':'',
