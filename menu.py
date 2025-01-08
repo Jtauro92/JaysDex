@@ -26,7 +26,7 @@ class Menu():
                             title=self.title,
                             subtitle=self.subtitle,
                             box=ROUNDED,
-                            padding=(1,1,0,1))
+                            padding=(2,1,0,1))
         return menu_screen
         
     def menu_options(self) -> str:
@@ -34,9 +34,9 @@ class Menu():
         menu_text = ""
         for idx, option in enumerate(self.options.keys()):
             if idx == self.current_row:
-                menu_text += f"<<< {option} >>>\n"
+                menu_text += f"<<< {option} >>>\n\n"
             else:
-                menu_text += f"{option}\n"
+                menu_text += f"{option}\n\n"
         return menu_text
     
     def display_menu(self) -> None:
@@ -79,11 +79,8 @@ class SubMenu(Menu):
 
 
 if __name__ == '__main__':
-    menu = Menu("Main Menu", 
-                {'Option 1':'',
-                 'Option 2':'',
-                 'Option 3':''})
-    menu.add_option({'Option 4': SubMenu("Sub Menu").run})
+    menu = Menu("Main Menu")
+    menu.add_option({'Option 1': SubMenu("Sub Menu").run})
     menu.run()
 
 
