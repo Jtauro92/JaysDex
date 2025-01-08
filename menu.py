@@ -12,15 +12,10 @@ def exit():
     clear()
     raise SystemExit
 
-def cancel():
-    cprint("Canceled")
-    time.sleep(1)
-    return
-
 class Menu():
-    def __init__(self, title, subtitle, options: dict={}, escape = {'Exit': exit}):
+    def __init__(self, title, options: dict={}, escape = {'Exit': exit}):
         self.title = title
-        self.subtitle = subtitle
+        self.subtitle = c("Select an Option", 'error','r')
         self.options = options
         self.current_row = 0
         self.escape = escape
@@ -78,20 +73,17 @@ class Menu():
                 break
             process(selected_option)
             
-
 class SubMenu(Menu):
-    def __init__(self, title, subtitle, options: dict, escape = {'Cancel': cancel}):
-        super().__init__(title, subtitle, options, escape)
+    def __init__(self, title, options: dict ={}, escape = {'Cancel': ''}):
+        super().__init__(title, options = options, escape=escape)
 
 if __name__ == '__main__':
     menu = Menu("Main Menu", 
-                c("Select an Option", 'error','r'), 
                 {'Option 1':'',
                  'Option 2':'',
                  'Option 3':''})
-    menu.add_option({'Option 4': SubMenu("Sub Menu",'Select an Option',
-                                         options={}).run})
+    menu.add_option({'Option 4': SubMenu("Sub Menu").run})
     menu.run()
 
-        
+
         
