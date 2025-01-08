@@ -15,9 +15,10 @@ def exit():
 def cancel():
     cprint("Canceled")
     time.sleep(1)
+    return
 
 class Menu():
-    def __init__(self, title, subtitle, options: dict, escape = {'Exit': exit}):
+    def __init__(self, title, subtitle, options: dict={}, escape = {'Exit': exit}):
         self.title = title
         self.subtitle = subtitle
         self.options = options
@@ -72,7 +73,15 @@ class Menu():
    
         while True:
             self.display_menu()
-            process(select_option())
+            selected_option = select_option()
+            if selected_option == 'Cancel':
+                break
+            process(selected_option)
+            
+
+class SubMenu(Menu):
+    def __init__(self, title, subtitle, options: dict, escape = {'Cancel': cancel}):
+        super().__init__(title, subtitle, options, escape)
 
 if __name__ == '__main__':
     menu = Menu("Main Menu", 
@@ -80,7 +89,8 @@ if __name__ == '__main__':
                 {'Option 1':'',
                  'Option 2':'',
                  'Option 3':''})
-    menu.add_option({'Option 4':''})
+    menu.add_option({'Option 4': SubMenu("Sub Menu",'Select an Option',
+                                         options={}).run})
     menu.run()
 
         
