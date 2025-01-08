@@ -1,11 +1,7 @@
 from Pokemon import *
-from view_pokemon import color as C, View_Pokemon as VP
+from view_pokemon import View_Pokemon as VP
 from add_stats import add_stats as AS
-from menu import Add_Pokemon_Display as APD
 
-color = C().color_rich
-
-clear_two_lines = lambda: (clear_line(), clear_line())
 
 class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
     def __init__(self):
