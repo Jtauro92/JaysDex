@@ -1,3 +1,4 @@
+from ctypes import alignment
 from rich.panel import Panel
 from rich.box import DOUBLE, MINIMAL, SQUARE, ASCII, ASCII_DOUBLE_HEAD,\
     HEAVY, HEAVY_HEAD, ROUNDED,SQUARE_DOUBLE_HEAD
@@ -21,22 +22,21 @@ class Menu():
         self.escape = escape
         
     def menu_panel(self) -> Panel:
-        menu_screen = Panel(Text(self.menu_options(), 
-                                 justify='center'),
+        menu_screen = Panel(self.menu_options(),
                             title=self.title,
                             subtitle=self.subtitle,
                             box=ROUNDED,
                             padding=(2,1,0,1))
         return menu_screen
         
-    def menu_options(self) -> str:
+    def menu_options(self) -> Text:
         self.add_option(self.escape)
-        menu_text = ""
+        menu_text = Text(justify='center')
         for idx, option in enumerate(self.options.keys()):
             if idx == self.current_row:
-                menu_text += f"<<< {option} >>>\n\n"
+                menu_text.append(c(f"<<< {option} >>>\n\n", 'success', 'r'))
             else:
-                menu_text += f"{option}\n\n"
+                menu_text.append(f"{option}\n\n")
         return menu_text
     
     def display_menu(self) -> None:
