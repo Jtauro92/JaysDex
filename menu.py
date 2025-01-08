@@ -5,12 +5,24 @@ from rich.text import Text
 from tools import minput,cprint, color_str as c, clear_console as clear
 import time
 
+def exit():
+    clear()
+    cprint("Goodbye!")
+    time.sleep(1)
+    clear()
+    raise SystemExit
+
+def cancel():
+    cprint("Canceled")
+    time.sleep(1)
+
 class Menu():
-    def __init__(self, title, subtitle, options: dict):
+    def __init__(self, title, subtitle, options: dict, escape = {'Exit': exit}):
         self.title = title
         self.subtitle = subtitle
         self.options = options
         self.current_row = 0
+        self.escape = escape
         
     def menu_panel(self) -> Panel:
         menu_screen = Panel(Text(self.menu_options(), 
@@ -22,6 +34,7 @@ class Menu():
         return menu_screen
         
     def menu_options(self) -> str:
+        self.add_option(self.escape)
         menu_text = ""
         for idx, option in enumerate(self.options.keys()):
             if idx == self.current_row:
@@ -60,16 +73,14 @@ class Menu():
         while True:
             self.display_menu()
             process(select_option())
-            
-    
 
 if __name__ == '__main__':
     menu = Menu("Main Menu", 
                 c("Select an Option", 'error','r'), 
                 {'Option 1':'',
                  'Option 2':'',
-                 'Option 3':'',
-                 'Exit': exit})
+                 'Option 3':''})
+    menu.add_option({'Option 4':''})
     menu.run()
 
         
