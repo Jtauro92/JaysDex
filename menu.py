@@ -77,7 +77,6 @@ class SubMenu(Menu):
     def __init__(self, title, options: dict ={}, escape = {'Cancel': ''}):
         super().__init__(title, options = options, escape=escape)
 
-
 if __name__ == '__main__':
     menu = Menu("Main Menu")
     menu.add_option({'Option 1': SubMenu("Sub Menu").run})

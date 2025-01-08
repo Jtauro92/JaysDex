@@ -7,7 +7,7 @@ class Pokemon:
                  sp_atk: int=0, sp_def: int=0, speed: int=0):
         
         self.name = name.title() if self.name_is_valid(name) else 'Default'
-        self.number = int(number) if self.number_is_valid(number) else None
+        self.number = int(number) if self.number_is_valid(number) else 0
         self.type1 = type.upper() if self.type_is_valid(type) else None
         self.type2 = type2.upper() if self.type2_is_valid(type2) else None
         self.ability = ability.title() if self.ability_is_valid else None
