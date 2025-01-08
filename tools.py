@@ -100,4 +100,4 @@ def cprint(*args, **kwargs):
 
 if __name__ == '__main__':
     clear_console()
-    cprint(color_str("Hello World", 'fire', 'r'))
+    cprint(color_str("Hello World", 'error', 'r'))
