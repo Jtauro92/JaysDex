@@ -1,30 +1,18 @@
 from database import dex,type_list,attributes
 from Pokemon import Pokemon as P
-import msvcrt as m
+from functools import partial
 
-
-
-def minput():
-        m.kbhit()
-        return m.getch()
-
+pokemon = partial(P)
 class Add_Pokemon():
+    
     def __init__(self):
         self.ability_list = []
-        self.new_pokemon = P()
+        self.new_pokemon = pokemon
+        
 
     def set_Name(self):
-        while True:
-            name = input('Enter Pokemon Name: ').title()
-            if name == '0':
-                print('Exiting...')
-                return
-            if name.isnumeric():
-                print('Invalid Name!')
-                continue
-            if self.new_pokemon.validate_pokemon(name) is False:
-                self.new_pokemon.name = name
-                break
+        pokemon(name= input('Enter Pokemon Name: '))
+        print(pokemon().name)
             
     def get_name(self):
         return self.new_pokemon
@@ -154,7 +142,6 @@ class Add_Pokemon():
 
 
 if __name__ == "__main__":
-    AD = Add_Pokemon()
+    a = Add_Pokemon()
+    a.set_Name()
 
-    AD.set_Name()
-    print(AD.get_name())

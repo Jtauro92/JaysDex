@@ -1,10 +1,11 @@
-from ctypes import alignment
 from rich.panel import Panel
+from rich.layout import Layout
 from rich.box import DOUBLE, MINIMAL, SQUARE, ASCII, ASCII_DOUBLE_HEAD,\
     HEAVY, HEAVY_HEAD, ROUNDED,SQUARE_DOUBLE_HEAD
 from rich.text import Text
 from tools import minput,cprint, color_str as c, clear_console as clear
 import time
+import rich.columns as columns
 
 def exit():
     clear()
@@ -14,29 +15,32 @@ def exit():
     raise SystemExit
 
 class Menu():
-    def __init__(self, title, options: dict={}, escape = {'Exit': exit}):
+    def __init__(self, title, options: dict={}, escape = {'Exit': exit},):
         self.title = title
-        self.subtitle = c("Select an Option", 'error','r')
+        self.subtitle = "Select an option"
         self.options = options
         self.current_row = 0
         self.escape = escape
         
     def menu_panel(self) -> Panel:
-        menu_screen = Panel(self.menu_options(),
-                            title=self.title,
-                            subtitle=self.subtitle,
-                            box=ROUNDED,
-                            padding=(2,1,0,1))
+        title_text = Text(str(self.title), style="bold yellow")
+
+        menu_screen = Panel(
+        self.menu_options(),
+        title=title_text,
+        subtitle=c(self.subtitle, 'error', 'r'),
+        style="white on black",
+        box=ROUNDED,
+        padding=(2, 1, 0, 1)
+    )
         return menu_screen
-        
+
     def menu_options(self) -> Text:
         self.add_option(self.escape)
         menu_text = Text(justify='center')
         for idx, option in enumerate(self.options.keys()):
-            if idx == self.current_row:
-                menu_text.append(c(f"<<< {option} >>>\n\n", 'success', 'r'))
-            else:
-                menu_text.append(f"{option}\n\n")
+            style = 'success' if idx == self.current_row else None
+            menu_text.append(c(f"<<< {option} >>>\n\n", style, 'r') if style else f"{option}\n\n")
         return menu_text
     
     def display_menu(self) -> None:
@@ -76,11 +80,18 @@ class Menu():
 class SubMenu(Menu):
     def __init__(self, title, options: dict ={}, escape = {'Cancel': ''}):
         super().__init__(title, options = options, escape=escape)
+        
+class Seletion_Menu(Menu):
+    def __init__(self, title, options: dict ={}, escape = {'Cancel': ''}):
+        super().__init__(title, options = options, escape=escape)
+        
 
 if __name__ == '__main__':
-    menu = Menu("Main Menu")
-    menu.add_option({'Option 1': SubMenu("Sub Menu").run})
-    menu.run()
+    options = []
+    row, col = divmod(50, 2)
+    for i in range(1, 11):
+        options.append(f"Option {i}")
+    columns = columns.Columns(options, equal=True)
+    cprint(columns)
+    
 
-
-        

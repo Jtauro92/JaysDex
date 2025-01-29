@@ -1,12 +1,14 @@
-from Pokemon import *
+from os import name
+from tkinter import N
+from Pokemon import Pokemon
+from functools import partial
 from view_pokemon import View_Pokemon as VP
 from add_stats import add_stats as AS
+new_pokemon = partial(Pokemon)
 
-
-class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
+class Add_Pokemon(): #Eventual menu option to add Pokemon to Pokedex
     def __init__(self):
-        super().__init__()
-        self.options = ['Name*:', 
+        self.options :list = ['Name*:', 
                         'Pokedex Number*:', 
                         'Primary Type*:', 
                         'Secondary Type:', 
@@ -14,7 +16,7 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
                         'Ability #2:', 
                         'Hidden Ability:']
         self.index = None
-        self.job_map ={b'1':self.validate_Name,
+        self.job_map :dict ={b'1':self.validate_Name,
                         b'2':self.validate_Number,
                         b'3':self.set_Type,
                         b'4':self.set_Type2,
@@ -23,30 +25,12 @@ class Add_Pokemon(Pokemon): #Eventual menu option to add Pokemon to Pokedex
                         b'7':self.set_Hidden_Ability,
                         b'8':self.clear_data,
                         b'9':self.add_Dex_Entry}
-        self.data_table = VP().pokemon_data
+        self.data_table: function = VP().pokemon_data
 
-    def validate_Name(self):
-        name = input('Enter Pokemon Name: ')
-        clear_line()
-        while True:
-            if name == '0':
-                return
-            if name.isnumeric():
-                cprint(color('Numbers are invalid!','error'))
-                
-            elif name == '':
-                cprint(color('Name cannot be empty!','error'))
-            else:
-                name = name.title()
-                if any(name == pokemon['Name'] for pokemon in self.dex):
-                    cprint(color('This Pokemon already exist!','error'))
-                else:
-                    self.name = name
-                    self.options[0] = f'Name:               {self.name}'
-                    return
-            name = input('Enter Pokemon Name: ')
-            clear_line()
-            clear_line()
+    def set_name(self,name):
+        new_pokemon(name=name)
+        print(new_pokemon().name)
+        
                 
     def validate_Number(self):
         number = input('Enter Pokedex Number: ')
@@ -376,6 +360,5 @@ class Add_Gigantamax(Add_Pokemon):
     pass
 
 if __name__ == '__main__':
-    M = Add_MegaEvolution()
-    A = Add_Pokemon()
-    A.main()
+    a = Add_Pokemon()
+    a.set_name('Charizard')

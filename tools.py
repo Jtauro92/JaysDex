@@ -20,6 +20,7 @@ def minput() -> str:
         else:
             return key.decode('utf-8')  # Return other keys as normal characters
 
+@staticmethod
 def color_str(string:str, color:str, type = None):
     color_map = {
         'fire': 'bold red',
@@ -95,8 +96,8 @@ def clear_line():
     
 clear_two_lines = lambda : (clear_line(), clear_line())
     
-def cprint(*args, **kwargs):
-    console().print(*args, **kwargs)
+def cprint(object: object):
+    console().print(object)
 
 if __name__ == '__main__':
     clear_console()
