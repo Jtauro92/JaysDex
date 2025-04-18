@@ -20,7 +20,7 @@ def minput() -> str:
         else:
             return key.decode('utf-8')  # Return other keys as normal characters
 
-@staticmethod
+@c
 def color_str(string:str, color:str, type = None):
     color_map = {
         'fire': 'bold red',

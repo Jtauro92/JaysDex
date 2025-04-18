@@ -14,7 +14,7 @@ def exit():
     clear()
     raise SystemExit
 
-class Menu():
+class Menu(): 
     def __init__(self, title, options: dict={}, escape = {'Exit': exit},):
         self.title = title
         self.subtitle = "Select an option"
@@ -81,10 +81,13 @@ class SubMenu(Menu):
     def __init__(self, title, options: dict ={}, escape = {'Cancel': ''}):
         super().__init__(title, options = options, escape=escape)
         
-class Seletion_Menu(Menu):
-    def __init__(self, title, options: dict ={}, escape = {'Cancel': ''}):
-        super().__init__(title, options = options, escape=escape)
-        
+class Seletion_Menu():
+    num_rows = 5
+    num_cols = 5
+    values = []
+     
+
+
 
 if __name__ == '__main__':
     options = []

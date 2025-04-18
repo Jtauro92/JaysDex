@@ -1,24 +1,18 @@
 from database import dex, ability_list, type_list
 
-class ValidName:
-    def __init__(self):
-        self.name = None
-        
-    def __set_name__(self, owner, name):
-        self.name = name
+def check_string(func):
+    def wrapper(string):
+        if (not string.isnumeric()) and func:
+            return True
+        return False
+    return wrapper
 
-    def __get__(self, instance, owner):
-        return instance.__dict__[self.name]
+@check_string
+def ValidName(string):
+    if string in dex:
+        return True
     
-    def __set__(self, instance, value):
-        try:
-            value = value.title()
-            instance.__dict__[self.name] = value if any(value == pokemon['Name'] for pokemon in dex) else 'Default'
-            in_dex = True
-        except AttributeError:
-            instance.__dict__[self.name] = 'Default'
-            in_dex = False
-        in_dex = False
+
 
 class ValidNumber:
     def __init__(self):
@@ -51,15 +45,15 @@ class ValidType:
         try:
             value = value.upper()
             
-            instance.__dict__[self.type] = value if any(value == t for t in type_list) else 'Normal'
+            instance.__dict__[self.type] = value if any(value == t for t in type_list) else 'NORMAL'
         except AttributeError:
-            instance.__dict__[self.type] = 'Normal'
+            instance.__dict__[self.type] = 'NORMAL'
             
 class ValidType2(ValidType):
     def __set__(self, instance, value):
         try:
             value = value.upper()
-            if any(value == t for t in type_list) and value != instance.type1:
+            if any(value == t for t in type_list) and (value != instance.type1):
                 instance.__dict__[self.type] = value 
             else:
                 instance.__dict__[self.type] = None
@@ -106,6 +100,5 @@ class ValidHiddenAbility(ValidAbility):
             instance.__dict__[self.ability] = None
             
 if __name__ == '__main__':
-    v = ValidName()
-    v.name = 0
+    v = ValidName('C')
     print(v)
