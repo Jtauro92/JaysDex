@@ -28,7 +28,7 @@ class Pokemon():
     
     @property
     def name(self) -> str:
-        return self._name.capitalize()
+        return self._name
     
     @name.setter
     @name_check
@@ -40,13 +40,14 @@ class Pokemon():
     
     @property
     def number(self) -> int:
-        return int(self._number)
+        return self._number
     
     @number.setter
     def number(self, number:int):
-        if ((isinstance(number, int) or number.isnumeric()) 
-            and 0 <= int(number) <= 1025):
-            self._number = number
+        for pokemon in dex:
+            if number == pokemon["Number"]:
+                self._number = number
+                break
 
     @property
     def type1(self) -> str:
@@ -104,7 +105,8 @@ if __name__ == '__main__':
     p.ability = 'overgrow'
     p.ability2 = 'overgrow'
     p.h_ability = 'overgrow'
-    p.number = 1
+    p.number = 1025
+    p.name = 'pecharunt'
     
     print((p))
         
