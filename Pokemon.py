@@ -1,26 +1,5 @@
 from database import ability_list, type_list, dex
-import pokemon_decorator 
-
-def type_check(func):
-    def wrapper(self, type1: str):
-        type1 = type1.upper()
-        if type1 in type_list:
-            func(self, type1)
-    return wrapper
-
-def ability_check(func):
-    def wrapper(self, ability:str):
-        ability = ability.capitalize()
-        if ability in ability_list:
-            func(self, ability)
-    return wrapper
-
-def name_check(func):
-    def wrapper(self, name:str):
-        if not (name.isnumeric()):
-            name = name.capitalize()
-            func(self, name)
-    return wrapper
+from pokemon_decorator import name_check, type_check, ability_check
 
 class Pokemon():
     DEFAULT_VALUE = 'N/A'
@@ -41,8 +20,7 @@ class Pokemon():
                      "number: " + str(self.number) + "\n" + 
                      "type1: " + (self.type1) + "\n" +  
                      "type2: " + (self._type2) + "\n" + 
-                     "ability: " + (self._ability) + 
-                     "\n" + 
+                     "ability: " + (self._ability) + "\n" + 
                      "ability2: " + (self._ability2) + "\n" + 
                      "h_ability: " + (self._h_ability) + "\n")
 
@@ -126,7 +104,6 @@ if __name__ == '__main__':
     p.ability = 'overgrow'
     p.ability2 = 'overgrow'
     p.h_ability = 'overgrow'
-    p.name = 'pecharunt'
     p.number = 1
     
     print((p))
