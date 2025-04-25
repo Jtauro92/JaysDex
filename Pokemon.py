@@ -1,4 +1,4 @@
-from database import ability_list, type_list, dex
+from database import dex
 from pokemon_decorator import name_check, type_check, ability_check
 
 class Pokemon():
@@ -16,13 +16,13 @@ class Pokemon():
         self._h_ability = h_ability
         
     def __str__(self) -> str:
-        statement = ("name: " + self.name + "\n" + 
-                     "number: " + str(self.number) + "\n" + 
-                     "type1: " + (self.type1) + "\n" +  
-                     "type2: " + (self._type2) + "\n" + 
-                     "ability: " + (self._ability) + "\n" + 
-                     "ability2: " + (self._ability2) + "\n" + 
-                     "h_ability: " + (self._h_ability) + "\n")
+        statement = ("name: " + self.name + "\n" 
+                     + "number: " + str(self.number) + "\n"  
+                     + "type1: " + (self.type1) + "\n"   
+                     + "type2: " + (self._type2) + "\n" 
+                     + "ability: " + (self._ability) + "\n" 
+                     + "ability2: " + (self._ability2) + "\n"
+                     + "h_ability: " + (self._h_ability) + "\n")
 
         return statement
     

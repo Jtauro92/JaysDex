@@ -1,4 +1,4 @@
-from database import dex, ability_list, type_list
+from database import ability_list, type_list
 
 
 def name_check(func):
