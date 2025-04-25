@@ -1,19 +1,25 @@
-import re
 from database import ability_list, type_list, dex
 import pokemon_decorator 
 
 def type_check(func):
     def wrapper(self, type1: str):
         type1 = type1.upper()
-        if type1  in type_list:
-            return func(self, type1)
+        if type1 in type_list:
+            func(self, type1)
     return wrapper
 
 def ability_check(func):
     def wrapper(self, ability:str):
         ability = ability.capitalize()
         if ability in ability_list:
-            return func(self, ability)
+            func(self, ability)
+    return wrapper
+
+def name_check(func):
+    def wrapper(self, name:str):
+        if not (name.isnumeric()):
+            name = name.capitalize()
+            func(self, name)
     return wrapper
 
 class Pokemon():
@@ -44,16 +50,19 @@ class Pokemon():
     
     @property
     def name(self) -> str:
-        return self._name
+        return self._name.capitalize()
     
     @name.setter
+    @name_check
     def name(self, name:str):
-        if not (name.isnumeric()):
-            self._name = name.capitalize()
+        for pokemon in dex:
+            if name == pokemon["Name"]:
+                self._name = name
+                break
     
     @property
     def number(self) -> int:
-        return self._number
+        return int(self._number)
     
     @number.setter
     def number(self, number:int):
@@ -96,7 +105,7 @@ class Pokemon():
     @ability2.setter
     @ability_check
     def ability2(self, ability2:str):
-        if (ability2 != self._ability) and (ability2 != self._h_ability):
+        if ability2 not in {self._ability, self._h_ability}:
             self._ability2 = ability2
 
     @property
@@ -106,15 +115,20 @@ class Pokemon():
     @h_ability.setter
     @ability_check
     def h_ability(self, h_ability:str):
-        if (h_ability != self._ability) and (h_ability != self._ability2):
+        if h_ability not in {self._ability, self._ability2}:
             self._h_ability = h_ability
 
             
 if __name__ == '__main__':
     p = Pokemon()
+    p.type1 = "fire"
+    p.type2 = "fire"
+    p.ability = 'overgrow'
     p.ability2 = 'overgrow'
-    p.h_ability = 'blaze'
+    p.h_ability = 'overgrow'
+    p.name = 'pecharunt'
+    p.number = 1
     
-    print(p)
+    print((p))
         
         
