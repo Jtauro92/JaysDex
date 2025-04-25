@@ -12,6 +12,10 @@ def ValidName(string):
     if string in dex:
         return True
     
+@property
+def name(self):
+    return self._name
+    
 
 
 class ValidNumber:
