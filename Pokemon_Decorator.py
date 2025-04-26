@@ -4,7 +4,7 @@ from database import ability_list, type_list
 def name_check(func):
     def wrapper(self, name:str):
         if not (name.isnumeric()):
-            name = name.capitalize()
+            name = name.title()
             func(self, name)
     return wrapper
 
