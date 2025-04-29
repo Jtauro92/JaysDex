@@ -1,3 +1,4 @@
+from multiprocessing import connection
 import mysql.connector
 
 
@@ -97,16 +98,19 @@ class Pokedex():
                 connection.close()
                 return result
 
-    @staticmethod
-    def load_dex():
-        dex=[]
-        result = Pokedex().get_db_data("select * FROM Pokemon")
-        if result:
-            columns = attributes
-            for row in result:
-                dex.append(dict(zip(columns,row)))
-        return dex
-    
+    def getAllPokemon(self):
+        connection = self.connectDB()
+        if connection:
+            with connection.cursor() as cursor:
+                query = "SELECT * FROM Pokemon"
+                cursor.execute(query)
+                result = cursor.fetchall()
+                if result:
+                    dex = [dict(zip(attributes,row)) for row in result]
+                    connection.close()
+                    return dex
+
+
     @staticmethod
     def load_ability_list():
         ability_list=[]
@@ -116,10 +120,10 @@ class Pokedex():
                     ability_list.append(ability.strip()) 
         return ability_list
 
-dex = Pokedex().load_dex()
+dex = Pokedex().getAllPokemon()
 ability_list = Pokedex().load_ability_list()
   
 if __name__ == '__main__':
     pokedex = Pokedex()
     pokemon = pokedex.getPokemon('Bulbasaur')
-    print(ability_list)
+    print(dex)
