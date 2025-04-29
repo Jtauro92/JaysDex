@@ -1,5 +1,5 @@
 from database import dex
-from pokemon_decorator import name_check, type_check, ability_check
+from pokemon_decorator import name_check, number_check, type_check, ability_check
 
 class Pokemon():
     DEFAULT_VALUE = 'N/A'
@@ -41,6 +41,7 @@ class Pokemon():
         return self._number
     
     @number.setter
+    @number_check
     def number(self, number:int):
         if (any(pokemon["Number"] == number for pokemon in dex)):
             self._number = number
@@ -101,7 +102,7 @@ if __name__ == '__main__':
     p.ability = 'overgrow'
     p.ability2 = 'overgrow'
     p.h_ability = 'overgrow'
-    p.number = 6000
+    p.number = 125
     p.name = 'Jason'
     
     print((p))

@@ -1,41 +1,114 @@
 import mysql.connector
 
+
 attributes = ['Number','Name','Type1','Type2','Ability','Ability2',
               'Hidden_Ability','Stage']
 type_list = ['FIRE','WATER','GRASS','ELECTRIC','ICE','FIGHTING',
                     'POISON','GROUND','FLYING','PSYCHIC','BUG','ROCK',
-                    'GHOST','DARK','DRAGON','STEEL','FAIRY','NORMAL']    
+                    'GHOST','DARK','DRAGON','STEEL','FAIRY','NORMAL'] 
+  
+
 
 class Pokedex():
-    def __init__(self):
-        pass
+    DATABASE_INFO = {
+    'host': 'localhost',
+    'user': 'root',
+    'password': 'devry123',
+    'database': 'pokedex',
+    'autocommit': True
+}
+    def __init__(self, database: dict = DATABASE_INFO):
+        self.database = database
 
-    def connect_to_db(self,database='pokedex'):
-        mydb = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="devry123",
-            database= database,
-            autocommit=True
-        )
-        return mydb
+    @classmethod
+    def connectDB(cls,database = DATABASE_INFO):
+        try:
+            mydb = mysql.connector.connect(**database)
+            return mydb
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")
+            print("Unable to connect to the database.")
+    
+    def create_db(self):
+        connection = Pokedex.connectDB()
+        if connection:
+            cursor = connection.cursor()
+            cursor.execute("CREATE DATABASE IF NOT EXISTS Pokemon " 
+                        + "Number INT PRIMARY KEY , "
+                        + "Name VARCHAR(20) , "                       
+                        + "Type1 VARCHAR(255), "
+                        + "Type2 VARCHAR(255), "
+                        + "Ability VARCHAR(255), "
+                        + "Ability2 VARCHAR(255), "
+                        + "Hidden_Ability VARCHAR(255), "
+                        + "Stage INT)")
+            connection.close()
+        
+    def getPokemon(self, name: str):
+        connection = self.connectDB()
+        if connection:
+            with connection.cursor() as cursor:
+                query = """SELECT P_Name, Pokemon_Number, p_type1, p_type2, 
+                            p_ability1, p_ability2,
+                            h_ability FROM Pokemon WHERE P_Name = %s"""
+                cursor.execute(query, (name,))
+                result = cursor.fetchone()
+            connection.close()
+            return result
+        
+    def addPokemon(self, pokemon):
+        if pokemon:
+            connection = self.connectDB()
+            if connection:
+                with connection.cursor() as cursor:
+                    query = """INSERT INTO Pokemon 
+                            (P_Name, Pokemon_Number,p_type1, 
+                            p_type2, p_ability1, p_ability2, h_ability) 
+                            VALUES (%s, %s, %s, %s, %s, %s, %s)"""
+                    cursor.execute(query, (pokemon.name, pokemon.number,
+                                        pokemon.type1, pokemon.type2,
+                                        pokemon.ability, pokemon.ability2,
+                                        pokemon.h_ability))
+                connection.close()
+                
+    def deletePokemon(self, name: str):
+        connection = self.connectDB()
+        if connection:
+            with connection.cursor() as cursor:
+                query = "DELETE FROM Pokemon WHERE P_Name = %s"
+                cursor.execute(query, (name,))
+            connection.close()
+    
+    def updateStats(self, name: str, column: str, value):
+        connection = self.connectDB()
+        if connection:
+            with connection.cursor() as cursor:
+                query = f"UPDATE Pokemon SET {column} = %s WHERE P_Name = %s"
+                cursor.execute(query, (value, name))
+            connection.close()
+
     
     def get_db_data(self,query):
-        connection = self.connect_to_db()
-        with connection.cursor() as cursor:
-            cursor.execute(query)
-            return cursor.fetchall()
-        connection.close()
-        
-    def load_dex(self):
+        connection = self.connectDB()
+        if connection:
+            with connection.cursor() as cursor:
+                cursor.execute(query)
+                result = cursor.fetchall()
+                connection.close()
+                return result
+
+    @staticmethod
+    def load_dex():
         dex=[]
-        result = self.get_db_data("select * FROM Pokemon")
-        columns = attributes
-        for row in result:
-            dex.append(dict(zip(columns,row)))
+        result = Pokedex().get_db_data("select * FROM Pokemon")
+        if result:
+            columns = attributes
+            for row in result:
+                dex.append(dict(zip(columns,row)))
         return dex
     
-    def load_ability_list(self):
+    @staticmethod
+    def load_ability_list():
         ability_list=[]
         with open('abilities.csv', 'r') as f:
             for line in f:
@@ -48,4 +121,5 @@ ability_list = Pokedex().load_ability_list()
   
 if __name__ == '__main__':
     pokedex = Pokedex()
-    print(dex)
+    pokemon = pokedex.getPokemon('Bulbasaur')
+    print(ability_list)
