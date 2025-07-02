@@ -99,17 +99,18 @@ class Pokedex():
                 connection.close()
                 return result
 
-    def getAllPokemon(self):
+    def getAllPokemon(self) -> list[dict]:
         connection = self.connectDB()
         if connection:
             with connection.cursor() as cursor:
                 query = "SELECT * FROM Pokemon"
                 cursor.execute(query)
                 result = cursor.fetchall()
-                if result:
-                    dex = [dict(zip(attributes,row)) for row in result]
-                    connection.close()
-                    return dex
+                dex = [dict(zip(attributes,row)) for row in result]
+                connection.close()
+                return dex
+        else:
+            return []
                 
     def pokemonDispenser(self):
         connection = self.connectDB()
@@ -139,7 +140,4 @@ ability_list = Pokedex().load_ability_list()
   
 if __name__ == '__main__':
     pokedex = Pokedex()
-    pokemon = pokedex.getPokemon('Bulbasaur')
-    for pokemon in pokedex.pokemonDispenser():
-        print(pokemon)
-        time.sleep(1)
+    print(dex)
