@@ -1,5 +1,6 @@
 from multiprocessing import connection
 import mysql.connector
+import time
 
 
 attributes = ['Number','Name','Type1','Type2','Ability','Ability2',
@@ -109,7 +110,19 @@ class Pokedex():
                     dex = [dict(zip(attributes,row)) for row in result]
                     connection.close()
                     return dex
-
+                
+    def pokemonDispenser(self):
+        connection = self.connectDB()
+        if connection:
+            with connection.cursor() as cursor:
+                query = "SELECT * FROM Pokemon"
+                cursor.execute(query)
+                while True:
+                    row = cursor.fetchone()  # Fetch one row at a time
+                    if row is None:  # No more rows
+                        break
+                    yield row
+                connection.close()
 
     @staticmethod
     def load_ability_list():
@@ -126,4 +139,6 @@ ability_list = Pokedex().load_ability_list()
 if __name__ == '__main__':
     pokedex = Pokedex()
     pokemon = pokedex.getPokemon('Bulbasaur')
-    print(dex)
+    for pokemon in pokedex.pokemonDispenser():
+        print(pokemon)
+        time.sleep(1)
