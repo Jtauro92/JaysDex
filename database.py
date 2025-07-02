@@ -120,6 +120,7 @@ class Pokedex():
                 while True:
                     row = cursor.fetchone()  # Fetch one row at a time
                     if row is None:  # No more rows
+                        connection.close()
                         break
                     yield row
                 connection.close()
