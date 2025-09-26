@@ -102,8 +102,8 @@ if __name__ == '__main__':
     p.ability = 'overgrow'
     p.ability2 = 'overgrow'
     p.h_ability = 'overgrow'
-    p.number = 125
-    p.name = 'Jason'
+    p.number = 1
+    p.name = 'Bulbasaur'
     
     print((p))
         

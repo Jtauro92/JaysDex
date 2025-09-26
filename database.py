@@ -12,18 +12,18 @@ type_list = ['FIRE','WATER','GRASS','ELECTRIC','ICE','FIGHTING',
 
 
 class Pokedex():
-    DATABASE_INFO = {
+    DATABASE_INFO: dict[str, str | bool] = {
     'host': 'localhost',
     'user': 'root',
     'password': 'devry123',
     'database': 'pokedex',
     'autocommit': True
 }
-    def __init__(self, database: dict = DATABASE_INFO):
+    def __init__(self, database: dict[str, str | bool] = DATABASE_INFO):
         self.database = database
 
     @classmethod
-    def connectDB(cls,database = DATABASE_INFO):
+    def connectDB(cls, database: dict[str, str | bool] = DATABASE_INFO):
         try:
             mydb = mysql.connector.connect(**database)
             return mydb
