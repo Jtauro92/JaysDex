@@ -6,57 +6,56 @@ class Pokemon_Info:
                  type1: str = 'Normal', type2: str = 'None', 
                  ability1: str = 'None', ability2: str = 'None', 
                  hidden_ability: str = 'None'):
-        self.name = name
-        self.number = number
-        self.type1 = type1
-        self.type2 = type2
-        self.ability1 = ability1
-        self.ability2 = ability2
-        self.hidden_ability = hidden_ability
+        self._name = name
+        self._number = number
+        self._type1 = type1
+        self._type2 = type2
+        self._ability1 = ability1
+        self._ability2 = ability2
+        self._hidden_ability = hidden_ability
         
     # String representation of the Pokemon_Info object
     def __str__(self):
-        return (f"Name: {self.name} \nNumber: {self.number}"
-                +f"\nType1: {self.type1} \nType2: {self.type2}"
-                +f"\nAbility1: {self.ability1} \nAbility2: {self.ability2}"
-                +f"\nHidden Ability: {self.hidden_ability}")
+        return (f"Name: {self._name} \nNumber: {self._number}"
+                +f"\nType1: {self._type1} \nType2: {self._type2}"
+                +f"\nAbility1: {self._ability1} \nAbility2: {self._ability2}"
+                +f"\nHidden Ability: {self._hidden_ability}")
 
     # Representation for debugging
     def __repr__(self):
-        return (f"Pokemon_Info(name={self.name}, number={self.number}, "
-                f"type1={self.type1}, type2={self.type2}, "
-                f"ability1={self.ability1}, ability2={self.ability2}, "
-                f"hidden_ability={self.hidden_ability})")
+        return (f"Pokemon_Info(name={self._name}, number={self._number}, "
+                f"type1={self._type1}, type2={self._type2}, "
+                f"ability1={self._ability1}, ability2={self._ability2}, "
+                f"hidden_ability={self._hidden_ability})")
         
-    # Getters and Setters
-    def get_name(self) -> str:
-        return self.name
+    @property
+    def name(self) -> str:
+        return self._name
     
-    def set_name(self,  name: str) -> bool:
-        if self.validate_string(name, "Name") is False:
-            return False
+    @name.setter
+    def name(self, name: str) -> None:
+        if self.validate_string(name, "Name"):
+            self._name = name.title()
+            print(f"Name set to: {self._name}")
         else:
-            self.name = name.title()
-            print(f"Name set to: {self.name}")
-            return True
+            print("Invalid name.")
 
-
-    def get_number(self) -> int:
-        return self.number
+    @property
+    def number(self) -> int:
+        return self._number
     
-    def set_number(self, number: int) -> bool:
+    @number.setter
+    def number(self, number: int) -> None:
         try:
             number = int(number)
-            if number < 0:
-                print("Error: Number cannot be negative.")
+            if 0 < number <= 1025:
+                self._number = number
             else:
-                self.number = number
-                print(f"Number set to: {self.number}")
-                return True
-        except ValueError:
-            print("Error: Number must be an integer.")
+                raise ValueError("Number must be between 1 and 1025.")
+        except ValueError as e:
+            print(f"Error: {e}")
+        
 
-        return False
     
     def get_type1(self) -> str:
         return self.type1
@@ -88,7 +87,9 @@ class Pokemon_Info:
             print(f"Error: {field_name} cannot be empty.")
         else:
             return True
+        
         return False
+
     
     #Helper method for type validation
     def validate_type(self, value: str) -> bool:
@@ -106,11 +107,10 @@ class Pokemon_Info:
 
 if __name__ == "__main__":
     # Example usage
-    pikachu = Pokemon_Info()
+    pokemon = Pokemon_Info()
+    pokemon.number = 1026
+    print(pokemon.number)
 
-    while pikachu.set_type1(input("Type? ")) == False:
-        print(pikachu.type1)
-        print("Please try again.\n")
-    print(pikachu.get_type1())
+    
     
     
